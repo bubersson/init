@@ -1,7 +1,7 @@
 # needs to be executed after git-commands.sh
 
 #export PS1="\[\033[33m\]\u\[\033[35m\]@\h:\[\e[32m\]\$(parse_git_branch) \[\033[36m\]\w\033[0m\n$ "
-export PS1="\[\033[33m\]\u\[\033[35m\]@pro2:\[\e[32m\]\$(parse_git_branch) \[\033[36m\]\w\033[0m\n$ "
+export PS1="\[\033[33m\]\u\[\033[35m\]@${MY_MACHINE_NAME:-TheMachine}:\[\e[32m\]\$(parse_git_branch) \[\033[36m\]\w\033[0m\n$ "
 
 # LS colors
 export CLICOLOR=1
