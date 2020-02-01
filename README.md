@@ -8,6 +8,7 @@ git clone https://github.com/bubersson/init.git
 Optional
 ```sh
 mkdir src
+touch .bashrc #if .bashrc does not exist
 ```
 
 Append following into .bashrc

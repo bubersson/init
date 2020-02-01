@@ -24,4 +24,9 @@ alias fff=gitfff # fff stands for diFFFiles
 alias tree=gittree
 alias log=gitlog
 alias status="git status -sb"
+
+alias cm="git commit -a -m "
+
 alias server="python -m SimpleHTTPServer"
+
+echo "LOADED ALIASES"
