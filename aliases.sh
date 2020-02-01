@@ -28,5 +28,3 @@ alias status="git status -sb"
 alias cm="git commit -a -m "
 
 alias server="python -m SimpleHTTPServer"
-
-echo "LOADED ALIASES"
