@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Mount WD My Passport Drive
+# Based on tutorial: https://www.howtogeek.com/236055/how-to-write-to-ntfs-drives-on-a-mac/
+
+# This utility mounts NTFS disk for read and write. It requires FUSE installed. 
+# Also it is hardcoded to my specific drive and mac situation: the identifier disk2s1 ...
+
+# One time setup:
+#  sudo mkdir /Volumes/NTFS
+#  brew install ntfs-3g
+
+# If you want to use this for your drive, run 
+#  diskutil list
+# and get IDENTIFIER next to Windows_NTFS line. 
+
+# The NTFS partition was probably automatically mounted by your Mac, 
+# so you’ll need to unmount it first.
+sudo umount /dev/disk3s1
+
+# To mount the drive, run the following command, replacing /dev/disk3s1 with 
+# the device name of your NTFS partition.
+sudo /usr/local/bin/ntfs-3g /dev/disk3s1 /Volumes/NTFS -olocal -oallow_other
+
+# You’ll see the file system mounted at /Volumes/NTFS. 
+# It will also appear on your desktop as a normal mounted drive. You can eject it normally when you want to unplug it.
