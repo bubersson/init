@@ -44,3 +44,15 @@ Make brew update automatially
 brew tap domt4/autoupdate
 brew autoupdate --start 43200 # update every 12 hours
 ```
+
+Make the MacOS dock autohide fast.
+```sh
+defaults write com.apple.dock autohide-delay -float 0
+defaults write com.apple.dock autohide-time-modifier -float 0.25
+killall Dock
+```
+
+# Linux Only
+```sh
+sudo apt-get install htop mc
+```
