@@ -56,3 +56,11 @@ killall Dock
 ```sh
 sudo apt-get install htop mc
 ```
+
+
+## Updating
+
+Just run 
+```sh
+cd ~/init ; git pull
+```
