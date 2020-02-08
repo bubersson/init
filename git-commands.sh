@@ -1,3 +1,5 @@
+export GIT_TERMINAL_PROMPT=1
+
 function parse_git_branch {
     git rev-parse --git-dir > /dev/null 2>&1
     if [ $? -eq 0 ]; then

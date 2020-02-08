@@ -56,7 +56,7 @@ killall Dock
 ```sh
 sudo apt-get install htop mc
 ```
-
+Install z: https://github.com/rupa/z
 
 ## Updating
 
@@ -67,3 +67,4 @@ cd ~/init ; git pull
 
 ## Other ideas / tricks
 * https://darrenburns.net/posts/tools/
+
