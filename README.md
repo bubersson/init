@@ -36,7 +36,7 @@ Go to https://brew.sh/ and run command from there.
 ```sh
 brew-refresh # works if above scripts are properly installed
 brew update; brew upgrade
-brew install mc curl htop golang bash
+brew install mc curl htop golang z bash
 ```
 
 Make brew update automatially
@@ -64,3 +64,6 @@ Just run
 ```sh
 cd ~/init ; git pull
 ```
+
+## Other ideas / tricks
+* https://darrenburns.net/posts/tools/
