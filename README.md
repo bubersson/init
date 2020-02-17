@@ -54,7 +54,7 @@ killall Dock
 
 ### Linux Only
 ```sh
-sudo apt-get install htop mc
+sudo apt-get install htop mc curl
 ```
 Install z: https://github.com/rupa/z
 
