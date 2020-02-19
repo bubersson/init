@@ -16,6 +16,8 @@ alias pg='ps -ef | grep '
 alias cdb='git checkout'
 alias mkb='git checkout -b'
 alias rmb='git branch -D'
+alias cm="git commit -a -m "
+alias gcm='git commit -m '
 alias mergebranch='git merge --squash'
 alias diffbranch="git diff --color master...`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`"
 alias listbranch="git branch -av"
@@ -25,6 +27,10 @@ alias tree=gittree
 alias log=gitlog
 alias status="git status -sb"
 
-alias cm="git commit -a -m "
-
 alias server="python -m SimpleHTTPServer"
+
+# Mac OS X only.
+if [ "$(uname)" == "Darwin" ]; then    
+    # Open current folder in finder (Mac OS X only)
+    alias f='open -a Finder'
+fi
