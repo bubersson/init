@@ -6,7 +6,9 @@ export PS1="\[\033[33m\]\u\[\033[35m\]@${MY_MACHINE_NAME:-TheMachine}:\[\e[32m\]
 # LS colors
 export CLICOLOR=1
 export LSCOLORS=gxfxcxdxbxegedabagacad
- 
+
+# `bind -P` to print out all bindings
+
 # Much better search in history with using just up/down arrow after the word 
 # prefix. E.g. write "cop", press up arrow and see "copy a.txt b.txt".
 bind '"\e[A": history-search-backward'

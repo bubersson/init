@@ -52,6 +52,18 @@ defaults write com.apple.dock autohide-time-modifier -float 0.25
 killall Dock
 ```
 
+Transfer iterm2 preferences. First get old preferences from `~/.config/iterm2` (or whatever configured folder), then move those to new laptop:
+```
+cd .config ; mkdir iterm2
+```
+In iterm2 go to `Preferences > General > Preferences` and enable both loading and saving from the folder (may need to copypaste the hidden path).
+
+The preferences include making ⌘+left, ⌘+right work, also can be found here:
+* https://coderwall.com/p/dapstw/keybindings-for-macosx-users-on-iterm2
+* https://unix.stackexchange.com/questions/300091/use-mac-os-command-key-in-bashs-bind-command
+
+
+
 ### Linux Only
 ```sh
 sudo apt-get install htop mc curl

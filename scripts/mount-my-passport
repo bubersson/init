@@ -1,4 +1,5 @@
 #!/bin/bash
+# Mac OS
 
 # Mount WD My Passport Drive
 # Based on tutorial: https://www.howtogeek.com/236055/how-to-write-to-ntfs-drives-on-a-mac/
