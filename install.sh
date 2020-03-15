@@ -8,3 +8,8 @@ source ~/init/bash-setup.sh
 source ~/init/aliases.sh
 
 echo -e "[\033[32mDONE\033[0m] Finished setting up all bubersson/init bindings"
+
+# Switching to zsh. 
+
+# Switch to zsh
+# chsh -s /bin/zsh

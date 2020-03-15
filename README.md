@@ -39,6 +39,12 @@ brew update; brew upgrade
 brew install mc curl htop golang z bash
 ```
 
+Install additional apps
+```sh
+brew install cask zettlr
+brew install pandoc # for exporting PDF from zettlr
+```
+
 Make brew update automatially
 ```sh
 brew tap domt4/autoupdate
