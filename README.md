@@ -58,6 +58,11 @@ defaults write com.apple.dock autohide-time-modifier -float 0.25
 killall Dock
 ```
 
+Disable scaling for mouse.
+```sh
+defaults write -g com.apple.mouse.scaling -1
+```
+
 Transfer iterm2 preferences. First get old preferences from `~/.config/iterm2` (or whatever configured folder), then move those to new laptop:
 ```
 cd .config ; mkdir iterm2
