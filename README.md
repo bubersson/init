@@ -6,6 +6,32 @@ cd ~
 git clone https://github.com/bubersson/init.git
 ```
 
+### ZSH Install & Config
+
+Create files and folders
+```sh
+mkdir src
+touch .zshrc # creates the file if it does not exist. 
+```
+
+Following appends to end of .zshrc
+```sh
+cat >> .zshrc << ENDOFFILE
+### Install all my aliases, bindings, etc. ###
+### See https://github.com/bubersson/init  ###
+export MY_MACHINE_NAME=pro2
+source ~/init/install.sh
+ENDOFFILE
+```
+
+Install oh-my-zsh
+```sh
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+
+### OLD: Bash version
+
 Create files and folders
 ```sh
 mkdir src
@@ -29,6 +55,7 @@ Finally, re-source .bashrc
 source ~/.bashrc
 ```
 
+
 ### Mac Only
 
 Install Homebrew.
@@ -45,7 +72,7 @@ brew install cask zettlr
 brew install pandoc # for exporting PDF from zettlr
 ```
 
-Make brew update automatially
+Make brew update automatically
 ```sh
 brew tap domt4/autoupdate
 brew autoupdate --start 43200 # update every 12 hours
@@ -57,6 +84,9 @@ defaults write com.apple.dock autohide-delay -float 0
 defaults write com.apple.dock autohide-time-modifier -float 0.25
 killall Dock
 ```
+
+Fix Home and End behavior on MacOS (so it doesn't scroll to the top and bottom of the page)
+* https://apple.stackexchange.com/questions/18016/can-i-change-the-behavior-of-the-home-and-end-keys-on-an-apple-keyboard-with-num
 
 Disable scaling for mouse.
 ```sh
