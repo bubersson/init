@@ -29,6 +29,19 @@ Install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
+Modify following lines in the .zshrc
+```sh
+ZSH_THEME="hop"
+plugins=(git z)
+export MY_MACHINE_NAME=pro2
+source $ZSH/oh-my-zsh.sh
+```
+
+Create a link to the hop zsh theme `ln -s target(existing) destination(new link)`
+```sh
+ln -s ~/init/zsh-theme/hop.zsh-theme  ~/.oh-my-zsh/custom/themes/hop.zsh-theme
+```
+
 
 ### OLD: Bash version
 

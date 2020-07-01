@@ -30,7 +30,7 @@ alias status="git status -sb"
 alias server="python -m SimpleHTTPServer"
 
 # Mac OS X only.
-if [ "$(uname)" == "Darwin" ]; then    
+if [[ "$(uname)" == "Darwin" ]]; then    
     # Open current folder in finder (Mac OS X only)
     alias f='open -a Finder'
 fi

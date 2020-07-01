@@ -14,12 +14,12 @@ function parse_git_branch {
         to_be_commited="[# ]*Changes to be committed:"
  
         # changes to be commited (no files to be added)
-        if [[ ${git_status}} =~ ${to_be_commited} ]]; then
+        if [[ ${git_status} =~ ${to_be_commited} ]]; then
             state=" •"
         fi
  
         #files not staged for commit
-        if [[ ${git_status}} =~ ${not_staged_pattern} ]]; then
+        if [[ ${git_status} =~ ${not_staged_pattern} ]]; then
             state=" ⁕"
         fi
  
