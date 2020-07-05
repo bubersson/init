@@ -42,6 +42,15 @@ Create a link to the hop zsh theme `ln -s target(existing) destination(new link)
 ln -s ~/init/zsh-theme/hop.zsh-theme  ~/.oh-my-zsh/custom/themes/hop.zsh-theme
 ```
 
+If the characters show up as questionmarsk in a box, then just in iTerm select
+`Profiles > Text > Use built-in Powerline glyphs`
+
+Or follow:
+- https://raspberrypi.stackexchange.com/questions/34255/special-characters-show-as-question-marks-in-the-shell
+- https://stackoverflow.com/questions/42271657/oh-my-zsh-showing-weird-character-on-terminal
+- `sudo dpkg-reconfigure locales`
+- `sudo apt-get install fonts-powerline`
+(this was issue on Raspberry)
 
 ### OLD: Bash version
 
@@ -120,7 +129,7 @@ The preferences include making ⌘+left, ⌘+right work, also can be found here:
 
 ### Linux Only
 ```sh
-sudo apt-get install htop mc curl
+sudo apt-get install htop mc curl fonts-powerline
 ```
 Install z: https://github.com/rupa/z
 
