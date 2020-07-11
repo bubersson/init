@@ -52,6 +52,14 @@ Or follow:
 - `sudo apt-get install fonts-powerline`
 (this was issue on Raspberry)
 
+
+On Linux install Powerline fonts
+```sh
+cd ~/src
+git clone https://github.com/powerline/fonts.git
+cd fonts; .install.sh
+```
+
 ### OLD: Bash version
 
 Create files and folders
