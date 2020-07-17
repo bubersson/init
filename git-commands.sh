@@ -68,3 +68,9 @@ function gitlog() {
 function gitfff() {
     git diff --stat ${1:-'master'}
 }
+
+function gitcme() {
+    git add .
+    git commit -a -m ${1:-'[autoupdate]'}
+    git push
+}
