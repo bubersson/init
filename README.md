@@ -98,7 +98,6 @@ brew install mc curl htop golang z bash
 
 Install additional apps
 ```sh
-brew install cask zettlr
 brew install pandoc # for exporting PDF from zettlr
 ```
 
@@ -140,6 +139,13 @@ The preferences include making ⌘+left, ⌘+right work, also can be found here:
 sudo apt-get install htop mc curl fonts-powerline
 ```
 Install z: https://github.com/rupa/z
+
+
+Disable sounds
+```sh
+sudo mv /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga{,.backup}
+sudo mv /usr/share/sounds/elementary/stereo/audio-volume-change.wav{,.backup}
+```
 
 ## Updating
 
