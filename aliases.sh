@@ -25,6 +25,7 @@ alias gb="git branch -av"
 alias fff=gitfff # fff stands for diFFFiles
 alias tree=gittree
 alias log=gitlog
+alias cme=gitcme # commit and export
 alias status="git status -sb"
 
 alias server="python -m SimpleHTTPServer"
