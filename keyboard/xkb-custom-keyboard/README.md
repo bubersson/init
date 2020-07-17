@@ -1,6 +1,7 @@
 # Custom XKB Keyboard
 
-Modified XKB keyboard that provides ~MacOS experience on Dell XPS running Linux. 
+Modified XKB keyboard that provides ~MacOS experience on Linux laptop.
+See the definition and comment out changes you don't like.
 
 ## Set up
 ```
@@ -25,7 +26,7 @@ Update `/usr/share/X11/xkb/rule/evdev.xml` and add following (e.g. under the eng
 </variant>
 ```
 
-Now you can select it as a keyboard layout in the GNOME UI. 
+Now you can select it as a keyboard layout in the GNOME UI.
 
 Optionally update
 ```
