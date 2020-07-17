@@ -42,8 +42,9 @@ Tutorials:
  - https://askubuntu.com/questions/510024/what-are-the-steps-needed-to-create-new-keyboard-layout-on-ubuntu
  - https://unix.stackexchange.com/questions/202883/create-xkb-configuration-from-xmodmap
  - https://www.charvolant.org/doug/xkb/html/node5.html
- - https://www.x.org/releases/X11R7.6/doc/xorg-docs/input/XKB-Config.- html
+ - https://www.x.org/releases/X11R7.6/doc/xorg-docs/input/XKB-Config.html
  - https://medium.com/@damko/a-simple-humble-but-comprehensive-guide-to-xkb-for-linux-6f1ad5e13450
+ 
 Examples:
  - https://github.com/nakal/xmonad-conf/blob/f25e81bf16d212b35dfe69765a135787c09c4b7b/xkb/us_alt
  - https://unix.stackexchange.com/questions/205226/xkb-make-ctrlbackspace-behave-as-delete
