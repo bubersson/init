@@ -7,6 +7,7 @@ NOTE: If you
  - need just a small change or 
  - are not fiddling with Ctrl or
  - you need the key change just for your Terminal  
+ 
 then you can try using `xmodmap`, but note the chances are that 
 your system will be trying to overwrite it anyway with xkbmap. See some tutorials on the bottom. 
 
