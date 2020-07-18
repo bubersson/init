@@ -1,9 +1,17 @@
 # Custom XKB Keyboard
 
 Modified XKB keyboard that provides ~MacOS experience on Linux laptop.
-See the definition and comment out changes you don't like.
+See the definition in `hopkeyboard` and comment out changes you don't like. 
+
+NOTE: If you 
+ - need just a small change or 
+ - are not fiddling with Ctrl or
+ - you need the key change just for your Terminal  
+then you can try using `xmodmap`, but note the chances are that 
+your system will be trying to overwrite it anyway with xkbmap. See some tutorials on the bottom. 
 
 ## Set up
+Download the `hopkeyboard` file somewhere to your system as `hopkeyboard`. 
 ```
 cd [wherever you downloaded the file]
 sudo ln -s hopkeyboard /usr/share/X11/xkb/symbols/hopkeyboard
@@ -16,17 +24,19 @@ setxkbmap hopkeyboard
 
 ## Install it forever
 
-Update `/usr/share/X11/xkb/rule/evdev.xml` and add following (e.g. under the english tree).
+Update `/usr/share/X11/xkb/rule/evdev.xml` and add following (e.g. under the english tree next below another `</variant>`).
 ```xml
 <variant>
     <configItem>
         <name>hopkeyboard</name>
-        <description>English (US, with Mac friendly touches)</description>
+        <description>English (US, Hop - Mac friendly touches)</description>
     </configItem>
 </variant>
 ```
 
 Now you can select it as a keyboard layout in the GNOME UI.
+
+![GNOME keyboard config dialog](keyboard-config-screenshot.png)
 
 Optionally update
 ```
@@ -36,7 +46,7 @@ to say
 ```
 XKBLAYOUT=hopkeyboard
 ```
-Which should set it as a default (even more?).
+Which should set it as a default (even more? not sure, send me PR to update this).
 
 ## Other tutorials
 Tutorials:
