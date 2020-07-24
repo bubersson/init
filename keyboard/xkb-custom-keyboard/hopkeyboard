@@ -37,22 +37,22 @@ xkb_symbols "hop_keyboard_symbols" {
     };
 
     // Make (new) ctrl+right go all the way to the end of the line (like End). 
-    override key <RGHT> {
-        type="PC_CONTROL_LEVEL2",
+     override key <RGHT> {
+        type="PC_CONTROL_LEVEL2",        
         symbols[Group1]= [ Right, NoSymbol ],
         actions[Group1] = [ NoAction(), RedirectKey(key=<END>, clearMods=Control) ]
     };
 
     // Make (new) ctrl+up do PgUp. 
     override key <UP> {
-        type="PC_CONTROL_LEVEL2",
+        type="PC_CONTROL_LEVEL2",        
         symbols[Group1]= [ Up, NoSymbol ],
         actions[Group1] = [ NoAction(), RedirectKey(key=<PGUP>, clearMods=Control) ]
     };
 
     // Make (new) ctrl+down do PgDown. 
     override key <DOWN> {
-        type="PC_CONTROL_LEVEL2",
+        type="PC_CONTROL_LEVEL2",        
         symbols[Group1]= [ Down, NoSymbol ],
         actions[Group1] = [ NoAction(), RedirectKey(key=<PGDN>, clearMods=Control) ]
     };
