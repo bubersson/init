@@ -10,11 +10,11 @@ git clone https://github.com/bubersson/init.git
 
 Create files and folders
 ```sh
-mkdir src
+mkdir src    # my common folder
 touch .zshrc # creates the file if it does not exist. 
 ```
 
-Following appends to end of .zshrc
+Following appends to end of .zshrc (update the machine name)
 ```sh
 cat >> .zshrc << ENDOFFILE
 ### Install all my aliases, bindings, etc. ###
@@ -37,13 +37,22 @@ export MY_MACHINE_NAME=pro2
 source $ZSH/oh-my-zsh.sh
 ```
 
+Optional: Install zsh autosuggestions and code highlighting
+zsh-syntax-highlighting (run this after executing zsh again), via https://medium.com/tech-notes-and-geek-stuff/install-zsh-on-arch-linux-manjaro-and-make-it-your-default-shell-b0098b756a7a
+```sh
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+```
+```sh
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 
+```
+
 Create a link to the hop zsh theme `ln -s target(existing) destination(new link)`
 ```sh
 ln -s ~/init/zsh-theme/hop.zsh-theme  ~/.oh-my-zsh/custom/themes/hop.zsh-theme
 ```
 
 If the characters show up as questionmarsk in a box, then just in iTerm select
-`Profiles > Text > Use built-in Powerline glyphs`
+`Profiles > Text > Use built-in Powerline glyphs`. The trick is to make sure your terminal app is using fonts that support powerlines. 
 
 Or follow:
 - https://raspberrypi.stackexchange.com/questions/34255/special-characters-show-as-question-marks-in-the-shell
@@ -58,6 +67,14 @@ On Linux install Powerline fonts
 cd ~/src
 git clone https://github.com/powerline/fonts.git
 cd fonts; .install.sh
+```
+
+Set up automatic updates of `apt`:
+https://www.cyberciti.biz/faq/how-to-set-up-automatic-updates-for-ubuntu-linux-18-04/
+
+Make sure `git log` shows inline and does not clear the terminal
+```sh
+git config --global --replace-all core.pager "less -iXFR"
 ```
 
 ### OLD: Bash version
@@ -94,11 +111,6 @@ Go to https://brew.sh/ and run command from there.
 brew-refresh # works if above scripts are properly installed
 brew update; brew upgrade
 brew install mc curl htop golang z bash
-```
-
-Install additional apps
-```sh
-brew install pandoc # for exporting PDF from zettlr
 ```
 
 Make brew update automatically
