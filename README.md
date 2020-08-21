@@ -77,6 +77,14 @@ Make sure `git log` shows inline and does not clear the terminal
 git config --global --replace-all core.pager "less -iXFR"
 ```
 
+Install Color `cat`
+```sh
+go get -u github.com/jingweno/ccat
+```
+```sh
+brew install ccat
+```
+
 ### OLD: Bash version
 
 Create files and folders
