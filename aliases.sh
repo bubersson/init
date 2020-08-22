@@ -5,9 +5,9 @@
 # some more ls aliases
 alias ..="cd .."
 alias ...="cd .. ; cd .."
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
+alias ll='ls -alF --group-directories-first'
+alias la='ls -A --group-directories-first'
+alias l='ls -CF --group-directories-first'
 
 # find process
 alias pg='ps -ef | grep '

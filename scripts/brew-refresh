@@ -5,3 +5,5 @@
 
 sudo chown -R $(whoami) /usr/local/bin /usr/local/etc /usr/local/sbin /usr/local/share /usr/local/share/doc
 chmod u+w /usr/local/bin /usr/local/etc /usr/local/sbin /usr/local/share /usr/local/share/doc
+
+echo -e "[\033[32mDONE\033[0m] Brew access refreshed"
