@@ -36,12 +36,12 @@ if [[ "$(uname)" == "Darwin" ]]; then
     alias f='open -a Finder'
     alias i='brew'
 fi
+
 # Linux only
-if [[ "$(uname)" == "Darwin" ]]; then
+if [[ "$(uname)" == "Linux" ]]; then
     # apt-get & similar
     alias i='sudo apt'    
 fi
-
 
 # If ccat exists, alias it to cat
 if command -v ccat &> /dev/null; then
