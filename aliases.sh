@@ -5,7 +5,7 @@
 # some more ls aliases
 alias ..="cd .."
 alias ...="cd .. ; cd .."
-alias ll='ls -alF --group-directories-first'
+alias ll='ls -alhF --group-directories-first'
 alias la='ls -A --group-directories-first'
 alias l='ls -CF --group-directories-first'
 
@@ -34,7 +34,14 @@ alias server="python -m SimpleHTTPServer"
 if [[ "$(uname)" == "Darwin" ]]; then
     # Open current folder in finder (Mac OS X only)
     alias f='open -a Finder'
+    alias i='brew'
 fi
+# Linux only
+if [[ "$(uname)" == "Darwin" ]]; then
+    # apt-get & similar
+    alias i='sudo apt'    
+fi
+
 
 # If ccat exists, alias it to cat
 if command -v ccat &> /dev/null; then
