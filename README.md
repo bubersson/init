@@ -8,10 +8,20 @@ git clone https://github.com/bubersson/init.git
 
 ### ZSH Install & Config
 
+Make ZSH the default shell (oh-my-zsh install also does that)
+```sh
+chsh -s $(which zsh)
+```
+
 Create files and folders
 ```sh
 mkdir src    # my common folder
 touch .zshrc # creates the file if it does not exist. 
+```
+
+Install oh-my-zsh
+```sh
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
 Following appends to end of .zshrc (update the machine name)
@@ -24,17 +34,10 @@ source ~/init/install.sh
 ENDOFFILE
 ```
 
-Install oh-my-zsh
-```sh
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-```
-
 Modify following lines in the .zshrc
 ```sh
 ZSH_THEME="hop"
 plugins=(git z)
-export MY_MACHINE_NAME=pro2
-source $ZSH/oh-my-zsh.sh
 ```
 
 Optional: Install zsh autosuggestions and code highlighting
