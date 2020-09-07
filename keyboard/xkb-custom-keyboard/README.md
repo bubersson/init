@@ -37,7 +37,8 @@ setxkbmap hopkeyboard
 
 ## Install it forever
 
-Update `/usr/share/X11/xkb/rule/evdev.xml` and add following (e.g. under the english tree next below another `</variant>`).
+Update `/usr/share/X11/xkb/rules/evdev.xml` and add following (e.g. under the english tree next below another `</variant>`).
+
 ```xml
 <variant>
     <configItem>
