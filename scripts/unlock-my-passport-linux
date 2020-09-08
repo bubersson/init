@@ -2,6 +2,6 @@
 # Linux
 
 # Mount WD My Passport Drive
-UNLOCK_WD_PATH="~/src/WD-Passport-Unlock-Linux"
+UNLOCK_WD_PATH=$HOME/src/WD-Passport-Unlock-Linux
 
-sudo $UNLOCK_WD_PATH/sg_raw -s 40 -i $UNLOCK_WD_PATH/password.bin /dev/sda c1 e1 00 00 00 00 00 00 28 00
+sudo sg_raw -s 40 -i $UNLOCK_WD_PATH/password.bin /dev/sda c1 e1 00 00 00 00 00 00 28 00
