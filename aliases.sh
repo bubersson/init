@@ -11,7 +11,7 @@ if [[ "$(uname)" == "Linux" ]]; then
   alias ll='ls -alhF --group-directories-first'
   alias la='ls -A --group-directories-first'
   alias l='ls -CF --group-directories-first'
-elif 
+else 
   alias ll='ls -alhF'
   alias la='ls -A'
   alias l='ls -CF'
