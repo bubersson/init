@@ -5,11 +5,19 @@
 # some more ls aliases
 alias ..="cd .."
 alias ...="cd .. ; cd .."
-alias ll='ls -alhF --group-directories-first'
-alias la='ls -A --group-directories-first'
-alias l='ls -CF --group-directories-first'
 
-# find process
+# Linux only
+if [[ "$(uname)" == "Linux" ]]; then
+  alias ll='ls -alhF --group-directories-first'
+  alias la='ls -A --group-directories-first'
+  alias l='ls -CF --group-directories-first'
+elif 
+  alias ll='ls -alhF'
+  alias la='ls -A'
+  alias l='ls -CF'
+fi
+
+# find process 
 alias pg='ps -ef | grep '
 
 # git svn aliases
