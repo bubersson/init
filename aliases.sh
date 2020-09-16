@@ -30,6 +30,10 @@ alias status="git status -sb"
 
 alias server="python -m SimpleHTTPServer"
 
+# Download Audio only in the best quality.
+alias yt-dl-audio='youtube-dl -f bestaudio --extract-audio --audio-format best --add-metadata'
+alias yt-dl='youtube-dl'
+
 # Mac OS X only.
 if [[ "$(uname)" == "Darwin" ]]; then
     # Open current folder in finder (Mac OS X only)
@@ -37,13 +41,13 @@ if [[ "$(uname)" == "Darwin" ]]; then
     alias i='brew'
 fi
 
-# Linux only
+# Linux only.
 if [[ "$(uname)" == "Linux" ]]; then
     # apt-get & similar
     alias i='sudo apt'    
 fi
 
-# If ccat exists, alias it to cat
+# If ccat exists, alias it to cat.
 if command -v ccat &> /dev/null; then
     alias cat="ccat $*"
 fi
