@@ -13,7 +13,3 @@ echo -e "[\033[32mDONE\033[0m] Finished setting up all bubersson/init bindings\n
 
 # Switch to zsh
 # chsh -s /bin/zsh
-
-
-
-

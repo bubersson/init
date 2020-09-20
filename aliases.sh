@@ -45,6 +45,7 @@ fi
 if [[ "$(uname)" == "Linux" ]]; then
     # apt-get & similar
     alias i='sudo apt'    
+    alias f='xdg-open'
 fi
 
 # If ccat exists, alias it to cat.
