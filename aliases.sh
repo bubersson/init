@@ -35,6 +35,7 @@ alias tree=gittree
 alias log=gitlog
 alias cme=gitcme # commit and export
 alias status="git status -sb"
+alias please="sudo"
 
 alias server="python -m SimpleHTTPServer"
 
