@@ -19,11 +19,6 @@ mkdir src    # my common folder
 touch .zshrc # creates the file if it does not exist. 
 ```
 
-Install oh-my-zsh
-```sh
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-```
-
 Following appends to end of .zshrc (update the machine name)
 ```sh
 cat >> .zshrc << ENDOFFILE
@@ -32,26 +27,6 @@ cat >> .zshrc << ENDOFFILE
 export MY_MACHINE_NAME=pro2
 source ~/init/install.sh
 ENDOFFILE
-```
-
-Modify following lines in the .zshrc
-```sh
-ZSH_THEME="hop"
-plugins=(git z)
-```
-
-Optional: Install zsh autosuggestions and code highlighting
-zsh-syntax-highlighting (run this after executing zsh again), via https://medium.com/tech-notes-and-geek-stuff/install-zsh-on-arch-linux-manjaro-and-make-it-your-default-shell-b0098b756a7a
-```sh
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-```
-```sh
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 
-```
-
-Create a link to the hop zsh theme `ln -s target(existing) destination(new link)`
-```sh
-ln -s ~/init/zsh-theme/hop.zsh-theme  ~/.oh-my-zsh/custom/themes/hop.zsh-theme
 ```
 
 If the characters show up as questionmarsk in a box, then just in iTerm select
@@ -63,7 +38,6 @@ Or follow:
 - `sudo dpkg-reconfigure locales`
 - `sudo apt-get install fonts-powerline`
 (this was issue on Raspberry)
-
 
 On Linux install Powerline fonts
 ```sh
@@ -112,7 +86,6 @@ Finally, re-source .bashrc
 ```
 source ~/.bashrc
 ```
-
 
 ### Mac Only
 
@@ -180,3 +153,30 @@ cd ~/init ; git pull
 ## Other ideas / tricks
 * https://darrenburns.net/posts/tools/
 
+
+## Deprecated
+
+Install oh-my-zsh
+```sh
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+Modify following lines in the .zshrc
+```sh
+ZSH_THEME="hop"
+plugins=(git z)
+```
+
+Optional: Install zsh autosuggestions and code highlighting
+zsh-syntax-highlighting (run this after executing zsh again), via https://medium.com/tech-notes-and-geek-stuff/install-zsh-on-arch-linux-manjaro-and-make-it-your-default-shell-b0098b756a7a
+```sh
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+```
+```sh
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 
+```
+
+Create a link to the hop zsh theme `ln -s target(existing) destination(new link)`
+```sh
+ln -s ~/init/zsh-theme/hop.zsh-theme  ~/.oh-my-zsh/custom/themes/hop.zsh-theme
+```
