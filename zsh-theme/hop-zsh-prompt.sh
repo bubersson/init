@@ -41,16 +41,11 @@ case ${SOLARIZED_THEME:-dark} in
     *)     CURRENT_FG='black';;
 esac
 
-# To print all colors use command
-# `spectrum_ls`
-
 PROMPT_CONTEXT_USERNAME='254'
 PROMPT_CONTEXT_HOST='247'
 PROMPT_CONTEXT_BG='238'
 PROMPT_DIR_FG='14'
 PROMPT_DIR_BG='235'
-
-# TODO: Add a default for machine
 
 # Special Powerline characters
 
@@ -108,82 +103,88 @@ prompt_context() {
   fi
 }
 
-# We wrap in a local function instead of exporting the variable directly in
-# order to avoid interfering with manually-run git commands by the user.
-function __git_prompt_git() {
-  GIT_OPTIONAL_LOCKS=0 command git "$@"
-}
-# Checks if working tree is dirty
-function parse_git_dirty() {
-  local STATUS
-  local -a FLAGS
-  FLAGS=('--porcelain')
-  if [[ "$(__git_prompt_git config --get oh-my-zsh.hide-dirty)" != "1" ]]; then
-    if [[ "${DISABLE_UNTRACKED_FILES_DIRTY:-}" == "true" ]]; then
-      FLAGS+='--untracked-files=no'
-    fi
-    case "${GIT_STATUS_IGNORE_SUBMODULES:-}" in
-      git)
-        # let git decide (this respects per-repo config in .gitmodules)
-        ;;
-      *)
-        # if unset: ignore dirty submodules
-        # other values are passed to --ignore-submodules
-        FLAGS+="--ignore-submodules=${GIT_STATUS_IGNORE_SUBMODULES:-dirty}"
-        ;;
-    esac
-    STATUS=$(__git_prompt_git status ${FLAGS} 2> /dev/null | tail -1)
-  fi
-  if [[ -n $STATUS ]]; then
-    echo "$ZSH_THEME_GIT_PROMPT_DIRTY"
-  else
-    echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
-  fi
-}
-
 # Git: branch/detached head, dirty status
 prompt_git() {
   (( $+commands[git] )) || return
-  if [[ "$(git config --get oh-my-zsh.hide-status 2>/dev/null)" = 1 ]]; then
-    return
-  fi
+  
   local PL_BRANCH_CHAR
   () {
     local LC_ALL="" LC_CTYPE="en_US.UTF-8"
     PL_BRANCH_CHAR=$'\ue0a0'         # 
   }
-  local ref dirty mode repo_path
+  local branch state remote dirty  
+  
+  repo_path=$(git rev-parse --git-dir 2>&1)    
+  if [ $? -eq 0 ]; then
+      git_status="$(git status 2> /dev/null)"
+      branch_pattern="^[# ]*On branch ([[:print:]]*)" # For ZSH added "\$" instead of "$". ([^${IFS}]*)
+      detached_branch_pattern="# Not currently on any branch"
+      remote_pattern="[# ]*Your branch is (.*) of"
+      diverge_pattern="[# ]*Your branch and (.*) have diverged"
+      untracked_pattern="[# ]*Untracked files:"
+      new_pattern="new file:"
+      not_staged_pattern="[# ]*Changes not staged for commit"
+      to_be_commited="[# ]*Changes to be committed:"
 
-  if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
-    repo_path=$(git rev-parse --git-dir 2>/dev/null)
-    dirty=$(parse_git_dirty)
-    ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git rev-parse --short HEAD 2> /dev/null)"
-    if [[ -n $dirty ]]; then
-      prompt_segment yellow black
-    else
-      prompt_segment green $CURRENT_FG
-    fi
+      # changes to be commited (no files to be added)
+      if [[ ${git_status} =~ ${to_be_commited} ]]; then
+          state=" •"
+          dirty=1
+      fi
 
-    if [[ -e "${repo_path}/BISECT_LOG" ]]; then
-      mode=" <B>"
-    elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
-      mode=" >M<"
-    elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
-      mode=" >R>"
-    fi
+      #files not staged for commit
+      if [[ ${git_status} =~ ${not_staged_pattern} ]]; then
+          state=" ⭑"
+          dirty=1
+      fi
 
-    setopt promptsubst
-    autoload -Uz vcs_info
-
-    zstyle ':vcs_info:*' enable git
-    zstyle ':vcs_info:*' get-revision true
-    zstyle ':vcs_info:*' check-for-changes true
-    zstyle ':vcs_info:*' stagedstr '✚'
-    zstyle ':vcs_info:*' unstagedstr '●'
-    zstyle ':vcs_info:*' formats ' %u%c'
-    zstyle ':vcs_info:*' actionformats ' %u%c'
-    vcs_info
-    echo -n "${ref/refs\/heads\//$PL_BRANCH_CHAR }${vcs_info_msg_0_%% }${mode}"
+      # add an else if or two here if you want to get more specific
+      # show if we're ahead or behind HEAD
+      if [[ ${git_status} =~ ${remote_pattern} ]]; then
+          dirty=1
+          if [[ $match[1] == "ahead" ]]; then
+              remote=" ↑"
+          else
+              remote=" ↓"
+          fi
+      fi
+      #new files
+      if [[ ${git_status} =~ ${new_pattern} ]]; then
+          dirty=1
+          remote=" +"
+      fi
+      #untracked files
+      if [[ ${git_status} =~ ${untracked_pattern} ]]; then
+          dirty=1
+          remote=" ?"
+      fi
+      #diverged branch
+      if [[ ${git_status} =~ ${diverge_pattern} ]]; then
+          dirty=1
+          remote=" ↕"
+      fi
+      #branch name
+      if [[ ${git_status} =~ ${branch_pattern} ]]; then
+          branch=$match[1] # ${BASH_REMATCH[1]} for bash
+      #detached branch
+      elif [[ ${git_status} =~ ${detached_branch_pattern} ]]; then
+          branch="NO BRANCH"
+      fi
+      #merge mode
+      if [[ -e "${repo_path}/BISECT_LOG" ]]; then
+        mode=" <B>"
+      elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
+        mode=" >M<"
+      elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
+        mode=" >R>"
+      fi
+      #segment color
+      if [[ -n $dirty ]]; then
+        prompt_segment yellow black
+      else
+        prompt_segment green $CURRENT_FG
+      fi
+      echo -n "${PL_BRANCH_CHAR} ${branch}${state}${remote}${mode}"          
   fi
 }
 

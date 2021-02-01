@@ -42,4 +42,5 @@ zstyle ':completion:*' menu select
 setopt auto_cd
 setopt multios
 setopt prompt_subst # enables substitution in prompt
+autoload -Uz vcs_info # from git command
 source ~/init/zsh-theme/hop-zsh-prompt.sh
