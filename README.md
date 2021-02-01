@@ -46,6 +46,12 @@ git clone https://github.com/powerline/fonts.git
 cd fonts; .install.sh
 ```
 
+Set default git user
+```
+git config --global user.name "FILL IN"
+git config --global user.email FILL@IN.com
+```
+
 Set up automatic updates of `apt`:
 https://www.cyberciti.biz/faq/how-to-set-up-automatic-updates-for-ubuntu-linux-18-04/
 
