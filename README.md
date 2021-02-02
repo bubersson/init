@@ -1,5 +1,7 @@
 ## My init scripts
 
+![iTerm screenshot with zsh examples](resources/screenshot.png | width=640)
+
 Run following
 ```sh
 cd ~
@@ -8,7 +10,7 @@ git clone https://github.com/bubersson/init.git
 
 ### ZSH Install & Config
 
-Make ZSH the default shell (oh-my-zsh install also does that)
+Make ZSH the default shell.
 ```sh
 chsh -s $(which zsh)
 ```
