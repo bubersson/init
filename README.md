@@ -1,6 +1,6 @@
 ## My init scripts
 
-![iTerm screenshot with zsh examples](resources/screenshot.png | width=640)
+![iTerm screenshot with zsh examples](resources/screenshot.png)
 
 Run following
 ```sh
