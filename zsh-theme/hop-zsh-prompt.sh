@@ -41,6 +41,8 @@ case ${SOLARIZED_THEME:-dark} in
     *)     CURRENT_FG='black';;
 esac
 
+# Available colors: https://i.imgur.com/okBgrw4.png.
+
 PROMPT_CONTEXT_USERNAME='254'
 PROMPT_CONTEXT_HOST='247'
 PROMPT_CONTEXT_BG='238'
@@ -96,10 +98,14 @@ prompt_end() {
 
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
-  if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    # prompt_segment black default "%(!.%{%F{yellow}%}.)%n@%m"    
-    # prompt_segment $PROMPT_CONTEXT_BG PROMPT_CONTEXT_USERNAME "%(!.%{%F{yellow}%}.)%n%{%F{$PROMPT_CONTEXT_HOST}%}@$MY_MACHINE_NAME"
-    prompt_segment $PROMPT_CONTEXT_BG PROMPT_CONTEXT_USERNAME "%n%{%F{$PROMPT_CONTEXT_HOST}%}@$MY_MACHINE_NAME"
+  local host_color
+  if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then    
+    if [[ -n $MY_MACHINE_COLOR ]]; then
+      host_color=$MY_MACHINE_COLOR
+    else
+      host_color=$PROMPT_CONTEXT_HOST 
+    fi    
+    prompt_segment $PROMPT_CONTEXT_BG PROMPT_CONTEXT_USERNAME "%n%{%F{$host_color}%}@$MY_MACHINE_NAME"
   fi
 }
 

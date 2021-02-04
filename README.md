@@ -27,6 +27,8 @@ cat >> .zshrc << ENDOFFILE
 ### Install all my aliases, bindings, etc. ###
 ### See https://github.com/bubersson/init  ###
 export MY_MACHINE_NAME=pro2
+# Available colors: https://i.imgur.com/okBgrw4.png
+# export MY_MACHINE_COLOR=247 
 source ~/init/install.sh
 ENDOFFILE
 ```
