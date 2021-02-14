@@ -35,6 +35,7 @@ alias tree=gittree
 alias log=gitlog
 alias cme=gitcme # commit and export
 alias status="git status -sb"
+alias please="sudo"
 
 alias server="python -m SimpleHTTPServer"
 
@@ -47,6 +48,9 @@ if [[ "$(uname)" == "Darwin" ]]; then
     # Open current folder in finder (Mac OS X only)
     alias f='open -a Finder'
     alias i='brew'
+
+    # Install z. See https://formulae.brew.sh/formula/z
+    . $(brew --prefix)/etc/profile.d/z.sh
 fi
 
 # Linux only.
