@@ -34,9 +34,14 @@ setopt hist_ignore_space      # ignore commands that start with space
 setopt hist_verify            # show command with history expansion to user before running it
 setopt share_history          # share command history data
 
+# Autocompletion load (this could be slow)
+# fpath=(/usr/local/share/zsh-completions $fpath)
+# autoload -U compinit && compinit
+# zmodload -i zsh/complist
+
 # Experience configuration
 # https://wiki.archlinux.org/index.php/zsh#Configure_Zsh
-zstyle ':completion:*' menu select
+# zstyle ':completion:*' menu select
 
 # Install ZSH Prompt
 setopt auto_cd

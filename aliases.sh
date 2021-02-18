@@ -62,5 +62,5 @@ fi
 
 # If ccat exists, alias it to cat.
 if command -v ccat &> /dev/null; then
-    alias cat="ccat $*"
+    alias cat='ccat --bg="dark" $*'
 fi
