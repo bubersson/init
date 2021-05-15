@@ -102,6 +102,7 @@ source ~/.bashrc
 Install Homebrew.
 Go to https://brew.sh/ and run command from there. 
 ```sh
+brew analytics off # disable tracking 
 brew-refresh # works if above scripts are properly installed
 brew update; brew upgrade
 brew install mc curl htop golang z bash
