@@ -148,7 +148,7 @@ body {
     sans-serif;
   color: var(--text-color1);
   background: var(--bg-color1);
-  line-height: 1.6;
+  /* line-height: 1.6; */
 }
 
 /* text selection background color */
@@ -231,6 +231,10 @@ hr {
 ul,
 ol {
   padding-left: 30px;
+}
+
+li p {
+  margin: .1rem 0;
 }
 
 /* blockquote */
@@ -684,6 +688,10 @@ input[type="radio"]:checked:before {
   border-color: var(--hover-text-color);
 }
 
+.file-node-icon {
+  opacity: .3;
+}
+
 /* suffix of file item*/
 .file-list-item-file-ext-part {
   opacity: 0.8;
@@ -709,7 +717,7 @@ input[type="radio"]:checked:before {
   color: var(--hover-text-color);
 }
 
-/* sidebar file nemu divider */
+/* sidebar file menu divider */
 #sidebar-files-menu > .show + .menuitem-group-label.show {
   border-color: var(--menu-divider-color);
 }
@@ -717,7 +725,7 @@ input[type="radio"]:checked:before {
 /* sidebar osx tab */
 .html-for-mac .sidebar-osx-tab > .sidebar-tabs {
   border: 0px;
-  box-shadow: 0 4px 10px -5px rgba(0, 0, 0, 0.5);
+  /* box-shadow: 0 4px 10px -5px rgba(0, 0, 0, 0.5); */
 }
 
 .html-for-mac .sidebar-content {
