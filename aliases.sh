@@ -28,7 +28,6 @@ alias cm="git commit -a -m "
 alias gcm='git commit -m '
 alias mergebranch='git merge --squash'
 alias diffbranch="git diff --color master...`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`"
-alias listbranch="git branch -av"
 alias gb="git branch -av"
 alias fff=gitfff # fff stands for diFFFiles
 alias tree=gittree
