@@ -5,39 +5,41 @@
 
 # Helpful Commands
 # sudo lshw -C network # Get all details about the wifi interface
- 
-# Check whether airmon-ng is installed
+
+# Check whether airmon-ng is installed.
 if ! command -v airmon-ng &> /dev/null; then
-  echo -e "[\033[31mERROR\033[0m] Could not find Aircrack-ng (airmon-ng)."  
-  echo -e "[\033[33mNOTE\033[0m] Follow: https://packagecloud.io/aircrack-ng/release/install"
+  echo -e "[\033[31mERROR\033[0m] Could not find Aircrack-ng (airmon-ng and besside-ng)."
+  echo -e "[\033[33mNOTE\033[0m]  Follow: https://packagecloud.io/aircrack-ng/release/install"
   exit 1 
 fi
 
 echo -e "[\033[34mSTART\033[0m] Initiating the scan with wifi-scan"
+
+# Create and always use capture dir.
+mkdir -p ~/capture
 cd ~/capture
 
-# Set the wifi wlan as variable
+# Set the wifi wlan as variable.
 export TARGET_WLAN=wlp0s20f3
 
-# clean up apps that may cause trouble
+# Clean up apps that may cause trouble.
 sudo airmon-ng check kill
 
-# put your network device into monitor mode
+# Put your network device into monitor mode.
 sudo airmon-ng start $TARGET_WLAN
 echo -e "[\033[32mDONE\033[0m] Switched WiFi device to monitor mode"
 
-# start the scan. from here it goes automatically
+# Start the scan. From here it goes automatically.
 echo -e "[\033[34mSTART\033[0m] Starting scan"
 sudo besside-ng $TARGET_WLAN"mon"
 # Custom Wifi: sudo besside-ng -R "pcv" $TARGET_WLAN"mon"
 
 echo -e "[\033[32mDONE\033[0m] Scan finished. Recovering WiFi."
 
-# return wifi to managed state
+# Return wifi to managed state.
 sudo airmon-ng stop $TARGET_WLAN"mon"
 sudo /etc/init.d/network-manager start
 
 echo -e "[\033[32mDONE\033[0m] Recovered original WiFi"
 
 # Consider uploading results to http://wpa-sec.stanev.org.
-
