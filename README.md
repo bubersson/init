@@ -72,31 +72,6 @@ go get -u github.com/jingweno/ccat
 brew install ccat
 ```
 
-### OLD: Bash version
-
-Create files and folders
-```sh
-mkdir src
-touch .bashrc # creates the file if it does not exist. 
-touch .bash_profile # is executed before terminal starts
-echo "if [ -f ~/.bashrc ]; then . ~/.bashrc; fi " > .bash_profile
-```
-
-Following appends to end of .bashrc
-```sh
-cat >> .bashrc << ENDOFFILE
-### Install all my aliases, bindings, etc. ###
-### See https://github.com/bubersson/init  ###
-export MY_MACHINE_NAME=pro2
-source ~/init/install.sh
-ENDOFFILE
-```
-
-Finally, re-source .bashrc
-```
-source ~/.bashrc
-```
-
 ### Mac Only
 
 Install Homebrew.
@@ -105,13 +80,20 @@ Go to https://brew.sh/ and run command from there.
 brew analytics off # disable tracking 
 brew-refresh # works if above scripts are properly installed
 brew update; brew upgrade
-brew install mc curl htop golang z bash
+brew install mc curl htop z bash gnupg # cli
+brew install golang deno pandoc duf # extended cli
+brew install --cask vlc brave-browser veracrypt typora calibre lulu # apps
 ```
 
 Make brew update automatically
 ```sh
 brew tap domt4/autoupdate
 brew autoupdate --start 43200 # update every 12 hours
+```
+
+Show brew apps dependency tree
+```sh
+brew deps --tree --installed
 ```
 
 Make the MacOS dock autohide fast.
@@ -190,4 +172,29 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 Create a link to the hop zsh theme `ln -s target(existing) destination(new link)`
 ```sh
 ln -s ~/init/zsh-theme/hop.zsh-theme  ~/.oh-my-zsh/custom/themes/hop.zsh-theme
+```
+
+### OLD: Bash version
+
+Create files and folders
+```sh
+mkdir src
+touch .bashrc # creates the file if it does not exist. 
+touch .bash_profile # is executed before terminal starts
+echo "if [ -f ~/.bashrc ]; then . ~/.bashrc; fi " > .bash_profile
+```
+
+Following appends to end of .bashrc
+```sh
+cat >> .bashrc << ENDOFFILE
+### Install all my aliases, bindings, etc. ###
+### See https://github.com/bubersson/init  ###
+export MY_MACHINE_NAME=pro2
+source ~/init/install.sh
+ENDOFFILE
+```
+
+Finally, re-source .bashrc
+```
+source ~/.bashrc
 ```
