@@ -21,8 +21,8 @@ fi
 alias pg='ps -ef | grep '
 
 # git svn aliases
-alias cdb='git checkout'
-alias mkb='git checkout -b'
+alias cdb='git switch'
+alias mkb='git switch -c'
 alias rmb='git branch -D'
 alias cm="git commit -a -m "
 alias gcm='git commit -m '
