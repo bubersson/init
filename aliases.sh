@@ -50,6 +50,8 @@ if [[ "$(uname)" == "Darwin" ]]; then
 
     # Install z. See https://formulae.brew.sh/formula/z
     . $(brew --prefix)/etc/profile.d/z.sh
+
+    alias brew-update='brew-refresh; i update; i upgrade'
 fi
 
 # Linux only.
