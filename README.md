@@ -136,6 +136,22 @@ sudo mv /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga{,.backup}
 sudo mv /usr/share/sounds/elementary/stereo/audio-volume-change.wav{,.backup}
 ```
 
+#### Elementary OS
+
+Make terminal have black background.
+```sh
+dconf write /io/elementary/terminal/settings/foreground "'#ddd'"
+dconf write /io/elementary/terminal/settings/background "'#000'"
+```
+Move plank app bar to the left and make it work fast
+```sh
+dconf write /net/launchpad/plank/docks/dock1/hide-delay "200"
+dconf write /net/launchpad/plank/docks/dock1/icon-size "48"
+dconf write /net/launchpad/plank/docks/dock1/position "'left'"
+dconf write /net/launchpad/plank/docks/dock1/theme "'Matte'"
+dconf write /net/launchpad/plank/docks/dock1/unhide-delay "0"
+```
+
 ## Updating
 
 Just run 
