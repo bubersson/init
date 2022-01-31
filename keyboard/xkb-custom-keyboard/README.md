@@ -66,12 +66,16 @@ to say
 XKBLAYOUT="hopkeyboard"
 ```
 
-If key repeating doesn't work, then try
-```
+If key repeating doesn't work, then try following script:
+```sh
+cat >> .profile << ENDOFFILE
+### Fix the repeated keys with hopkeyboard
 xset r on
 xset r 22
 seq 111 116 | xargs -n 1 xset r
+ENDOFFILE
 ```
+
 
 Which should set it as a default (even more? not sure, send me PR to update this).
 
