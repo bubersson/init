@@ -17,8 +17,11 @@ bindkey "^[[3~" delete-char
 
 # Much better search in history with using just up/down arrow after the word 
 # prefix. E.g. write "cop", press up arrow and see "copy a.txt b.txt".
-bindkey "^[[A" history-beginning-search-backward
-bindkey "^[[B" history-beginning-search-forward
+# bindkey "^[[A" history-beginning-search-backward
+# bindkey "^[[B" history-beginning-search-forward
+bindkey "$key[Up]" history-beginning-search-backward
+bindkey "$key[Down]" history-beginning-search-forward
+
 
 # History file configuration
 [ -z "$HISTFILE" ] && HISTFILE="$HOME/.zsh_history"
