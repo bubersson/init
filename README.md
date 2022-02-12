@@ -152,6 +152,26 @@ dconf write /net/launchpad/plank/docks/dock1/theme "'Matte'"
 dconf write /net/launchpad/plank/docks/dock1/unhide-delay "0"
 ```
 
+Change theme for darker (e.g. for doublecmd)
+
+Download dark theme, e.g. https://www.gnome-look.org/p/1302313
+Unpack it and copy gtk-2.0 folder to 
+`/usr/share/themes/io.elementary.stylesheet.blueberry/`
+
+**Switch to deep sleep.**
+Descriptions: https://learnubuntumate.weebly.com/draining-battery.html
+Update `/sys/power/mem_sleep` to include deep sleep
+```sh
+code /etc/default/grub
+# and there 
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash mem_sleep_default=deep"
+```
+and then confirm (in brackets is the selected one)
+```sh
+λ cat /sys/power/mem_sleep
+s2idle [deep]
+```
+
 ## Updating
 
 Just run 
