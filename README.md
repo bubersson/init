@@ -146,6 +146,42 @@ sudo mv /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga{,.backup}
 sudo mv /usr/share/sounds/elementary/stereo/audio-volume-change.wav{,.backup}
 ```
 
+#### Elementary OS
+
+Make terminal have black background.
+```sh
+dconf write /io/elementary/terminal/settings/foreground "'#ddd'"
+dconf write /io/elementary/terminal/settings/background "'#000'"
+```
+Move plank app bar to the left and make it work fast
+```sh
+dconf write /net/launchpad/plank/docks/dock1/hide-delay "200"
+dconf write /net/launchpad/plank/docks/dock1/icon-size "48"
+dconf write /net/launchpad/plank/docks/dock1/position "'left'"
+dconf write /net/launchpad/plank/docks/dock1/theme "'Matte'"
+dconf write /net/launchpad/plank/docks/dock1/unhide-delay "0"
+```
+
+Change theme for darker (e.g. for doublecmd)
+
+Download dark theme, e.g. https://www.gnome-look.org/p/1302313
+Unpack it and copy gtk-2.0 folder to 
+`/usr/share/themes/io.elementary.stylesheet.blueberry/`
+
+**Switch to deep sleep.**
+Descriptions: https://learnubuntumate.weebly.com/draining-battery.html
+Update `/sys/power/mem_sleep` to include deep sleep
+```sh
+code /etc/default/grub
+# and there 
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash mem_sleep_default=deep"
+```
+and then confirm (in brackets is the selected one)
+```sh
+λ cat /sys/power/mem_sleep
+s2idle [deep]
+```
+
 ## Updating
 
 Just run 
@@ -155,56 +191,3 @@ cd ~/init ; git pull
 
 ## Other ideas / tricks
 * https://darrenburns.net/posts/tools/
-
-
-## Deprecated
-
-Install oh-my-zsh
-```sh
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-```
-
-Modify following lines in the .zshrc
-```sh
-ZSH_THEME="hop"
-plugins=(git z)
-```
-
-Optional: Install zsh autosuggestions and code highlighting
-zsh-syntax-highlighting (run this after executing zsh again), via https://medium.com/tech-notes-and-geek-stuff/install-zsh-on-arch-linux-manjaro-and-make-it-your-default-shell-b0098b756a7a
-```sh
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-```
-```sh
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 
-```
-
-Create a link to the hop zsh theme `ln -s target(existing) destination(new link)`
-```sh
-ln -s ~/init/zsh-theme/hop.zsh-theme  ~/.oh-my-zsh/custom/themes/hop.zsh-theme
-```
-
-### OLD: Bash version
-
-Create files and folders
-```sh
-mkdir src
-touch .bashrc # creates the file if it does not exist. 
-touch .bash_profile # is executed before terminal starts
-echo "if [ -f ~/.bashrc ]; then . ~/.bashrc; fi " > .bash_profile
-```
-
-Following appends to end of .bashrc
-```sh
-cat >> .bashrc << ENDOFFILE
-### Install all my aliases, bindings, etc. ###
-### See https://github.com/bubersson/init  ###
-export MY_MACHINE_NAME=pro2
-source ~/init/install.sh
-ENDOFFILE
-```
-
-Finally, re-source .bashrc
-```
-source ~/.bashrc
-```

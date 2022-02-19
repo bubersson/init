@@ -24,14 +24,16 @@ your system will be trying to overwrite it anyway with xkbmap. See some tutorial
 (note: check the `hopkeyboard` file, this may be not up to date)
 
 ## Set up
-Download the `hopkeyboard` file somewhere to your system as `hopkeyboard`.
+Either download the `hopkeyboard` file somewhere to your system as `hopkeyboard` or use 
+this as part of full init scripts installation. 
 ```
-cd [wherever you downloaded the file]
-sudo ln -s hopkeyboard /usr/share/X11/xkb/symbols/hopkeyboard
+sudo cp ~/init/keyboard/xkb-custom-keyboard/hopkeyboard /usr/share/X11/xkb/symbols/hopkeyboard
 ```
 
 ## Test it
+This should not return errors.
 ```
+cd /usr/share/X11/xkb/symbols
 setxkbmap hopkeyboard
 ```
 
@@ -52,7 +54,10 @@ Now you can select it as a keyboard layout in the GNOME UI.
 
 ![GNOME keyboard config dialog](keyboard-config-screenshot.png)
 
-Then update
+
+## Troubleshooting
+
+Setting defaults
 ```
 /etc/default/keyboard
 ```
@@ -61,12 +66,16 @@ to say
 XKBLAYOUT="hopkeyboard"
 ```
 
-If key repeating doesn't work, then try
-```
+If key repeating doesn't work, then try following script:
+```sh
+cat >> .profile << ENDOFFILE
+### Fix the repeated keys with hopkeyboard
 xset r on
 xset r 22
 seq 111 116 | xargs -n 1 xset r
+ENDOFFILE
 ```
+
 
 Which should set it as a default (even more? not sure, send me PR to update this).
 
