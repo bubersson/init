@@ -56,6 +56,16 @@ git config --global user.name "FILL IN"
 git config --global user.email FILL@IN.com
 ```
 
+Setup .gitignore
+```
+touch ~/.gitignore
+cat >> ~/.gitignore << ENDOFFILE
+.obsidian/
+
+ENDOFFILE
+git config --global core.excludesFile ~/.gitignore
+```
+
 Set up automatic updates of `apt`:
 https://www.cyberciti.biz/faq/how-to-set-up-automatic-updates-for-ubuntu-linux-18-04/
 
