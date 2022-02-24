@@ -7,6 +7,16 @@ autoload -U colors && colors	# Load colors
 alias ls='ls -G'
 export LSCOLORS="Gxfxcxdxbxegedabagacad"
 
+# Much better search in history with using just up/down arrow after the word 
+# prefix. E.g. write "cop", press up arrow and see "copy a.txt b.txt".
+if [[ "$(uname)" == "Darwin" ]]; then #Mac
+    bindkey "^[[A" history-beginning-search-backward
+    bindkey "^[[B" history-beginning-search-forward
+else # Linux
+    bindkey "$key[Up]" history-beginning-search-backward
+    bindkey "$key[Down]" history-beginning-search-forward
+fi
+
 # Make the command left and right work with iTerm2
 # https://coderwall.com/p/a8uxma/zsh-iterm2-osx-shortcuts
 bindkey "^[[H" beginning-of-line
@@ -14,14 +24,6 @@ bindkey "^[[F" end-of-line
 
 # Make delete work to delete a char.
 bindkey "^[[3~" delete-char
-
-# Much better search in history with using just up/down arrow after the word 
-# prefix. E.g. write "cop", press up arrow and see "copy a.txt b.txt".
-# bindkey "^[[A" history-beginning-search-backward
-# bindkey "^[[B" history-beginning-search-forward
-bindkey "$key[Up]" history-beginning-search-backward
-bindkey "$key[Down]" history-beginning-search-forward
-
 
 # History file configuration
 [ -z "$HISTFILE" ] && HISTFILE="$HOME/.zsh_history"
