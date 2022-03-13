@@ -90,9 +90,9 @@ Go to https://brew.sh/ and run command from there.
 brew analytics off # disable tracking 
 brew-refresh # works if above scripts are properly installed
 brew update; brew upgrade
-brew install mc curl htop z bash gnupg # cli
-brew install golang deno pandoc duf # extended cli
-brew install --cask vlc brave-browser veracrypt typora calibre lulu # apps
+brew install mc curl htop z gnupg # cli
+brew install golang deno duf # extended cli
+brew install --cask vlc brave-browser veracrypt obsidian calibre lulu # apps
 ```
 
 Make brew update automatically
@@ -160,11 +160,6 @@ dconf write /net/launchpad/plank/docks/dock1/icon-size "48"
 dconf write /net/launchpad/plank/docks/dock1/position "'left'"
 dconf write /net/launchpad/plank/docks/dock1/theme "'Matte'"
 dconf write /net/launchpad/plank/docks/dock1/unhide-delay "0"
-```
-
-Optional: With LCD screens change text size:
-```sh
-
 ```
 
 Change theme for darker (e.g. for doublecmd)
