@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [[ $# -gt 0 ]]; then # Turn OFF
+    dconf write /org/gnome/desktop/interface/text-scaling-factor "1.4"
+    setxkbmap -layout "hopkeyboard"
+    echo -e "[\033[32mDONE\033[0m] Logitech turned OFF"
+else # Turn ON
+    dconf write /org/gnome/desktop/interface/text-scaling-factor "1.2"
+    setxkbmap -layout "hopkeyboard+ctrl(swap_lwin_lctl)"
+    xset r on
+    xset r 22
+    xset r 116
+    seq 111 116 | xargs -n 1 xset r
+    echo -e "[\033[32mDONE\033[0m] Logitech layout set"
+fi
