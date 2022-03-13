@@ -162,6 +162,11 @@ dconf write /net/launchpad/plank/docks/dock1/theme "'Matte'"
 dconf write /net/launchpad/plank/docks/dock1/unhide-delay "0"
 ```
 
+Optional: With LCD screens change text size:
+```sh
+
+```
+
 Change theme for darker (e.g. for doublecmd)
 
 Download dark theme, e.g. https://www.gnome-look.org/p/1302313
