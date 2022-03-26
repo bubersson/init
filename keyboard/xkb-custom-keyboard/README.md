@@ -54,6 +54,11 @@ Now you can select it as a keyboard layout in the GNOME UI.
 
 ![GNOME keyboard config dialog](keyboard-config-screenshot.png)
 
+Show the keyboard layout visually
+```sh
+gkbd-keyboard-display -l hopkeyboard
+```
+
 
 ## Troubleshooting
 

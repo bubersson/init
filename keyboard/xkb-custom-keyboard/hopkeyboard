@@ -67,13 +67,14 @@ xkb_symbols "swap_ralt_rctl" {
     modifier_map Control { <RALT> };
 };
 
-// Swap the functions of the left Win key and the left Ctrl key.
-partial modifier_keys
+// Map Alt to Super(win)
+// Map Win to Control
+// Map Ctrl to Alt
 xkb_symbols "swap_lalt_lctl_lwin" {
-    replace key <LALT> { [ Alt_L, Meta_L ] }; 
+    replace key <LALT> { [ Super_L ] };
     replace key <LWIN> { [ Control_L, Control_L ] };
-    replace key <LCTL> { [ Super_L ] };
-    modifier_map Mod1    { <LALT> };
-    modifier_map Mod4    { <LCTL> };
+    replace key <LCTL> { [ Alt_L, Meta_L ] };
+    modifier_map Mod1    { <LCTL> };
+    modifier_map Mod4    { <LALT> };
     modifier_map Control { <LWIN> };
 };
