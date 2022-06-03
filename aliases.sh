@@ -52,7 +52,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
     # Install z. See https://formulae.brew.sh/formula/z
     . $(brew --prefix)/etc/profile.d/z.sh
 
-    alias brew-update='brew-refresh; i update; i upgrade'
+    alias up='brew-refresh; i update; i upgrade'
 fi
 
 # Linux only.
@@ -60,6 +60,7 @@ if [[ "$(uname)" == "Linux" ]]; then
     # apt-get & similar
     alias i='sudo apt'    
     alias f='xdg-open'
+    alias up='sudo apt update; sudo apt upgrade'
 fi
 
 # If ccat exists, alias it to cat.
