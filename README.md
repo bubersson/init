@@ -80,11 +80,10 @@ Install Homebrew.
 Go to https://brew.sh/ and run command from there. 
 ```sh
 brew analytics off # disable tracking 
-brew-refresh # works if above scripts are properly installed
-brew update; brew upgrade
+up # works if above scripts are properly installed
 brew install mc curl htop z gnupg # cli
-brew install golang deno duf # extended cli
-brew install --cask vlc brave-browser veracrypt obsidian calibre lulu # apps
+brew install golang deno # extended cli
+brew install --cask vlc brave-browser veracrypt obsidian calibre # apps
 ```
 
 Make brew update automatically
