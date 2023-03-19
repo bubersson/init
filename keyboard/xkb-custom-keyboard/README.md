@@ -23,14 +23,15 @@ your system will be trying to overwrite it anyway with xkbmap. See some tutorial
 
 (note: check the `hopkeyboard` file, this may be not up to date)
 
-## Set up
+
+## Test it
 Either download the `hopkeyboard` file somewhere to your system as `hopkeyboard` or use 
 this as part of full init scripts installation. 
-```
+
+```zsh
 sudo cp ~/init/keyboard/xkb-custom-keyboard/hopkeyboard /usr/share/X11/xkb/symbols/hopkeyboard
 ```
 
-## Test it
 This should not return errors.
 ```
 cd /usr/share/X11/xkb/symbols
@@ -38,9 +39,26 @@ setxkbmap hopkeyboard
 ```
 
 ## Install it forever
+Run:
 
+```zsh
+sudo cp ~/init/keyboard/xkb-custom-keyboard/hopkeyboard /usr/share/X11/xkb/symbols/hopkeyboard
+
+sudo sed -i.bak "s|<variantList>|\
+<variantList>\n\
+        <variant>\n\
+            <configItem>\n\
+                <name>hopkeyboard</name>\n\
+                <description>English (US, Hop - Mac friendly touches)</description>\n\
+            </configItem>\n\
+        </variant>\n\
+|" /usr/share/X11/xkb/rules/evdev.xml
+```
+
+#### Details
 Update `/usr/share/X11/xkb/rules/evdev.xml` and add following (e.g. under the english tree next below another `</variant>`).
 
+Or use this specific xml
 ```xml
 <variant>
     <configItem>
