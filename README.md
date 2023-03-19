@@ -144,6 +144,12 @@ sudo mv /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga{,.backup}
 sudo mv /usr/share/sounds/elementary/stereo/audio-volume-change.wav{,.backup}
 ```
 
+Make `code` work when VSCode is install via flatpak.
+Add to .zshrc
+```sh
+alias code="flatpak run com.visualstudio.code"
+```
+
 #### Elementary OS
 
 Make terminal have black background.
