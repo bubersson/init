@@ -61,6 +61,13 @@ Setup .gitignore
 touch ~/.gitignore
 cat >> ~/.gitignore << ENDOFFILE
 .obsidian/
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
 ENDOFFILE
 git config --global core.excludesFile ~/.gitignore
