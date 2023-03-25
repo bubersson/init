@@ -44,7 +44,7 @@ Run:
 ```zsh
 sudo cp ~/init/keyboard/xkb-custom-keyboard/hopkeyboard /usr/share/X11/xkb/symbols/hopkeyboard
 
-sudo sed -i.bak "s|<variantList>|\
+sudo sed -i.bak "0,/<variantList>/{s|<variantList>|\
 <variantList>\n\
         <variant>\n\
             <configItem>\n\
@@ -52,8 +52,17 @@ sudo sed -i.bak "s|<variantList>|\
                 <description>English (US, Hop - Mac friendly touches)</description>\n\
             </configItem>\n\
         </variant>\n\
-|" /usr/share/X11/xkb/rules/evdev.xml
+|}" /usr/share/X11/xkb/rules/evdev.xml
+
+sudo bash -c 'cat > /etc/default/keyboard << ENDOFFILE
+XKBLAYOUT=hopkeyboard
+BACKSPACE=guess
+ENDOFFILE'
 ```
+Notes:
+- the sed only applies the replacement on the first occurence
+- may need to restart the machine after doing this
+- the `XKBLAYOUT=hopkeyboard` seems to be the main thing that actually switches it
 
 #### Details
 Update `/usr/share/X11/xkb/rules/evdev.xml` and add following (e.g. under the english tree next below another `</variant>`).

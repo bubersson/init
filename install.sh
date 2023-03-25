@@ -2,7 +2,7 @@
 # First switch to zsh:
 # chsh -s /bin/zsh
 
-echo -e "[\033[34mSTART\033[0m] Running install.sh (clonned from https://github.com/bubersson/init)"
+echo -e "[\033[34mSTART\033[0m] Running init/install.sh"
 
 source ~/init/paths.sh
 source ~/init/git-commands.sh
@@ -11,4 +11,4 @@ source ~/init/git-commands.sh
 
 source ~/init/aliases.sh
 
-echo -e "[\033[32mDONE\033[0m] Finished setting up all bubersson/init bindings\n"
+echo -e "[\033[32mDONE\033[0m] Finished setting up all init bindings\n"

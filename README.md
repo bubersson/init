@@ -33,22 +33,23 @@ source ~/init/install.sh
 ENDOFFILE
 ```
 
-If the characters show up as questionmarsk in a box, then just in iTerm select
-`Profiles > Text > Use built-in Powerline glyphs`. The trick is to make sure your terminal app is using fonts that support powerlines. 
+### Fix prompt font (when broken)
+- iTerm: `Profiles > Text > Use built-in Powerline glyphs`.
+- Linux: `sudo apt-get install fonts-powerline` (and then select some font that supports it like `Ubuntu Mono`)
 
-Or follow:
+Other resources
 - https://raspberrypi.stackexchange.com/questions/34255/special-characters-show-as-question-marks-in-the-shell
 - https://stackoverflow.com/questions/42271657/oh-my-zsh-showing-weird-character-on-terminal
 - `sudo dpkg-reconfigure locales`
-- `sudo apt-get install fonts-powerline`
-(this was issue on Raspberry)
 
-On Linux install Powerline fonts
+On linux install manually
 ```sh
 cd ~/src
 git clone https://github.com/powerline/fonts.git
 cd fonts; .install.sh
 ```
+
+### Set up git
 
 Set default git user
 ```
@@ -73,13 +74,13 @@ ENDOFFILE
 git config --global core.excludesFile ~/.gitignore
 ```
 
-Set up automatic updates of `apt`:
-https://www.cyberciti.biz/faq/how-to-set-up-automatic-updates-for-ubuntu-linux-18-04/
-
 Make sure `git log` shows inline and does not clear the terminal
 ```sh
 git config --global --replace-all core.pager "less -iXFR"
 ```
+
+Set up automatic updates of `apt`:
+https://www.cyberciti.biz/faq/how-to-set-up-automatic-updates-for-ubuntu-linux-18-04/
 
 ### Mac Only
 
@@ -143,6 +144,35 @@ Disable sounds
 sudo mv /usr/share/sounds/freedesktop/stereo/audio-volume-change.oga{,.backup}
 sudo mv /usr/share/sounds/elementary/stereo/audio-volume-change.wav{,.backup}
 ```
+
+Make `code` work when VSCode is install via flatpak.
+Add to .zshrc
+```sh
+alias code="flatpak run com.visualstudio.code"
+```
+
+#### Keyboard Shortcuts
+- First install the hopkeyboard
+- Then apply this
+
+```sh
+dconf write /org/gnome/desktop/wm/keybindings/switch-applications "['<Super>Tab', '<Primary>Tab']"
+dconf write /org/gnome/desktop/wm/keybindings/switch-applications-backward "['<Shift><Super>Tab', '<Primary><Shift>Tab']"
+dconf write /org/gnome/desktop/wm/keybindings/switch-group "['<Super>grave', '<Super>asciitilde', '<Primary>grave']"
+dconf write /org/gnome/desktop/wm/keybindings/switch-group-backward  "['<Shift><Super>grave', '<Shift><Super>asciitilde', '<Primary><Shift>grave']"
+dconf write /org/gnome/desktop/wm/keybindings/toggle-maximized "['<Super>m', '<Super>Up']"
+dconf write /org/gnome/mutter/keybindings/toggle-tiled-left "['<Primary><Super>Left', '<Primary><Super>KP_Left', '<Primary><Super>h', '<Super>Left']"
+dconf write /org/gnome/mutter/keybindings/toggle-tiled-right "['<Primary><Super>Right', '<Primary><Super>KP_Right', '<Primary><Super>l', '<Super>Right']"
+```
+
+#### VSCode Key Bindings
+When installed through flatpak, it lives in `~/.var/app/com.visualstudio.code/config/Code/User/keybindings.json`
+
+Installation: Copy from init into the right spot. 
+`cp ~/init/vscode/keybindings.json ~/.var/app/com.visualstudio.code/config/Code/User/keybindings.json`
+
+Updating init: Copy current keybindings into init. 
+`cp ~/.var/app/com.visualstudio.code/config/Code/User/keybindings.json ~/init/vscode/keybindings.json`
 
 #### Elementary OS
 

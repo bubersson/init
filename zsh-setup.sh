@@ -47,6 +47,7 @@ setopt share_history          # share command history data
 # Experience configuration
 # https://wiki.archlinux.org/index.php/zsh#Configure_Zsh
 # zstyle ':completion:*' menu select
+setopt interactive_comments   # allow copypasting scripts with "#" comments
 
 # Install ZSH Prompt
 setopt auto_cd
