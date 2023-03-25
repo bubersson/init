@@ -39,6 +39,7 @@ echo -e "[\033[32mDONE\033[0m] Scan finished. Recovering WiFi."
 # Return wifi to managed state.
 sudo airmon-ng stop $TARGET_WLAN"mon"
 sudo /etc/init.d/network-manager start
+sudo systemctl start NetworkManager 
 
 echo -e "[\033[32mDONE\033[0m] Recovered original WiFi"
 
