@@ -138,6 +138,20 @@ sudo apt-get install htop mc curl fonts-powerline
 ```
 Install z: https://github.com/rupa/z
 
+Install Flatpak apps
+```sh
+flatpak install flathub \
+org.gimp.GIMP \
+com.bitwarden.desktop \
+com.brave.Browser \
+com.calibre_ebook.calibre \
+com.visualstudio.code \
+md.obsidian.Obsidian \
+me.kozec.syncthingtk \
+org.qbittorrent.qBittorrent \
+org.signal.Signal
+```
+
 
 Disable sounds
 ```sh
