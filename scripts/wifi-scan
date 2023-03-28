@@ -32,7 +32,7 @@ echo -e "[\033[32mDONE\033[0m] Switched WiFi device to monitor mode"
 # Start the scan. From here it goes automatically.
 echo -e "[\033[34mSTART\033[0m] Starting scan"
 sudo besside-ng $TARGET_WLAN"mon"
-# Custom Wifi: sudo besside-ng -R "pcv" $TARGET_WLAN"mon"
+# Custom Wifi: sudo besside-ng -R "wifiABC" $TARGET_WLAN"mon"
 
 echo -e "[\033[32mDONE\033[0m] Scan finished. Recovering WiFi."
 
