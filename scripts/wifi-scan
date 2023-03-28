@@ -20,7 +20,7 @@ mkdir -p ~/capture
 cd ~/capture
 
 # Set the wifi wlan as variable.
-export TARGET_WLAN=wlp0s20f3
+export TARGET_WLAN=${1:-'wlp0s20f3'}
 
 # Clean up apps that may cause trouble.
 sudo airmon-ng check kill
