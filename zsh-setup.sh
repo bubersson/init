@@ -6,6 +6,7 @@ autoload -U colors && colors	# Load colors
 # Enable ls colors
 alias ls='ls -G'
 export LSCOLORS="Gxfxcxdxbxegedabagacad"
+export LS_COLORS="Gxfxcxdxbxegedabagacad"
 
 # Much better search in history with using just up/down arrow after the word 
 # prefix. E.g. write "cop", press up arrow and see "copy a.txt b.txt".
@@ -43,15 +44,20 @@ setopt share_history          # share command history data
 # fpath=(/usr/local/share/zsh-completions $fpath)
 # autoload -U compinit && compinit
 # zmodload -i zsh/complist
+autoload -Uz compinit
+compinit -C
+zstyle ':completion:*' menu select
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 # Experience configuration
 # https://wiki.archlinux.org/index.php/zsh#Configure_Zsh
 # zstyle ':completion:*' menu select
-setopt interactive_comments   # allow copypasting scripts with "#" comments
 
 # Install ZSH Prompt
 setopt auto_cd
 setopt multios
 setopt prompt_subst # enables substitution in prompt
+setopt interactive_comments   # allow copypasting scripts with "#" comments
 autoload -Uz vcs_info # from git command
 source ~/init/zsh-theme/hop-zsh-prompt.sh
