@@ -46,14 +46,18 @@ setopt share_history          # share command history data
 autoload -Uz compinit
 compinit -C
 zstyle ':completion:*' menu select
+zstyle ':completion:*' list-colors ''
 
 if whence dircolors >/dev/null; then # On Linux
   eval "$(dircolors -b)"
-  zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 else # On MacOS
+  # On Mac LS_COLORS is used only specifically for zsh autocomplete
+  # https://superuser.com/questions/290500/zsh-completion-colors-and-os-x  # 
+  # Tool for translation: https://geoff.greer.fm/lscolors/
   export CLICOLOR=1
-  zstyle ':completion:*' list-colors ''
+  export LS_COLORS="di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
 fi
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 # Experience configuration
 # https://wiki.archlinux.org/index.php/zsh#Configure_Zsh
