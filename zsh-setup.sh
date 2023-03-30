@@ -5,8 +5,7 @@ autoload -U colors && colors	# Load colors
 
 # Enable ls colors
 alias ls='ls -G'
-export LSCOLORS="Gxfxcxdxbxegedabagacad"
-export LS_COLORS="Gxfxcxdxbxegedabagacad"
+export LSCOLORS="Gxfxcxdxbxegedabagacad" # Applies on MacOS(BSD) only.
 
 # Much better search in history with using just up/down arrow after the word 
 # prefix. E.g. write "cop", press up arrow and see "copy a.txt b.txt".
@@ -47,8 +46,14 @@ setopt share_history          # share command history data
 autoload -Uz compinit
 compinit -C
 zstyle ':completion:*' menu select
-zstyle ':completion:*' list-colors ''
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
+if whence dircolors >/dev/null; then # On Linux
+  eval "$(dircolors -b)"
+  zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+else # On MacOS
+  export CLICOLOR=1
+  zstyle ':completion:*' list-colors ''
+fi
 
 # Experience configuration
 # https://wiki.archlinux.org/index.php/zsh#Configure_Zsh
