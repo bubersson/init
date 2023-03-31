@@ -12,7 +12,7 @@ git clone https://github.com/bubersson/init.git
 
 Make ZSH the default shell.
 ```sh
-chsh -s $(which zsh)
+sudo chsh -s $(which zsh)
 ```
 
 Create files and folders
@@ -134,7 +134,7 @@ The preferences include making ⌘+left, ⌘+right work, also can be found here:
 
 ### Linux Only
 ```sh
-sudo apt-get install htop mc curl fonts-powerline
+sudo apt-get install htop mc fonts-powerline
 ```
 Install z: https://github.com/rupa/z
 
@@ -151,7 +151,6 @@ me.kozec.syncthingtk \
 org.qbittorrent.qBittorrent \
 org.signal.Signal
 ```
-
 
 Disable sounds
 ```sh
