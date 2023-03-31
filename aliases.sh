@@ -41,7 +41,7 @@ alias server="python -m SimpleHTTPServer"
 
 function fd() {
   # Find file by prefix. Usage: `fd hopkeyboard`
-  find ${2:-~} -iname "${1}*" 2>/dev/null
+  find ${2:-.} -iname "${1}*" 2>/dev/null
 }
 
 # Download Audio only in the best quality.
