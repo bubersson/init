@@ -136,7 +136,6 @@ The preferences include making ⌘+left, ⌘+right work, also can be found here:
 ```sh
 sudo apt-get install htop mc fonts-powerline
 ```
-Install z: https://github.com/rupa/z
 
 Install Flatpak apps
 ```sh
