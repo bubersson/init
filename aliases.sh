@@ -45,6 +45,9 @@ function fd() {
   find ${2:-.} -iname "${1}*" 2>/dev/null
 }
 
+# Install z
+. ~/init/scripts/z.sh
+
 # Download Audio only in the best quality.
 alias yt-dl-audio='youtube-dl -f bestaudio --extract-audio --audio-format best --add-metadata'
 alias yt-dl='youtube-dl'
