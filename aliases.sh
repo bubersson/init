@@ -40,7 +40,8 @@ alias please="sudo"
 alias server="python -m SimpleHTTPServer"
 
 function fd() {
-  # Find file by prefix. Usage: `fd hopkeyboard`
+  # Find file by prefix, ignoring case. By default it searches under current directory.
+  # Usage: `fd myfile` or `fd myfile.txt ~`
   find ${2:-.} -iname "${1}*" 2>/dev/null
 }
 
@@ -57,7 +58,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
     # Install z. See https://formulae.brew.sh/formula/z
     . $(brew --prefix)/etc/profile.d/z.sh
 
-    alias up='brew-refresh; i update; i upgrade'
+    alias up='brew-refresh; brew update; brew upgrade'
 fi
 
 # Linux only.
