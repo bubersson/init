@@ -1,0 +1,74 @@
+#!/bin/bash
+
+GREEN='\033[32m'
+YELLOW='\033[33m'
+GRAY='\033[90m'
+RESET='\033[0m'
+RED='\033[31m'
+BLUE='\033[34m'
+
+function _default() {
+	echo -e "${GREEN}identity${RESET}"
+	echo -e "SSH Identity Utility (v.01). Use -h or --help param for help."
+	echo -e ""
+	echo -e "${YELLOW}USAGE:${RESET}"
+	echo -e "    identity <SUBCOMMAND> <PARAMS>"
+	echo -e "    ${GRAY}identity create user-abc abc@email.com${RESET}"
+	echo -e ""
+	echo -e "${YELLOW}SUBCOMMANDS:${RESET}"
+	echo -e "    ${GREEN}create  ${RESET}Create new identity. PARAMS: <USERNAME> <EMAIL>"
+	echo -e "    ${GREEN}list    ${RESET}List existing identities"
+	echo -e ""
+	_list
+}
+
+function _list() {
+	echo -e "${YELLOW}AVAILABLE IDENTITIES:${RESET}"
+	sed -n 's/.*Host /    /p' ~/.ssh/config
+	echo -e ""
+}
+
+function _createUsage() {
+	echo -e "${YELLOW}identity${RESET} > ${GREEN}create${RESET}"
+	echo -e ""
+	echo -e "${YELLOW}USAGE:${RESET}"
+	echo -e "    identity create <USERNAME> <EMAIL>"
+	echo -e ""
+}
+
+function _create() {
+	# Validate
+	case $2 in
+		--help|-h)
+			_createUsage
+			exit 0
+		;;
+	esac
+	# no params provided
+	# identity already exists
+
+	# Confirm
+	echo -e "${YELLOW}identity${RESET} > ${GREEN}create${RESET}"
+	echo -e ""
+	echo -e "Creating new identity"
+	echo -e "   USERNAME:   $2"
+	echo -e "   EMAIL:      $3"
+	echo -e ""
+	echo -e "Looks ok? (Y/n)"
+	echo -e ""
+	echo -e "Identity created"
+	exit 0
+}
+
+# Parse Inputs
+case $1 in
+	--help|-h)
+		_default ;;
+	list)
+		_list ;;
+	create)
+		_create $@ ;;
+	*)
+		_default ; exit 0 ;;
+esac
+

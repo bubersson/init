@@ -1,0 +1,82 @@
+#!/bin/bash
+
+GREEN='\033[32m'
+YELLOW='\033[33m'
+GRAY='\033[90m'
+RESET='\033[0m'
+RED='\033[31m'
+BLUE='\033[34m'
+
+function _default() {
+  echo -e "${GREEN}yt-dl${RESET}"
+  echo -e "Youtube Downloader (v.01). Use -h or --help param for help."
+  echo -e "${GRAY}WARNING: DO NOT USE THIS PROGRAM! DO NOT RUN IT!"
+  echo -e ""
+  echo -e "${YELLOW}USAGE:${RESET}"
+  echo -e "    yt-dl <SUBCOMMAND> <PARAMS>"
+  echo -e "    ${GRAY}yt-dl audio "https://www.youtube.com/watch?v=1WEAJ-DFkHE"${RESET}"
+  echo -e ""
+  echo -e "${YELLOW}SUBCOMMANDS:${RESET}"
+  echo -e "    ${GREEN}video   ${RESET}Grab a video from a Youtube link."
+  echo -e "    ${GREEN}audio   ${RESET}Grab audio only from a Youtube link."
+  echo -e "    ${GREEN}install ${RESET}Pull and install youtube-dl."
+  echo -e ""
+  _validate
+}
+
+function _install() {
+    if [[ "$(uname)" == "Darwin" ]]; then #Mac
+        sudo brew install youtube-dl
+        if [ $? -eq 0 ]; then
+            echo -e "[${GREEN}DONE${RESET}] Installation successful"
+        fi
+    else # Linux
+        sudo wget https://yt-dl.org/downloads/latest/youtube-dl -O /usr/local/bin/youtube-dl
+        if [ $? -eq 0 ]; then
+            echo -e "[${GREEN}DONE${RESET}] Installation successful"
+        fi
+        sudo chmod a+rx /usr/local/bin/youtube-dl
+    fi
+}
+
+function _validate() {
+  REQUIRED="youtube-dl"
+  MISSING=""
+  for i in $REQUIRED ; do
+    command -v $i >/dev/null && continue || { MISSING="$MISSING $i"; }
+  done
+  if [ "$MISSING" ]; then
+    echo -e "${RED}MISSING DEPENDENCY:${RESET}"
+    for m in $MISSING ; do
+      echo -e "    ${RED}$m${RESET} not found"
+    done
+    echo -e ""
+    echo -e "    Please run \"yt-dl install\""
+    echo -e ""
+    exit 1
+  fi
+}
+
+function _video() {
+    _validate
+    youtube-dl $2
+}
+
+function _audio() {
+    _validate
+    youtube-dl -f bestaudio --extract-audio --audio-format best --add-metadata $2
+}
+
+case $1 in
+  --help|-h)
+    _default ; exit 0 ;;
+  video)
+    _video $@ ; exit 0 ;;
+  audio)
+    _audio $@ ; exit 0 ;;
+  install)
+    _install ; exit 0 ;;
+  *)
+    # TODO: Check if there's $1 and if yes, then default to video.
+    _default ; exit 0 ;;
+esac

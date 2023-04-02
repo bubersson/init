@@ -48,10 +48,6 @@ function fd() {
 # Install z
 . ~/init/scripts/z.sh
 
-# Download Audio only in the best quality.
-alias yt-dl-audio='youtube-dl -f bestaudio --extract-audio --audio-format best --add-metadata'
-alias yt-dl='youtube-dl'
-
 # Mac OS X only.
 if [[ "$(uname)" == "Darwin" ]]; then
     # Open current folder in finder (Mac OS X only)

@@ -1,46 +1,133 @@
 #!/bin/bash
 
 # This script is for education purposes only and should not be executed.
-# Do NOT execute on public networks. 
+# Do NOT execute on public networks.
 
 # Helpful Commands
 # sudo lshw -C network # Get all details about the wifi interface
 
-# Check whether airmon-ng is installed.
-if ! command -v airmon-ng &> /dev/null; then
-  echo -e "[\033[31mERROR\033[0m] Could not find Aircrack-ng (airmon-ng and besside-ng)."
-  echo -e "[\033[33mNOTE\033[0m]  Follow: https://packagecloud.io/aircrack-ng/release/install"
-  exit 1 
-fi
+GREEN='\033[32m'
+YELLOW='\033[33m'
+GRAY='\033[90m'
+RESET='\033[0m'
+RED='\033[31m'
+BLUE='\033[34m'
 
-echo -e "[\033[34mSTART\033[0m] Initiating the scan with wifi-scan"
+function _default() {
+  echo -e "${GREEN}wifi-scan${RESET}"
+  echo -e "WiFi Scanner (v.01). Use -h or --help param for help."
+  echo -e "${GRAY}WARNING: DO NOT USE THIS PROGRAM! DO NOT RUN IT!"
+  echo -e ""
+  echo -e "${YELLOW}USAGE:${RESET}"
+  echo -e "   wifi-scan <SUBCOMMAND> <PARAMS>"
+  echo -e "   ${GRAY}wifi-scan run wlp0s20f3${RESET}"
+  echo -e ""
+  echo -e "${YELLOW}SUBCOMMANDS:${RESET}"
+  echo -e "   ${GREEN}run       ${RESET}Runs wide scan. Optional param inteface (e.g. wlp0s20f3). Stop with CTRL+C."
+  echo -e "   ${GREEN}install   ${RESET}Clones and installs aircrack-ng suite. Linux only, needs internet."
+  echo -e "   ${GREEN}update    ${RESET}Pull and re-build aircrack-ng installation."
+  echo -e ""
+  _validate
+}
 
-# Create and always use capture dir.
-mkdir -p ~/capture
-cd ~/capture
+function _install() {
+  echo -e "${YELLOW}wifi-scan${RESET} > ${GREEN}install${RESET}"
+  sudo apt-get install build-essential autoconf automake \
+      libtool pkg-config libnl-3-dev libnl-genl-3-dev libssl-dev \
+      ethtool shtool rfkill zlib1g-dev libpcap-dev libsqlite3-dev \
+      libpcre2-dev libhwloc-dev libcmocka-dev hostapd wpasupplicant \
+      tcpdump screen iw usbutils expect
+  mkdir -p ~/apps
+  cd apps
+  git clone http://github.com/aircrack-ng/aircrack-ng
+  cd aircrack-ng
+  autoreconf -i
+  ./configure
+  make
+  make install
+  if [ $? -eq 0 ]; then
+    echo -e "[${GREEN}DONE${RESET}] Installation successful"
+  fi
+}
 
-# Set the wifi wlan as variable.
-export TARGET_WLAN=${1:-'wlp0s20f3'}
+function _update() {
+  echo -e "${YELLOW}wifi-scan${RESET} > ${GREEN}update${RESET}"
+  cd ~/apps/aircrack-ng
+  git pull
+  autoreconf -i
+  ./configure
+  make
+  if [ $? -eq 0 ]; then
+    echo -e "[${GREEN}DONE${RESET}] Update successful"
+  fi
+}
 
-# Clean up apps that may cause trouble.
-sudo airmon-ng check kill
+function _validate() {
+  REQUIRED="airmon-ng besside-ng"
+  MISSING=""
+  for i in $REQUIRED ; do
+    command -v $i >/dev/null && continue || { MISSING="$MISSING $i"; }
+  done
+  if [ "$MISSING" ]; then
+    echo -e "${RED}MISSING DEPENDENCY:${RESET}"
+    for m in $MISSING ; do
+      echo -e "    ${RED}$m${RESET} not found"
+    done
+    echo -e ""
+    echo -e "    Please run \"wifi-scan install\""
+    echo -e ""
+    exit 1
+  fi
+}
 
-# Put your network device into monitor mode.
-sudo airmon-ng start $TARGET_WLAN
-echo -e "[\033[32mDONE\033[0m] Switched WiFi device to monitor mode"
+function _run() {
+  echo -e "${YELLOW}wifi-scan${RESET} > ${GREEN}run${RESET}"
+  echo -e "WiFi Scan (v.01)."
+  echo -e ""
 
-# Start the scan. From here it goes automatically.
-echo -e "[\033[34mSTART\033[0m] Starting scan"
-sudo besside-ng $TARGET_WLAN"mon"
-# Custom Wifi: sudo besside-ng -R "wifiABC" $TARGET_WLAN"mon"
+  _validate
 
-echo -e "[\033[32mDONE\033[0m] Scan finished. Recovering WiFi."
+  echo -e "[${BLUE}START${RESET}] Initiating the scan with wifi-scan"
 
-# Return wifi to managed state.
-sudo airmon-ng stop $TARGET_WLAN"mon"
-sudo /etc/init.d/network-manager start
-sudo systemctl start NetworkManager 
+  # Create and always use capture dir.
+  mkdir -p ~/capture
+  cd ~/capture
 
-echo -e "[\033[32mDONE\033[0m] Recovered original WiFi"
+  # Set the wifi wlan as variable.
+  export TARGET_WLAN=${2:-'wlp0s20f3'}
 
-# Consider uploading results to http://wpa-sec.stanev.org.
+  # Clean up apps that may cause trouble.
+  sudo airmon-ng check kill
+
+  # Put your network device into monitor mode.
+  sudo airmon-ng start $TARGET_WLAN
+  echo -e "[${GREEN}DONE${RESET}] Switched WiFi device to monitor mode"
+
+  # Start the scan. From here it goes automatically.
+  echo -e "[${BLUE}START${RESET}] Starting scan"
+  sudo besside-ng $TARGET_WLAN"mon"
+  # Custom Wifi: sudo besside-ng -R "wifiABC" $TARGET_WLAN"mon"
+
+  echo -e "[${GREEN}DONE${RESET}] Scan finished. Recovering WiFi."
+
+  # Return wifi to managed state.
+  sudo airmon-ng stop $TARGET_WLAN"mon"
+  sudo /etc/init.d/network-manager start
+  sudo systemctl start NetworkManager
+
+  echo -e "[${GREEN}DONE${RESET}] Recovered original WiFi"
+  echo -e "Consider uploading results to http://wpa-sec.stanev.org"
+}
+
+case $1 in
+  --help|-h)
+    _default ; exit 0 ;;
+  install)
+    _install ; exit 0 ;;
+  run)
+    _run $@ ; exit 0 ;;
+  update)
+    _update $@ ; exit 0 ;;
+  *)
+    _default ; exit 0 ;;
+esac
