@@ -14,7 +14,7 @@ function _default() {
   echo -e ""
   echo -e "${YELLOW}USAGE:${RESET}"
   echo -e "    yt-dl <SUBCOMMAND> <PARAMS>"
-  echo -e "    ${GRAY}yt-dl audio "https://www.youtube.com/watch?v=1WEAJ-DFkHE"${RESET}"
+  echo -e "    ${GRAY}yt-dl audio \"https://www.youtube.com/watch?v=1WEAJ-DFkHE\"${RESET}"
   echo -e ""
   echo -e "${YELLOW}SUBCOMMANDS:${RESET}"
   echo -e "    ${GREEN}video   ${RESET}Grab a video from a Youtube link."
