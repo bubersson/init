@@ -20,10 +20,10 @@ function _default() {
   echo -e ""
   echo -e "${YELLOW}USAGE:${RESET}"
   echo -e "   wifi-scan <SUBCOMMAND> <PARAMS>"
-  echo -e "   ${GRAY}wifi-scan run wlp0s20f3${RESET}"
+  echo -e "   ${GRAY}wifi-scan run wlan0${RESET}"
   echo -e ""
   echo -e "${YELLOW}SUBCOMMANDS:${RESET}"
-  echo -e "   ${GREEN}run       ${RESET}Runs wide scan. Optional param inteface (e.g. wlp0s20f3). Stop with CTRL+C."
+  echo -e "   ${GREEN}run       ${RESET}Runs wide scan. Optional param inteface (e.g. wlan0). Stop with CTRL+C."
   echo -e "   ${GREEN}install   ${RESET}Clones and installs aircrack-ng suite. Linux only, needs internet."
   echo -e "   ${GREEN}update    ${RESET}Pull and re-build aircrack-ng installation."
   echo -e ""
@@ -38,7 +38,7 @@ function _install() {
       libpcre2-dev libhwloc-dev libcmocka-dev hostapd wpasupplicant \
       tcpdump screen iw usbutils expect
   mkdir -p ~/apps
-  cd apps
+  cd ~/apps
   git clone http://github.com/aircrack-ng/aircrack-ng
   cd aircrack-ng
   autoreconf -i
@@ -116,7 +116,8 @@ function _run() {
   sudo systemctl start NetworkManager
 
   echo -e "[${GREEN}DONE${RESET}] Recovered original WiFi"
-  echo -e "Consider uploading results to http://wpa-sec.stanev.org"
+  echo -e "Don't upload the results to http://wpa-sec.stanev.org for automated cracking"
+  echo -e "Don't crack with dictionary like \"sudo aircrack-ng -w rockyou.txt -b 84:D8:1B:06:EF:06 psk.cap\""
 }
 
 case $1 in
