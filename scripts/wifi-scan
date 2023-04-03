@@ -30,7 +30,7 @@ function _default() {
   echo -e "   ${GREEN}update    ${RESET}Pull and re-build aircrack-ng installation."
   echo -e "   ${GREEN}download  ${RESET}Download and unzip rockyou.txt wordlist (50MB)."
   echo -e "   ${GREEN}list      ${RESET}List all owned/discovered networks (get BSSID here)."
-  echo -e "   ${GREEN}crack     ${RESET}Crack passphrase. Required param BSSID (e.g. \"00:00s:11:22:33:44\")"
+  echo -e "   ${GREEN}crack     ${RESET}Crack passphrase after scan. Required param BSSID (e.g. \"00:00s:11:22:33:44\")"
   echo -e ""
   _validate
 }
