@@ -21,11 +21,16 @@ function _default() {
   echo -e "${YELLOW}USAGE:${RESET}"
   echo -e "   wifi-scan <SUBCOMMAND> <PARAMS>"
   echo -e "   ${GRAY}wifi-scan run wlan0${RESET}"
+  echo -e "   ${GRAY}wifi-scan list${RESET}"
+  echo -e "   ${GRAY}wifi-scan crack \"00:00:11:22:33:44\"${RESET}"
   echo -e ""
   echo -e "${YELLOW}SUBCOMMANDS:${RESET}"
-  echo -e "   ${GREEN}run       ${RESET}Runs wide scan. Optional param inteface (e.g. wlan0). Stop with CTRL+C."
+  echo -e "   ${GREEN}run       ${RESET}Run wide scan. Optional param inteface (e.g. wlan0). Stop with CTRL+C."
   echo -e "   ${GREEN}install   ${RESET}Clones and installs aircrack-ng suite. Linux only, needs internet."
   echo -e "   ${GREEN}update    ${RESET}Pull and re-build aircrack-ng installation."
+  echo -e "   ${GREEN}download  ${RESET}Download and unzip rockyou.txt wordlist (50MB)."
+  echo -e "   ${GREEN}list      ${RESET}List all owned/discovered networks (get BSSID here)."
+  echo -e "   ${GREEN}crack     ${RESET}Crack passphrase. Required param BSSID (e.g. \"00:00s:11:22:33:44\")"
   echo -e ""
   _validate
 }
@@ -63,7 +68,7 @@ function _update() {
 }
 
 function _validate() {
-  REQUIRED="airmon-ng besside-ng"
+  REQUIRED=${1,-"airmon-ng besside-ng"}
   MISSING=""
   for i in $REQUIRED ; do
     command -v $i >/dev/null && continue || { MISSING="$MISSING $i"; }
@@ -78,6 +83,22 @@ function _validate() {
     echo -e ""
     exit 1
   fi
+}
+
+function _download() {
+  echo -e "${YELLOW}wifi-scan${RESET} > ${GREEN}download${RESET}"
+  echo -e ""
+  echo -e "[${BLUE}START${RESET}] Downloading rockyou.txt"
+  mkdir -p ~/apps/aircrack-ng/wordlists
+  wget "https://github.com/zacheller/rockyou/blob/master/rockyou.txt.tar.gz?raw=true" -O ~/apps/aircrack-ng/wordlists/rockyou.txt.tar.gz
+  if [ $? -eq 0 ]; then
+    echo -e "[${GREEN}DONE${RESET}] Download of rockyou.txt.tar.gz successful"
+  else
+    echo -e "[${RED}ERROR${RESET}] Download of rockyou.txt.tar.gz failed"
+    exit 1
+  fi
+  tar xvzf ~/apps/aircrack-ng/wordlists/rockyou.txt.tar.gz -C ~/apps/aircrack-ng/wordlists
+  echo -e "[${GREEN}DONE${RESET}] Unzip of rockyou.txt.tar.gz successful"
 }
 
 function _run() {
@@ -116,8 +137,25 @@ function _run() {
   sudo systemctl start NetworkManager
 
   echo -e "[${GREEN}DONE${RESET}] Recovered original WiFi"
-  echo -e "Don't upload the results to http://wpa-sec.stanev.org for automated cracking"
-  echo -e "Don't crack with dictionary like \"sudo aircrack-ng -w rockyou.txt -b 84:D8:1B:06:EF:06 psk.cap\""
+  echo -e "Don't upload the results to https://wpa-sec.stanev.org for automated cracking"
+}
+
+function _list() {
+  echo -e "${YELLOW}wifi-scan${RESET} > ${GREEN}list${RESET}"
+  echo -e ""
+  cat ~/capture/besside.log
+}
+
+function _crack() {
+  echo -e "${YELLOW}wifi-scan${RESET} > ${GREEN}crack${RESET}"
+  echo -e ""
+  _validate "aircrack-ng"
+
+  wordlist=~/apps/aircrack-ng/wordlists/rockyou.txt
+  bssid=$2 # e.g. "B0:5D:D4:DF:EA:29"
+  aircrack-ng -w "$wordlist" -b "$bssid" ~/capture/wpa.cap
+  aircrack-ng ~/capture/wep.cap
+  echo -e "[${GREEN}DONE${RESET}] Done"
 }
 
 case $1 in
@@ -129,6 +167,12 @@ case $1 in
     _run $@ ; exit 0 ;;
   update)
     _update $@ ; exit 0 ;;
+  download)
+    _download ; exit 0 ;;
+  list)
+    _list ; exit 0 ;;
+  crack)
+    _crack $@ ; exit 0 ;;
   *)
     _default ; exit 0 ;;
 esac
