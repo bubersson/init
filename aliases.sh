@@ -53,10 +53,6 @@ if [[ "$(uname)" == "Darwin" ]]; then
     # Open current folder in finder (Mac OS X only)
     alias f='open -a Finder'
     alias i='brew'
-
-    # Install z. See https://formulae.brew.sh/formula/z
-    . $(brew --prefix)/etc/profile.d/z.sh
-
     alias up='brew-refresh; brew update; brew upgrade'
 fi
 
