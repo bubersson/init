@@ -68,7 +68,7 @@ function _update() {
 }
 
 function _validate() {
-  REQUIRED=${1,-"airmon-ng besside-ng"}
+  REQUIRED=${1:-"airmon-ng besside-ng"}
   MISSING=""
   for i in $REQUIRED ; do
     command -v $i >/dev/null && continue || { MISSING="$MISSING $i"; }
