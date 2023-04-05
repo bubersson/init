@@ -7,7 +7,7 @@ autoload -U colors && colors	# Load colors
 alias ls='ls -G'
 export LSCOLORS="Gxfxcxdxbxegedabagacad" # Applies on MacOS(BSD) only.
 
-# Much better search in history with using just up/down arrow after the word 
+# Much better search in history with using just up/down arrow after the word
 # prefix. E.g. write "cop", press up arrow and see "copy a.txt b.txt".
 if [[ "$(uname)" == "Darwin" ]]; then #Mac
     bindkey "^[[A" history-beginning-search-backward
@@ -52,7 +52,7 @@ if whence dircolors >/dev/null; then # On Linux
   eval "$(dircolors -b)"
 else # On MacOS
   # On Mac LS_COLORS is used only specifically for zsh autocomplete
-  # https://superuser.com/questions/290500/zsh-completion-colors-and-os-x  # 
+  # https://superuser.com/questions/290500/zsh-completion-colors-and-os-x  #
   # Tool for translation: https://geoff.greer.fm/lscolors/
   export CLICOLOR=1
   export LS_COLORS="di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"

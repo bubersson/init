@@ -13,6 +13,10 @@ RESET='\033[0m'
 RED='\033[31m'
 BLUE='\033[34m'
 
+INSTALL_FOLDER=~/apps
+WORDLIST_FOLDER=$INSTALL_FOLDER/aircrack-ng/wordlists
+CAPTURE_FOLDER=~/capture
+
 function _default() {
   echo -e "${GREEN}wifi-scan${RESET}"
   echo -e "WiFi Scanner (v.01). Use -h or --help param for help."
@@ -42,8 +46,8 @@ function _install() {
       ethtool shtool rfkill zlib1g-dev libpcap-dev libsqlite3-dev \
       libpcre2-dev libhwloc-dev libcmocka-dev hostapd wpasupplicant \
       tcpdump screen iw usbutils expect
-  mkdir -p ~/apps
-  cd ~/apps
+  mkdir -p $INSTALL_FOLDER
+  cd $INSTALL_FOLDER
   git clone http://github.com/aircrack-ng/aircrack-ng
   cd aircrack-ng
   autoreconf -i
@@ -57,7 +61,7 @@ function _install() {
 
 function _update() {
   echo -e "${YELLOW}wifi-scan${RESET} > ${GREEN}update${RESET}"
-  cd ~/apps/aircrack-ng
+  cd $INSTALL_FOLDER/aircrack-ng
   git pull
   autoreconf -i
   ./configure
@@ -86,18 +90,20 @@ function _validate() {
 }
 
 function _download() {
+  ROCKYOU_URL="https://github.com/zacheller/rockyou/blob/master/rockyou.txt.tar.gz?raw=true"
   echo -e "${YELLOW}wifi-scan${RESET} > ${GREEN}download${RESET}"
   echo -e ""
   echo -e "[${BLUE}START${RESET}] Downloading rockyou.txt"
-  mkdir -p ~/apps/aircrack-ng/wordlists
-  wget "https://github.com/zacheller/rockyou/blob/master/rockyou.txt.tar.gz?raw=true" -O ~/apps/aircrack-ng/wordlists/rockyou.txt.tar.gz
+  
+  mkdir -p $WORDLIST_FOLDER
+  wget $ROCKYOU_URL -O $WORDLIST_FOLDER/rockyou.txt.tar.gz
   if [ $? -eq 0 ]; then
     echo -e "[${GREEN}DONE${RESET}] Download of rockyou.txt.tar.gz successful"
   else
     echo -e "[${RED}ERROR${RESET}] Download of rockyou.txt.tar.gz failed"
     exit 1
   fi
-  tar xvzf ~/apps/aircrack-ng/wordlists/rockyou.txt.tar.gz -C ~/apps/aircrack-ng/wordlists
+  tar xvzf $WORDLIST_FOLDER/rockyou.txt.tar.gz -C $WORDLIST_FOLDER
   echo -e "[${GREEN}DONE${RESET}] Unzip of rockyou.txt.tar.gz successful"
 }
 
@@ -111,8 +117,8 @@ function _run() {
   echo -e "[${BLUE}START${RESET}] Initiating the scan with wifi-scan"
 
   # Create and always use capture dir.
-  mkdir -p ~/capture
-  cd ~/capture
+  mkdir -p $CAPTURE_FOLDER
+  cd $CAPTURE_FOLDER
 
   # Set the wifi wlan as variable.
   export TARGET_WLAN=${2:-'wlp0s20f3'}
@@ -143,7 +149,7 @@ function _run() {
 function _list() {
   echo -e "${YELLOW}wifi-scan${RESET} > ${GREEN}list${RESET}"
   echo -e ""
-  cat ~/capture/besside.log
+  cat $CAPTURE_FOLDER/besside.log
 }
 
 function _crack() {
@@ -151,28 +157,20 @@ function _crack() {
   echo -e ""
   _validate "aircrack-ng"
 
-  wordlist=~/apps/aircrack-ng/wordlists/rockyou.txt
-  bssid=$2 # e.g. "B0:5D:D4:DF:EA:29"
-  aircrack-ng -w "$wordlist" -b "$bssid" ~/capture/wpa.cap
-  aircrack-ng ~/capture/wep.cap
+  wordlist=$WORDLIST_FOLDER/rockyou.txt
+  bssid=$2 # e.g. "00:11:22:33:44:55"
+  aircrack-ng -w "$wordlist" -b "$bssid" $CAPTURE_FOLDER/wpa.cap
+  aircrack-ng -b "$bssid" $CAPTURE_FOLDER/wep.cap
   echo -e "[${GREEN}DONE${RESET}] Done"
 }
 
 case $1 in
-  --help|-h)
-    _default ; exit 0 ;;
-  install)
-    _install ; exit 0 ;;
-  run)
-    _run $@ ; exit 0 ;;
-  update)
-    _update $@ ; exit 0 ;;
-  download)
-    _download ; exit 0 ;;
-  list)
-    _list ; exit 0 ;;
-  crack)
-    _crack $@ ; exit 0 ;;
-  *)
-    _default ; exit 0 ;;
+  --help|-h)  _default    ; exit 0 ;;
+  install)    _install    ; exit 0 ;;
+  run)        _run $@     ; exit 0 ;;
+  update)     _update $@  ; exit 0 ;;
+  download)   _download   ; exit 0 ;;
+  list)       _list       ; exit 0 ;;
+  crack)      _crack $@   ; exit 0 ;;
+  *)          _default    ; exit 0 ;;
 esac
