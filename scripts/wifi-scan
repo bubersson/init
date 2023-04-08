@@ -6,12 +6,12 @@
 # Helpful Commands
 # sudo lshw -C network # Get all details about the wifi interface
 
-GREEN='\033[32m'
-YELLOW='\033[33m'
-GRAY='\033[90m'
-RESET='\033[0m'
-RED='\033[31m'
-BLUE='\033[34m'
+RED=$(tput setaf 1) #'\033[31m'
+GREEN=$(tput setaf 2) #'\033[32m'
+YELLOW=$(tput setaf 3) #'\033[33m'
+BLUE=$(tput setaf 4) #'\033[34m'
+GRAY=$(tput setaf 8) #'\033[90m'
+RESET=$(tput sgr0) #'\033[0m'
 
 INSTALL_FOLDER=~/apps
 WORDLIST_FOLDER=$INSTALL_FOLDER/aircrack-ng/wordlists
@@ -20,29 +20,47 @@ CAPTURE_FOLDER=~/capture
 ROCKYOU_URL="https://github.com/zacheller/rockyou/blob/master/rockyou.txt.tar.gz?raw=true"
 
 function _default() {
-  echo -e "${GREEN}wifi-scan${RESET}"
-  echo -e "WiFi Scanner (v.01). Use -h or --help param for help."
-  echo -e "${GRAY}WARNING: DO NOT USE THIS PROGRAM! DO NOT RUN IT!"
-  echo -e ""
-  echo -e "${YELLOW}USAGE:${RESET}"
-  echo -e "   wifi-scan <SUBCOMMAND> <PARAMS>"
-  echo -e "   ${GRAY}wifi-scan run wlan0${RESET}"
-  echo -e "   ${GRAY}wifi-scan list${RESET}"
-  echo -e "   ${GRAY}wifi-scan crack \"00:00:11:22:33:44\"${RESET}"
-  echo -e ""
-  echo -e "${YELLOW}SUBCOMMANDS:${RESET}"
-  echo -e "   ${GREEN}run       ${RESET}Run wide scan. Optional param inteface (e.g. wlan0). Stop with CTRL+C."
-  echo -e "   ${GREEN}install   ${RESET}Clones and installs aircrack-ng suite. Linux only, needs internet."
-  echo -e "   ${GREEN}update    ${RESET}Pull and re-build aircrack-ng installation."
-  echo -e "   ${GREEN}download  ${RESET}Download and unzip rockyou.txt wordlist (50MB)."
-  echo -e "   ${GREEN}list      ${RESET}List all owned/discovered networks (get BSSID here)."
-  echo -e "   ${GREEN}crack     ${RESET}Crack passphrase after scan. Required param BSSID (e.g. \"00:00:11:22:33:44\")"
-  echo -e ""
+  cat <<HEREDOC
+${GREEN}wifi-scan${RESET}
+WiFi Scanner (v.01). Use -h or --help param for help.
+${GRAY}WARNING: DO NOT USE THIS PROGRAM! DO NOT RUN IT!
+
+${YELLOW}USAGE:${RESET}
+   wifi-scan <SUBCOMMAND> <PARAMS>
+   ${GRAY}wifi-scan run wlan0${RESET}
+   ${GRAY}wifi-scan list${RESET}
+   ${GRAY}wifi-scan crack "00:00:11:22:33:44"${RESET}
+
+${YELLOW}SUBCOMMANDS:${RESET}
+   ${GREEN}run       ${RESET}Run wide scan. Optional param inteface (e.g. wlan0). Stop with CTRL+C.
+   ${GREEN}install   ${RESET}Clones and installs aircrack-ng suite. Linux only, needs internet.
+   ${GREEN}update    ${RESET}Pull and re-build aircrack-ng installation.
+   ${GREEN}available ${RESET}List available WiFis with channels.
+   ${GREEN}download  ${RESET}Download and unzip rockyou.txt wordlist (50MB).
+   ${GREEN}list      ${RESET}List all owned/discovered networks (get BSSID here).
+   ${GREEN}crack     ${RESET}Crack passphrase after scan. Required param BSSID (e.g. "00:00:11:22:33:44")
+
+HEREDOC
   _validate
 }
 
 function _install() {
   echo -e "${YELLOW}wifi-scan${RESET} > ${GREEN}install${RESET}"
+
+  # Mac OS X only.
+  if [[ "$(uname)" == "Darwin" ]]; then
+    _validate brew
+    mkdir -p /usr/local/bin
+    sudo ln -s /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport /usr/local/bin/airport
+    sudo install aircrack-ng
+    if [ $? -eq 0 ]; then
+      echo -e "[${GREEN}DONE${RESET}] Installation successful"
+      exit 0
+    fi
+    exit 1
+  fi
+
+  # Linux only.
   sudo apt-get install build-essential autoconf automake \
       libtool pkg-config libnl-3-dev libnl-genl-3-dev libssl-dev \
       ethtool shtool rfkill zlib1g-dev libpcap-dev libsqlite3-dev \
@@ -63,6 +81,12 @@ function _install() {
 
 function _update() {
   echo -e "${YELLOW}wifi-scan${RESET} > ${GREEN}update${RESET}"
+  # Mac OS X only.
+  if [[ "$(uname)" == "Darwin" ]]; then
+    echo -e ""
+    echo -e "[${RED}Not Supported${RESET}] Update is not supported on MacOS."
+  fi
+
   cd $INSTALL_FOLDER/aircrack-ng
   git pull
   autoreconf -i
@@ -95,7 +119,7 @@ function _download() {
   echo -e "${YELLOW}wifi-scan${RESET} > ${GREEN}download${RESET}"
   echo -e ""
   echo -e "[${BLUE}START${RESET}] Downloading rockyou.txt"
-  
+
   mkdir -p $WORDLIST_FOLDER
   wget $ROCKYOU_URL -O $WORDLIST_FOLDER/rockyou.txt.tar.gz
   if [ $? -eq 0 ]; then
@@ -153,6 +177,22 @@ function _list() {
   cat $CAPTURE_FOLDER/besside.log
 }
 
+function _available() {
+  echo -e "${YELLOW}wifi-scan${RESET} > ${GREEN}available${RESET}"
+  echo -e ""
+  echo -e "[${BLUE}START${RESET}] Scanning for available WiFis"
+  # Mac OS X only.
+  if [[ "$(uname)" == "Darwin" ]]; then
+    # Getting BSSID requires sudo.
+    sudo /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s
+  fi
+
+  # Linux only.
+  if [[ "$(uname)" == "Linux" ]]; then
+    nmcli dev wifi list
+  fi
+}
+
 function _crack() {
   echo -e "${YELLOW}wifi-scan${RESET} > ${GREEN}crack${RESET}"
   echo -e ""
@@ -172,6 +212,7 @@ case $1 in
   install)    _install    ; exit 0 ;;
   run)        _run $@     ; exit 0 ;;
   update)     _update $@  ; exit 0 ;;
+  available)  _available  ; exit 0 ;;
   download)   _download   ; exit 0 ;;
   list)       _list       ; exit 0 ;;
   crack)      _crack $@   ; exit 0 ;;
