@@ -17,6 +17,8 @@ INSTALL_FOLDER=~/apps
 WORDLIST_FOLDER=$INSTALL_FOLDER/aircrack-ng/wordlists
 CAPTURE_FOLDER=~/capture
 
+ROCKYOU_URL="https://github.com/zacheller/rockyou/blob/master/rockyou.txt.tar.gz?raw=true"
+
 function _default() {
   echo -e "${GREEN}wifi-scan${RESET}"
   echo -e "WiFi Scanner (v.01). Use -h or --help param for help."
@@ -90,7 +92,6 @@ function _validate() {
 }
 
 function _download() {
-  ROCKYOU_URL="https://github.com/zacheller/rockyou/blob/master/rockyou.txt.tar.gz?raw=true"
   echo -e "${YELLOW}wifi-scan${RESET} > ${GREEN}download${RESET}"
   echo -e ""
   echo -e "[${BLUE}START${RESET}] Downloading rockyou.txt"
@@ -161,7 +162,8 @@ function _crack() {
   bssid=$2 # e.g. "00:11:22:33:44:55"
   # Appending "| tee" on the end to make it possible to stop with Ctrl+C
   aircrack-ng -w "$wordlist" -b "$bssid" $CAPTURE_FOLDER/wpa.cap | tee
-  aircrack-ng -b "$bssid" $CAPTURE_FOLDER/wep.cap | tee
+  # Uncomment to crack WEP (you need to catch enough IVs for that)
+  # aircrack-ng -b "$bssid" $CAPTURE_FOLDER/wep.cap | tee
   echo -e "[${GREEN}DONE${RESET}] Done"
 }
 
