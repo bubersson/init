@@ -1,15 +1,28 @@
 #!/bin/bash
 
-if [[ $# -gt 0 ]]; then # Turn OFF
-    dconf write /org/gnome/desktop/interface/text-scaling-factor "1.4"
-    setxkbmap -layout "hopkeyboard"
-    echo -e "[\033[32mDONE\033[0m] Logitech turned OFF"
-else # Turn ON
-    dconf write /org/gnome/desktop/interface/text-scaling-factor "1.2"
-    setxkbmap -layout "hopkeyboard+hopkeyboard(swap_lalt_lctl_lwin)"
-    xset r on
-    xset r 22
-    xset r 116
-    seq 111 116 | xargs -n 1 xset r
-    echo -e "[\033[32mDONE\033[0m] Logitech layout set"
-fi
+function _keyboard() {
+  # Set layout for Logitech keyboard.
+  setxkbmap -layout "hopkeyboard+hopkeyboard(swap_lalt_lctl_lwin)"
+  xset r on
+  xset r 22
+  xset r 116
+  seq 111 116 | xargs -n 1 xset r
+  echo -e "[\033[32mDONE\033[0m] Logitech layout set"
+}
+
+function _off() {
+  dconf write /org/gnome/desktop/interface/text-scaling-factor "1.4"
+  setxkbmap -layout "hopkeyboard"
+  echo -e "[\033[32mDONE\033[0m] Logitech turned OFF"
+}
+
+function _small() {
+  dconf write /org/gnome/desktop/interface/text-scaling-factor "1.2"
+  echo -e "[\033[32mDONE\033[0m] Scaling factor set to 1.2"
+}
+
+case $1 in
+  small)      _small      ; exit 0 ;;
+  off)        _off        ; exit 0 ;;
+  *)          _keyboard   ; exit 0 ;;
+esac
