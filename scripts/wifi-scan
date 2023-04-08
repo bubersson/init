@@ -14,16 +14,18 @@ GRAY=$(tput setaf 8) #'\033[90m'
 RESET=$(tput sgr0) #'\033[0m'
 
 INSTALL_FOLDER=~/apps
-WORDLIST_FOLDER=$INSTALL_FOLDER/aircrack-ng/wordlists
+WORDLIST_FOLDER=~/apps/aircrack-ng/wordlists
 CAPTURE_FOLDER=~/capture
 
 ROCKYOU_URL="https://github.com/zacheller/rockyou/blob/master/rockyou.txt.tar.gz?raw=true"
+
+AIRPORT_CMD="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"
 
 function _default() {
   cat <<HEREDOC
 ${GREEN}wifi-scan${RESET}
 WiFi Scanner (v.01). Use -h or --help param for help.
-${GRAY}WARNING: DO NOT USE THIS PROGRAM! DO NOT RUN IT!
+${GRAY}WARNING: DO NOT USE THIS PROGRAM! DO NOT RUN IT!${RESET}
 
 ${YELLOW}USAGE:${RESET}
    wifi-scan <SUBCOMMAND> <PARAMS>
@@ -51,8 +53,8 @@ function _install() {
   if [[ "$(uname)" == "Darwin" ]]; then
     _validate brew
     mkdir -p /usr/local/bin
-    sudo ln -s /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport /usr/local/bin/airport
-    sudo install aircrack-ng
+    sudo ln -s "${AIRPORT_CMD}" /usr/local/bin/airport
+    sudo brew install aircrack-ng
     if [ $? -eq 0 ]; then
       echo -e "[${GREEN}DONE${RESET}] Installation successful"
       exit 0
@@ -98,7 +100,7 @@ function _update() {
 }
 
 function _validate() {
-  REQUIRED=${1:-"airmon-ng besside-ng"}
+  REQUIRED=${@:-"airmon-ng besside-ng"}
   MISSING=""
   for i in $REQUIRED ; do
     command -v $i >/dev/null && continue || { MISSING="$MISSING $i"; }
@@ -121,8 +123,15 @@ function _download() {
   echo -e "[${BLUE}START${RESET}] Downloading rockyou.txt"
 
   mkdir -p $WORDLIST_FOLDER
-  wget $ROCKYOU_URL -O $WORDLIST_FOLDER/rockyou.txt.tar.gz
-  if [ $? -eq 0 ]; then
+  local result=0
+  if [ command -v curl >/dev/null ]; then
+    curl $ROCKYOU_URL -o $WORDLIST_FOLDER/rockyou.txt.tar.gz
+    result = $?
+  else
+    wget $ROCKYOU_URL -O $WORDLIST_FOLDER/rockyou.txt.tar.gz
+    result = $?
+  fi
+  if [ $result -eq 0 ]; then
     echo -e "[${GREEN}DONE${RESET}] Download of rockyou.txt.tar.gz successful"
   else
     echo -e "[${RED}ERROR${RESET}] Download of rockyou.txt.tar.gz failed"
@@ -184,7 +193,7 @@ function _available() {
   # Mac OS X only.
   if [[ "$(uname)" == "Darwin" ]]; then
     # Getting BSSID requires sudo.
-    sudo /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s
+    sudo ${AIRPORT_CMD} -s
   fi
 
   # Linux only.
