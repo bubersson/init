@@ -145,26 +145,35 @@ function _download() {
 }
 
 function _runMac() {
-  echo -e "[${BLUE}START${RESET}] Initiating the scan with wifi-scan (MacOS version)"  
+  echo -e "[${BLUE}START${RESET}] Initiating the scan with wifi-scan (MacOS version)"
   # Create and always use capture dir.
   mkdir -p $CAPTURE_FOLDER
   cd $CAPTURE_FOLDER
 
-  # Get list of channels with wifis. 
+  # Get list of channels with wifis.
+  channels=$(airport -s | awk -F ' ' '{print $3}' | sort | uniq)
 
   # Start sniffing on channel (puts wifi in monitor mode).
-  for i in {1..162}; do 
-    echo -e "Sniffing on channel $i" 
+  for i in {1..220}; do
+    if [[ $i =~ ^[^0-9]+$ ]]; then
+      continue;
+    fi
+    echo -e "Sniffing on channel $i"
     sudo "${AIRPORT_CMD}" en0 sniff $i &
     t=$!
     sleep 10
-    sudo kill -s HUP $t
+    sudo kill -s INT $t
   done
 
-  # Use besside to get the useful stuff out of the captures. 
+  # brew install wireshark ; brew install --cask wireshark
+
+  # Transform caps into pcaps.
+  # editcap -F pcap /tmp/airportSniffjrqzFX.cap output.pcap
+
+  # Use besside to get the useful stuff out of the captures.
   besside-ng-crawler /tmp $CAPTURE_FOLDER/wpa.cap
 
-  # Remove all sniffed files. TODO: Ask for confirmation. 
+  # Remove all sniffed files. TODO: Ask for confirmation.
   # sudo rm /tmp/airportSniff*
 
   exit 0
@@ -180,7 +189,7 @@ function _run() {
     _runMac
     exit 0
   fi
-  
+
   _validate
 
   echo -e "[${BLUE}START${RESET}] Initiating the scan with wifi-scan"

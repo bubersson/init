@@ -72,7 +72,8 @@ function _random() {
     _listInterfaces
 
     echo "${BLUE}SELECT OPTION:${RESET} ${GRAY}(Input number of interface to change MAC)${RESET}"
-    local interfaces=$(ip -br l | sed -e 's/\s.*$//')
+    #local interfaces=$(ip -br l | sed -e 's/\s.*$//')
+    local interfaces=$(ls -1 /sys/class/net)    
     select iface in $interfaces exit; do
         case $iface in
             exit)
