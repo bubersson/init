@@ -1,0 +1,143 @@
+#!/bin/bash
+
+RED=$(tput setaf 1) #'\033[31m'
+GREEN=$(tput setaf 2) #'\033[32m'
+YELLOW=$(tput setaf 3) #'\033[33m'
+BLUE=$(tput setaf 4) #'\033[34m'
+GRAY=$(tput setaf 8) #'\033[90m'
+RESET=$(tput sgr0) #'\033[0m'
+
+ME=$(basename "${0}")
+VERSION="v0.01"
+
+function _default() {
+  cat <<HEREDOC
+${GREEN}change-mac${RESET}
+Change MAC Address (${VERSION}). Use -h or --help param for help.
+${GRAY}WARNING: DO NOT USE THIS PROGRAM! DO NOT RUN IT!${RESET}
+
+${YELLOW}USAGE:${RESET}
+    change-mac <SUBCOMMAND> <PARAMS>
+    ${GRAY}change-mac install${RESET}
+    ${GRAY}change-mac random${RESET}
+
+${YELLOW}SUBCOMMANDS:${RESET}
+    ${GREEN}install   ${RESET}Installs macchanger.
+    ${GREEN}random    ${RESET}Changes the MAC address to random address.
+    ${GREEN}print     ${RESET}Prints out current & original MAC address for each interface.
+    ${GREEN}reset     ${RESET}Resets the MAC address to original value.
+
+HEREDOC
+  _listInterfaces
+  _validate
+}
+
+function _validate() {
+  REQUIRED=${@:-"macchanger"}
+  MISSING=""
+  for i in $REQUIRED ; do
+    command -v $i >/dev/null && continue || { MISSING="$MISSING $i"; }
+  done
+  if [ "$MISSING" ]; then
+    echo -e "${RED}MISSING DEPENDENCY:${RESET}"
+    for m in $MISSING ; do
+      echo -e "    ${RED}$m${RESET} not found"
+    done
+    echo -e ""
+    echo -e "    Please run \"${ME} install\""
+    echo -e ""
+    exit 1
+  fi
+}
+
+function _listInterfaces() {
+    echo -e "${YELLOW}LIST OF INTERFACES:${RESET}"
+    ip -br l | awk '{print "    " $0}'
+    echo -e ""
+}
+
+function _install() {
+    echo -e "${YELLOW}${ME}${RESET} > ${GREEN}install${RESET}"
+    _validate
+    sudo apt-get install macchanger
+    if [ $? -eq 0 ]; then
+      echo -e "[${GREEN}DONE${RESET}] Installation successful"
+    fi
+}
+
+function _random() {
+    echo -e "${YELLOW}${ME}${RESET} > ${GREEN}random${RESET}"
+    echo -e ""
+    _validate
+    _listInterfaces
+
+    echo "${BLUE}SELECT OPTION:${RESET} ${GRAY}(Input number of interface to change MAC)${RESET}"
+    local interfaces=$(ip -br l | sed -e 's/\s.*$//')
+    select iface in $interfaces exit; do
+        case $iface in
+            exit)
+                echo -e "[${GREEN}DONE${RESET}] No changes"
+                echo -e ""
+                exit 0 ;;
+            *)
+                echo -e ""
+                echo -e "[${BLUE}START${RESET}] Initiating MAC change"
+                sudo ifconfig $iface down
+                sudo macchanger -r $iface
+                sudo ifconfig $iface up
+                echo -e "[${GREEN}DONE${RESET}] Change done"
+                echo -e ""
+                exit 0 ;;
+        esac
+    done
+}
+
+function _print() {
+    echo -e "${YELLOW}${ME}${RESET} > ${GREEN}print${RESET}"
+    echo -e ""
+    _validate
+
+    local interfaces=$(ip -br l)
+    while read -r line; do
+        echo -e $line
+        local iface=$(echo $line | sed -e 's/\s.*$//')
+        sudo macchanger -s $iface | awk '{print "    " $0}'
+        echo -e ""
+    done <<< "$interfaces"    
+}
+
+function _reset() {
+    echo -e "${YELLOW}${ME}${RESET} > ${GREEN}reset${RESET}"
+    echo -e ""
+    _validate
+    _listInterfaces
+
+    echo "${BLUE}SELECT OPTION:${RESET} ${GRAY}(Input number of interface to change MAC)${RESET}"
+    local interfaces=$(ip -br l | sed -e 's/\s.*$//')
+    select iface in $interfaces exit; do
+        case $iface in
+            exit)
+                echo -e "[${GREEN}DONE${RESET}] No changes"
+                echo -e ""
+                exit 0 ;;
+            *)
+                echo -e ""
+                echo -e "[${BLUE}START${RESET}] Initiating MAC change"
+                sudo ifconfig $iface down
+                sudo macchanger -p $iface
+                sudo ifconfig $iface up
+                echo -e "[${GREEN}DONE${RESET}] Reset done"
+                echo -e ""
+                exit 0 ;;
+        esac
+    done
+}
+
+case $1 in
+  --help|-h)  _default    ; exit 0 ;;
+  install)    _install    ; exit 0 ;;
+  random)     _random     ; exit 0 ;;
+  print)      _print      ; exit 0 ;;
+  reset)      _reset      ; exit 0 ;;
+  *)          _default    ; exit 0 ;;
+esac

@@ -13,6 +13,9 @@ BLUE=$(tput setaf 4) #'\033[34m'
 GRAY=$(tput setaf 8) #'\033[90m'
 RESET=$(tput sgr0) #'\033[0m'
 
+ME=$(basename "${0}")
+VERSION="v0.01"
+
 INSTALL_FOLDER=~/apps
 WORDLIST_FOLDER=~/apps/aircrack-ng/wordlists
 CAPTURE_FOLDER=~/capture
@@ -24,23 +27,23 @@ AIRPORT_CMD="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Cur
 function _default() {
   cat <<HEREDOC
 ${GREEN}wifi-scan${RESET}
-WiFi Scanner (v.01). Use -h or --help param for help.
+WiFi Scanner (${VERSION}). Use -h or --help param for help.
 ${GRAY}WARNING: DO NOT USE THIS PROGRAM! DO NOT RUN IT!${RESET}
 
 ${YELLOW}USAGE:${RESET}
-   wifi-scan <SUBCOMMAND> <PARAMS>
-   ${GRAY}wifi-scan run wlan0${RESET}
-   ${GRAY}wifi-scan list${RESET}
-   ${GRAY}wifi-scan crack "00:00:11:22:33:44"${RESET}
+    wifi-scan <SUBCOMMAND> <PARAMS>
+    ${GRAY}wifi-scan run wlan0${RESET}
+    ${GRAY}wifi-scan list${RESET}
+    ${GRAY}wifi-scan crack "00:00:11:22:33:44"${RESET}
 
 ${YELLOW}SUBCOMMANDS:${RESET}
-   ${GREEN}run       ${RESET}Run wide scan. Optional param inteface (e.g. wlan0). Stop with CTRL+C.
-   ${GREEN}install   ${RESET}Clones and installs aircrack-ng suite. Linux only, needs internet.
-   ${GREEN}update    ${RESET}Pull and re-build aircrack-ng installation.
-   ${GREEN}available ${RESET}List available WiFis with channels.
-   ${GREEN}download  ${RESET}Download and unzip rockyou.txt wordlist (50MB).
-   ${GREEN}list      ${RESET}List all owned/discovered networks (get BSSID here).
-   ${GREEN}crack     ${RESET}Crack passphrase after scan. Required param BSSID (e.g. "00:00:11:22:33:44")
+    ${GREEN}run       ${RESET}Run wide scan. Optional param inteface (e.g. wlan0). Stop with CTRL+C.
+    ${GREEN}install   ${RESET}Clones and installs aircrack-ng suite. Linux only, needs internet.
+    ${GREEN}update    ${RESET}Pull and re-build aircrack-ng installation.
+    ${GREEN}available ${RESET}List available WiFis with channels.
+    ${GREEN}download  ${RESET}Download and unzip rockyou.txt wordlist (50MB).
+    ${GREEN}list      ${RESET}List all owned/discovered networks (get BSSID here).
+    ${GREEN}crack     ${RESET}Crack passphrase after scan. Required param BSSID (e.g. "00:00:11:22:33:44")
 
 HEREDOC
   _validate
@@ -111,7 +114,7 @@ function _validate() {
       echo -e "    ${RED}$m${RESET} not found"
     done
     echo -e ""
-    echo -e "    Please run \"wifi-scan install\""
+    echo -e "    Please run \"${ME} install\""
     echo -e ""
     exit 1
   fi
