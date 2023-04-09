@@ -154,7 +154,7 @@ function _runMac() {
   channels=$(airport -s | awk -F ' ' '{print $3}' | sort | uniq)
 
   # Start sniffing on channel (puts wifi in monitor mode).
-  for i in {1..220}; do
+  for i in channels; do
     if [[ $i =~ ^[^0-9]+$ ]]; then
       continue;
     fi
