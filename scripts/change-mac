@@ -90,7 +90,7 @@ function _random() {
       echo -e "[${BLUE}START${RESET}] Changing MAC address to $newmac"
       echo -e "[${BLUE}WARNING${RESET}] This will only apply until restart of the computer"
       # Set the MAC to en0.
-      sudo ifconfig  en0  ether $newmac
+      sudo ifconfig  en0 lladdr $newmac
       exit 0
     fi
 
