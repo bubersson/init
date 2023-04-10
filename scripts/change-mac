@@ -34,6 +34,9 @@ HEREDOC
   if [[ "$(uname)" == "Linux" ]]; then
     _validate
   fi
+  if [[ "$(uname)" == "Darwin" ]]; then
+    _validate "openssl"
+  fi
 }
 
 function _validate() {
@@ -69,6 +72,18 @@ function _listInterfaces() {
 
 function _install() {
     echo -e "${YELLOW}${ME}${RESET} > ${GREEN}install${RESET}"
+
+    # Mac OS X only.
+    if [[ "$(uname)" == "Darwin" ]]; then
+      _validate brew
+      sudo brew install openssl
+      if [ $? -eq 0 ]; then
+        echo -e "[${GREEN}DONE${RESET}] Installation successful"
+        exit 0
+      fi
+      exit 1
+    fi
+
     _validate
     sudo apt-get install macchanger
     if [ $? -eq 0 ]; then

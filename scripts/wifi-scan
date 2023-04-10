@@ -46,7 +46,13 @@ ${YELLOW}SUBCOMMANDS:${RESET}
     ${GREEN}crack     ${RESET}Crack passphrase after scan. Required param BSSID (e.g. "00:00:11:22:33:44")
 
 HEREDOC
-  _validate
+
+  if [[ "$(uname)" == "Linux" ]]; then
+    _validate "airmon-ng besside-ng"
+  fi
+  if [[ "$(uname)" == "Darwin" ]]; then
+    _validate "aircrack-ng wpaclean"
+  fi
 }
 
 function _install() {
@@ -57,13 +63,21 @@ function _install() {
     _validate brew
     mkdir -p /usr/local/bin
     sudo ln -s "${AIRPORT_CMD}" /usr/local/bin/airport
-    sudo brew install aircrack-ng wireshark
+    sudo brew install aircrack-ng curl
     if [ $? -eq 0 ]; then
       echo -e "[${GREEN}DONE${RESET}] Installation successful"
       exit 0
     fi
     exit 1
   fi
+
+  # MacOS install on M1/M2 CPUs.
+  # brew install autoconf automake libtool openssl shtool pkg-config hwloc pcre2 sqlite3 libpcap cmocka
+  # autoreconf -vif
+  # env CPPFLAGS="-Wno-deprecated-declarations" ./configure --with-experimental
+  # make
+  # make check
+  # sudo make install
 
   # Linux only.
   sudo apt-get install build-essential autoconf automake \
@@ -123,16 +137,17 @@ function _validate() {
 function _download() {
   echo -e "${YELLOW}wifi-scan${RESET} > ${GREEN}download${RESET}"
   echo -e ""
+  _validate curl
   echo -e "[${BLUE}START${RESET}] Downloading rockyou.txt"
 
   mkdir -p $WORDLIST_FOLDER
   local result=0
-  if [ command -v curl >/dev/null ]; then
-    curl $ROCKYOU_URL -o $WORDLIST_FOLDER/rockyou.txt.tar.gz
-    result = $?
+  if command -v curl >/dev/null ]; then
+    curl $ROCKYOU_URL -L -o $WORDLIST_FOLDER/rockyou.txt.tar.gz
+    result=$?
   else
     wget $ROCKYOU_URL -O $WORDLIST_FOLDER/rockyou.txt.tar.gz
-    result = $?
+    result=$?
   fi
   if [ $result -eq 0 ]; then
     echo -e "[${GREEN}DONE${RESET}] Download of rockyou.txt.tar.gz successful"
@@ -148,13 +163,12 @@ function _runMac() {
   echo -e "[${BLUE}START${RESET}] Initiating the scan with wifi-scan (MacOS version). Cancel with Command+C."
   echo -e ""
 
-  _validate "editcap"
+  #_validate "aircrack-ng wpaclean"
 
-  # Create and always use capture dir.
+  # Create and always use ture dir.
   mkdir -p $CAPTURE_FOLDER
   cd $CAPTURE_FOLDER
 
-  # Log out of the current network and print a list of available networks.
   sudo "${AIRPORT_CMD}" -zs
   echo -e ""
 
@@ -175,35 +189,40 @@ function _runMac() {
       fi
       exit
     }
-    while true ; do
-      # Get list of channels with wifis.
+    # Get list of channels with wifis.
+    while true; do
       channels=$(${AIRPORT_CMD} -s | awk -F ' ' '{print $3}' | sort | uniq)
       for i in $channels; do
         if [[ $i =~ ^[0-9]+$ ]]; then
             printf "%s[CH: %03d]%s Sniffing on channel %s: " ${GRAY} $i ${RESET} $i
             sudo "${AIRPORT_CMD}" $iface sniff $i &
-            sleep 10
+            sleep 1
         fi
       done
+      # airport can't get channels when in monitor mode ($channels will be empty),
+      # so after the first one, this will just keep looping and waiting for end.
+      sleep 1
     done
   )
 
-  echo -e "[${BLUE}START${RESET}] Transform .cap to .pcap"
-  for filename in /tmp/airportSniff*.cap; do
-    editcap -F pcap -T ieee-802-11 "$filename" "$filename.pcap"
-  done
+  # if does not exist create besside.log
+  if [[ ! -e "$CAPTURE_FOLDER/besside.log" ]]; then
+    touch "$CAPTURE_FOLDER/besside.log"
+    echo "Captured WPA handshake packets for following networks:" > "$CAPTURE_FOLDER/besside.log"
+  fi
 
-  # Use besside to get the useful stuff out of the captures. 
-  # Run in new subprocess so it doesn't complain about files beeing newer than process.
-  echo -e "[${BLUE}START${RESET}] Extract useful stuff from the pcaps into $CAPTURE_FOLDER/wpa.cap"
-  (
-    besside-ng-crawler /tmp $CAPTURE_FOLDER/wpa.cap
-  )
-
-  # Remove all sniffed files. TODO: Ask for confirmation.
-  # sudo rm /tmp/airportSniff*
-
-  echo -e "[${GREEN}DONE${RESET}] Removed all /tmp/airportSniff*"
+  # Run WPAClean to combine all the result into single nice capture. wpaclean is part of aircrack-ng.
+  echo -e "[${BLUE}START${RESET}] Extract useful stuff from the caps into $CAPTURE_FOLDER/wpa.cap"
+  wpaclean "$CAPTURE_FOLDER/wpa.cap" /tmp/airportSniff*.cap | tee >(grep "Net" >> $CAPTURE_FOLDER/besside.log)
+  if [[ -e "$CAPTURE_FOLDER/wpa.cap" ]]; then
+    echo -e "[${GREEN}DONE${RESET}] Filtered output is in $CAPTURE_FOLDER/wpa.cap"
+    sudo rm /tmp/airportSniff*
+    echo -e "[${GREEN}DONE${RESET}] Removed all /tmp/airportSniff*"
+    echo -e "Don't upload the results to https://wpa-sec.stanev.org for automated cracking."
+  else
+    echo -e "[${RED}ERROR${RESET}] wpaclean returned error"
+    exit 1
+  fi
   exit 0
 }
 
