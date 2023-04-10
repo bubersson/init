@@ -10,6 +10,8 @@ RESET=$(tput sgr0) #'\033[0m'
 ME=$(basename "${0}")
 VERSION="v0.01"
 
+AIRPORT_CMD="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"
+
 function _default() {
   cat <<HEREDOC
 ${GREEN}change-mac${RESET}
@@ -29,7 +31,9 @@ ${YELLOW}SUBCOMMANDS:${RESET}
 
 HEREDOC
   _listInterfaces
-  _validate
+  if [[ "$(uname)" == "Linux" ]]; then
+    _validate
+  fi
 }
 
 function _validate() {
@@ -52,7 +56,14 @@ function _validate() {
 
 function _listInterfaces() {
     echo -e "${YELLOW}LIST OF INTERFACES:${RESET}"
-    ip -br l | awk '{print "    " $0}'
+
+    # Mac OS X only.
+    if [[ "$(uname)" == "Darwin" ]]; then
+      # TODO: Make this not f**king ugly.
+      echo $(networksetup -listallhardwareports) | sed s/Hardware.Port:./\\\n/g | sed s/Device:./\\\t/g | sed s/Ethernet.Address:./\\\t/g
+    else
+      ip -br l | awk '{print "    " $0}'
+    fi
     echo -e ""
 }
 
@@ -68,12 +79,26 @@ function _install() {
 function _random() {
     echo -e "${YELLOW}${ME}${RESET} > ${GREEN}random${RESET}"
     echo -e ""
-    _validate
     _listInterfaces
+
+    # Mac OS X only.
+    if [[ "$(uname)" == "Darwin" ]]; then
+      # Disconnect.
+      sudo "${AIRPORT_CMD}" -z
+      # Generate new random MAC.
+      newmac=$(openssl rand -hex 6 | sed "s/\(..\)/\1:/g; s/.$//")
+      echo -e "[${BLUE}START${RESET}] Changing MAC address to $newmac"
+      echo -e "[${BLUE}WARNING${RESET}] This will only apply until restart of the computer"
+      # Set the MAC to en0.
+      sudo ifconfig  en0  ether $newmac
+      exit 0
+    fi
+
+    _validate
 
     echo "${BLUE}SELECT OPTION:${RESET} ${GRAY}(Input number of interface to change MAC)${RESET}"
     #local interfaces=$(ip -br l | sed -e 's/\s.*$//')
-    local interfaces=$(ls -1 /sys/class/net)    
+    local interfaces=$(ls -1 /sys/class/net)
     select iface in $interfaces exit; do
         case $iface in
             exit)
@@ -104,7 +129,7 @@ function _print() {
         local iface=$(echo $line | sed -e 's/\s.*$//')
         sudo macchanger -s $iface | awk '{print "    " $0}'
         echo -e ""
-    done <<< "$interfaces"    
+    done <<< "$interfaces"
 }
 
 function _reset() {
