@@ -190,7 +190,7 @@ function _runMac() {
 
   echo -e "[${BLUE}START${RESET}] Transform .cap to .pcap"
   for filename in /tmp/airportSniff*.cap; do
-    editcap -F pcap "$filename" "$filename.pcap"
+    editcap -F pcap -T ieee-802-11 "$filename" "$filename.pcap"
   done
 
   # Use besside to get the useful stuff out of the captures.
