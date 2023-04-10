@@ -193,9 +193,12 @@ function _runMac() {
     editcap -F pcap -T ieee-802-11 "$filename" "$filename.pcap"
   done
 
-  # Use besside to get the useful stuff out of the captures.
+  # Use besside to get the useful stuff out of the captures. 
+  # Run in new subprocess so it doesn't complain about files beeing newer than process.
   echo -e "[${BLUE}START${RESET}] Extract useful stuff from the pcaps into $CAPTURE_FOLDER/wpa.cap"
-  besside-ng-crawler /tmp $CAPTURE_FOLDER/wpa.cap
+  (
+    besside-ng-crawler /tmp $CAPTURE_FOLDER/wpa.cap
+  )
 
   # Remove all sniffed files. TODO: Ask for confirmation.
   # sudo rm /tmp/airportSniff*
