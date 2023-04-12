@@ -1,11 +1,14 @@
 #!/bin/bash
 
-GREEN='\033[32m'
-YELLOW='\033[33m'
-GRAY='\033[90m'
-RESET='\033[0m'
-RED='\033[31m'
-BLUE='\033[34m'
+ME=$(basename "${0}")
+VERSION="v0.01"
+
+RED=$(tput setaf 1) #'\033[31m'
+GREEN=$(tput setaf 2) #'\033[32m'
+YELLOW=$(tput setaf 3) #'\033[33m'
+BLUE=$(tput setaf 4) #'\033[34m'
+GRAY=$(tput setaf 8) #'\033[90m'
+RESET=$(tput sgr0) #'\033[0m'
 
 function _default() {
 	echo -e "${GREEN}identity${RESET}"
