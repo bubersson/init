@@ -1,11 +1,14 @@
 #!/bin/bash
 
-GREEN='\033[32m'
-YELLOW='\033[33m'
-GRAY='\033[90m'
-RESET='\033[0m'
-RED='\033[31m'
-BLUE='\033[34m'
+ME=$(basename "${0}")
+VERSION="v0.01"
+
+RED=$(tput setaf 1) #'\033[31m'
+GREEN=$(tput setaf 2) #'\033[32m'
+YELLOW=$(tput setaf 3) #'\033[33m'
+BLUE=$(tput setaf 14) #'\033[34m'
+GRAY=$(tput setaf 8) #'\033[90m'
+RESET=$(tput sgr0) #'\033[0m'
 
 function _default() {
   echo -e "${GREEN}yt-dl${RESET}"
@@ -40,7 +43,7 @@ function _install() {
 }
 
 function _validate() {
-  REQUIRED="youtube-dl"
+  REQUIRED=${@:-"youtube-dl"}
   MISSING=""
   for i in $REQUIRED ; do
     command -v $i >/dev/null && continue || { MISSING="$MISSING $i"; }
@@ -51,7 +54,7 @@ function _validate() {
       echo -e "    ${RED}$m${RESET} not found"
     done
     echo -e ""
-    echo -e "    Please run \"yt-dl install\""
+    echo -e "    Please run \"${ME} install\""
     echo -e ""
     exit 1
   fi
@@ -68,15 +71,9 @@ function _audio() {
 }
 
 case $1 in
-  --help|-h)
-    _default ; exit 0 ;;
-  video)
-    _video $@ ; exit 0 ;;
-  audio)
-    _audio $@ ; exit 0 ;;
-  install)
-    _install ; exit 0 ;;
-  *)
-    # TODO: Check if there's $1 and if yes, then default to video.
-    _default ; exit 0 ;;
+  --help|-h)  _default    ; exit 0 ;;
+  video)      _video $@   ; exit 0 ;;
+  audio)      _audio $@   ; exit 0 ;;
+  install)    _install    ; exit 0 ;;
+  *)          _default    ; exit 0 ;;
 esac

