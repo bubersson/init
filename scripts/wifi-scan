@@ -253,6 +253,9 @@ function _run() {
 
   echo -e "[${BLUE}START${RESET}] Initiating the scan with wifi-scan"
 
+  # Print out list of wifis.
+  nmcli dev wifi list
+
   # Create and always use capture dir.
   mkdir -p $CAPTURE_FOLDER
   cd $CAPTURE_FOLDER
