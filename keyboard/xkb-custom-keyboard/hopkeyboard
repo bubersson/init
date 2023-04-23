@@ -1,9 +1,9 @@
 //
-// Custom changes to a keyboard layout. 
+// Custom changes to a keyboard layout.
 // github.com/bubersson/init
 //
 // For full installation see README.md.
-// In short: 
+// In short:
 //  - move this file under /usr/share/X11/xkb/symbols or make a link.
 //  - reference in /usr/share/X11/xkb/rule/evdev.xml
 
@@ -13,7 +13,7 @@ xkb_symbols "hop_keyboard_symbols" {
 
     // Default "pc105" keyboard, English (US) keyboard, Evdev Standardized Keycodes.
     include "pc+us+inet(evdev)"
-    // Alt+shift chooses the next keyboard group. Not sure if needed. 
+    // Alt+shift chooses the next keyboard group. Not sure if needed.
     include "group(alt_shift_toggle)"
     // Caps lock acts as escape.
     include "capslock(escape)"
@@ -22,37 +22,45 @@ xkb_symbols "hop_keyboard_symbols" {
     // Swap right alt and right ctrl (my edit).
     include "hopkeyboard(swap_ralt_rctl)"
 
+    // Repeating is broken. This exact issue
+    // https://www.reddit.com/r/archlinux/comments/96rpvu/remapped_keys_via_xmodmap_and_xkb_not_repeating
+
     // Make (new) alt+backspace behave like Delete.
     override key <BKSP> {
-        type= "PC_ALT_LEVEL2",
-        symbols[Group1]=  [ BackSpace, NoSymbol ],
-        actions[Group1] = [ NoAction(), RedirectKey(key=<DELE>,clearMods=Mod1) ]
+        type = "PC_ALT_LEVEL2",
+        repeat = Yes,
+        symbols[Group1] = [ BackSpace, NoSymbol ],
+        actions[Group1] = [ NoAction(), RedirectKey(key=<DELE>, clearMods=Mod1) ]
     };
-    
-    // Make (new) ctrl+left go all the way to the beginning of the line (like Home). 
+
+    // Make (new) ctrl+left go all the way to the beginning of the line (like Home).
     override key <LEFT> {
-        type="PC_CONTROL_LEVEL2",
+        type = "PC_CONTROL_LEVEL2",
+        repeat = Yes,
         symbols[Group1] = [ Left, NoSymbol ],
         actions[Group1] = [ NoAction(), RedirectKey(key=<HOME>, clearMods=Control) ]
     };
 
-    // Make (new) ctrl+right go all the way to the end of the line (like End). 
-     override key <RGHT> {
-        type="PC_CONTROL_LEVEL2",        
-        symbols[Group1]= [ Right, NoSymbol ],
+    // Make (new) ctrl+right go all the way to the end of the line (like End).
+    override key <RGHT> {
+        type="PC_CONTROL_LEVEL2",
+        repeat = Yes,
+        symbols[Group1] = [ Right, NoSymbol ],
         actions[Group1] = [ NoAction(), RedirectKey(key=<END>, clearMods=Control) ]
     };
 
-    // Make (new) ctrl+up do PgUp. 
+    // Make (new) ctrl+up do PgUp.
     override key <UP> {
-        type="PC_CONTROL_LEVEL2",        
-        symbols[Group1]= [ Up, NoSymbol ],
+        type="PC_CONTROL_LEVEL2",
+        repeat = Yes,
+        symbols[Group1] = [ Up, NoSymbol ],
         actions[Group1] = [ NoAction(), RedirectKey(key=<PGUP>, clearMods=Control) ]
     };
 
-    // Make (new) ctrl+down do PgDown. 
+    // Make (new) ctrl+down do PgDown.
     override key <DOWN> {
-        type="PC_CONTROL_LEVEL2",        
+        type="PC_CONTROL_LEVEL2",
+        repeat = Yes,
         symbols[Group1]= [ Down, NoSymbol ],
         actions[Group1] = [ NoAction(), RedirectKey(key=<PGDN>, clearMods=Control) ]
     };

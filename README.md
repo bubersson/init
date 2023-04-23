@@ -176,7 +176,7 @@ dconf write /org/gnome/desktop/wm/keybindings/toggle-maximized "['<Super>m', '<S
 dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-down "['<Alt>Page_Down']"
 dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-up "['<Alt>Page_Up']"
 dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-left "['<Super>Home']"
-dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-left "['<Super>End']"
+dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-right "['<Super>End']"
 dconf write /org/gnome/mutter/keybindings/toggle-tiled-left "['<Primary><Super>Left', '<Primary><Super>KP_Left', '<Primary><Super>h', '<Super>Left']"
 dconf write /org/gnome/mutter/keybindings/toggle-tiled-right "['<Primary><Super>Right', '<Primary><Super>KP_Right', '<Primary><Super>l', '<Super>Right']"
 ```

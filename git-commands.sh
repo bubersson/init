@@ -17,3 +17,8 @@ function gitcme() {
     git commit -a -m ${1:-'[autoupdate]'}
     git push
 }
+
+function gitcm() {
+    git add .
+    git commit -a -m ${1:-'[autoupdate]'} 
+}
