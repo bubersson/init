@@ -2,6 +2,9 @@
 #### My Aliases #####
 #####################
 
+RED=$(tput setaf 1) #'\033[31m'
+RESET=$(tput sgr0) #'\033[0m'
+
 # some more ls aliases
 alias ..="cd .."
 alias ...="cd .. ; cd .."
@@ -38,7 +41,15 @@ alias log=gitlog
 alias diffbranch="git diff --color master...`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`"
 alias mergebranch='git merge --squash'
 
-alias server="python -m SimpleHTTPServer"
+function server() {
+  if command -v python3 &> /dev/null; then
+    python3 -m http.server ${1}
+  elif command -v python &> /dev/null; then
+    python -m SimpleHTTPServer ${1}
+  else
+    echo -e "${RED}ERROR:${RESET} python or python3 not found"
+  fi
+}
 
 function fd() {
   # Find file by prefix, ignoring case. By default it searches under current directory.
