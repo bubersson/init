@@ -148,7 +148,8 @@ com.visualstudio.code \
 md.obsidian.Obsidian \
 me.kozec.syncthingtk \
 org.qbittorrent.qBittorrent \
-org.signal.Signal
+org.signal.Signal \
+com.github.tchx84.Flatseal
 ```
 
 Disable sounds
