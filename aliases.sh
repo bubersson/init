@@ -23,6 +23,9 @@ else
   alias l='ls -CF'
 fi
 
+# make dir and cd into it
+function mkd { mkdir -p ${1} ; cd ${1} }
+
 # find process
 alias pg='ps -ef | grep '
 

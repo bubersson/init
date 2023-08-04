@@ -2,35 +2,37 @@
 
 ![iTerm screenshot with zsh examples](resources/screenshot.png)
 
-Run following
+Run following all-in-one
+- install scripts 
+- download / install zsh
+- make zsh the default
+
 ```sh
 cd ~
 git clone https://github.com/bubersson/init.git
-```
 
-### ZSH Install & Config
+echo -e "Install zsh and make it default"
+if [[ "$(uname)" == "Darwin" ]]; then ; brew install zsh ; fi
+if [[ "$(uname)" == "Linux" ]]; then ; sudo apt install zsh ; fi
 
-Make ZSH the default shell.
-```sh
 sudo chsh -s $(which zsh)
+touch .zshrc
+
+read -p "Enter the name of this device: " machine_name
+
+echo -e "\n### Install all aliases, bindings, etc. ###" >> .zshrc
+echo -e "# Available colors: https://i.imgur.com/okBgrw4.png" >> .zshrc
+echo -e "export MY_MACHINE_NAME=${machine_name}" >> .zshrc
+echo -e "export MY_PROMPT_CONTEXT_HOST=247" >> .zshrc
+echo -e "export MY_PROMPT_CONTEXT_BG=238" >> .zshrc
+echo -e "source ~/init/install.sh" >> .zshrc
+
+zsh
 ```
 
 Create files and folders
 ```sh
-mkdir src    # my common folder
-touch .zshrc # creates the file if it does not exist. 
-```
-
-Following appends to end of .zshrc (update the machine name)
-```sh
-cat >> .zshrc << ENDOFFILE
-### Install all my aliases, bindings, etc. ###
-### See https://github.com/bubersson/init  ###
-export MY_MACHINE_NAME=pro2
-# Available colors: https://i.imgur.com/okBgrw4.png
-# export MY_MACHINE_COLOR=247 
-source ~/init/install.sh
-ENDOFFILE
+mkdir -p src
 ```
 
 ### Fix prompt font (when broken)
@@ -148,7 +150,8 @@ com.visualstudio.code \
 md.obsidian.Obsidian \
 me.kozec.syncthingtk \
 org.qbittorrent.qBittorrent \
-org.signal.Signal
+org.signal.Signal \
+com.github.tchx84.Flatseal
 ```
 
 Disable sounds

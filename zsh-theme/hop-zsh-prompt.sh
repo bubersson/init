@@ -98,29 +98,27 @@ prompt_end() {
 
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
-  local host_color
-  if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then    
-    if [[ -n $MY_MACHINE_COLOR ]]; then
-      host_color=$MY_MACHINE_COLOR
-    else
-      host_color=$PROMPT_CONTEXT_HOST 
-    fi    
-    prompt_segment $PROMPT_CONTEXT_BG PROMPT_CONTEXT_USERNAME "%n%{%F{$host_color}%}@$MY_MACHINE_NAME"
+  local context_bg
+  local host_fg
+  if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
+    context_bg=${MY_PROMPT_CONTEXT_BG:-$PROMPT_CONTEXT_BG}
+    host_fg=${MY_PROMPT_CONTEXT_HOST:-$PROMPT_CONTEXT_HOST}
+    prompt_segment $context_bg PROMPT_CONTEXT_USERNAME "%n%{%F{$host_fg}%}@$MY_MACHINE_NAME"
   fi
 }
 
 # Git: branch/detached head, dirty status
 prompt_git() {
   (( $+commands[git] )) || return
-  
+
   local PL_BRANCH_CHAR
   () {
     local LC_ALL="" LC_CTYPE="en_US.UTF-8"
     PL_BRANCH_CHAR="⑂" # $'\ue0a0' # 
   }
-  local branch state remote dirty  
-  
-  repo_path=$(git rev-parse --git-dir 2>&1)    
+  local branch state remote dirty
+
+  repo_path=$(git rev-parse --git-dir 2>&1)
   if [ $? -eq 0 ]; then
       git_status="$(git status 2> /dev/null)"
       branch_pattern="^[# ]*On branch ([[:print:]]*)" # For ZSH added "\$" instead of "$". ([^${IFS}]*)
@@ -190,7 +188,7 @@ prompt_git() {
       else
         prompt_segment green $CURRENT_FG
       fi
-      echo -n "${PL_BRANCH_CHAR} ${branch}${state}${remote}${mode}"          
+      echo -n "${PL_BRANCH_CHAR} ${branch}${state}${remote}${mode}"
   fi
 }
 
@@ -308,7 +306,7 @@ build_prompt() {
   prompt_status
 #   prompt_virtualenv
 #   prompt_aws
-  prompt_context  
+  prompt_context
   prompt_git
 #   prompt_bzr
 #   prompt_hg
