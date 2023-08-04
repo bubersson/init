@@ -10,6 +10,8 @@ alias ..="cd .."
 alias ...="cd .. ; cd .."
 
 alias ls='ls --color=auto'
+alias ip='ip --color=auto'
+
 # Linux only
 if [[ "$(uname)" == "Linux" ]]; then
   alias ll='ls -alhF --group-directories-first'
