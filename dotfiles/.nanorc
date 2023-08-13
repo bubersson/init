@@ -1,0 +1,62 @@
+## My .nanorc config
+## Options in this file overwrite the default in /etc/nanorc
+
+## Options
+
+set autoindent
+set historylog
+set indicator
+set jumpyscrolling
+set mouse
+set smarthome
+set stateflags
+set zap
+
+## Colors
+
+set titlecolor bold,white,#444
+set promptcolor lightwhite,#444
+set statuscolor bold,white,green
+set errorcolor bold,white,red
+set spotlightcolor black,lightyellow
+set selectedcolor lightwhite,magenta
+set stripecolor ,yellow
+set scrollercolor cyan
+set numbercolor #444
+set keycolor bold,white
+set functioncolor gray
+
+## Key bindings
+
+# bind ^X cut main
+bind ^C copy main
+bind ^V paste all
+#bind ^Q exit all
+bind ^S savefile main
+#bind ^W writeout main
+#bind ^O insert main
+#set multibuffer
+#bind ^H help all
+#bind ^H exit help
+bind ^F whereis all
+bind ^G findnext all
+#bind ^B wherewas all
+#bind ^D findprevious all
+#bind ^R replace main
+#unbind ^U all
+#unbind ^N main
+#unbind ^Y all
+#unbind M-J main
+#unbind M-T main
+#bind ^A mark main
+#bind ^P location main
+#bind ^T gotoline main
+#bind ^T gotodir browser
+#bind ^T cutrestoffile execute
+#bind ^L linter execute
+#bind ^E execute main
+#bind ^K "{mark}{end}{zap}" main
+#bind ^U "{mark}{home}{zap}" main
+bind ^Z undo main
+bind ^Y redo main
+

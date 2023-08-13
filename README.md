@@ -9,16 +9,20 @@ Run following all-in-one
 
 ```sh
 cd ~
-git clone https://github.com/bubersson/init.git
 
-echo -e "Install zsh and make it default"
-if [[ "$(uname)" == "Darwin" ]]; then ; brew install zsh ; fi
-if [[ "$(uname)" == "Linux" ]]; then ; sudo apt install zsh ; fi
+echo -e "Install pre-requisities: zsh and git"
+if [[ "$(uname)" == "Darwin" ]]; then 
+    brew install git zsh ; fi
+if [[ "$(uname)" == "Linux" ]]; then 
+    sudo apt install git zsh ; fi
+
+git clone https://github.com/bubersson/init.git
 
 sudo chsh -s $(which zsh)
 touch .zshrc
 
-read -p "Enter the name of this device: " machine_name
+# read -p "Enter the name of this device: " 
+machine_name=box
 
 echo -e "\n### Install all aliases, bindings, etc. ###" >> .zshrc
 echo -e "# Available colors: https://i.imgur.com/okBgrw4.png" >> .zshrc
@@ -26,6 +30,8 @@ echo -e "export MY_MACHINE_NAME=${machine_name}" >> .zshrc
 echo -e "export MY_PROMPT_CONTEXT_HOST=247" >> .zshrc
 echo -e "export MY_PROMPT_CONTEXT_BG=238" >> .zshrc
 echo -e "source ~/init/install.sh" >> .zshrc
+
+cp -rf ~/init/dotfiles/.nanorc ~/.nanorc
 
 zsh
 ```
