@@ -1,15 +1,9 @@
 #!/bin/bash
 
+source ~/init/scripts/defaults.sh
+
 ME=$(basename "${0}")
 VERSION="v0.01"
-
-RED=$(tput setaf 1) #'\033[31m'
-GREEN=$(tput setaf 2) #'\033[32m'
-YELLOW=$(tput setaf 3) #'\033[33m'
-BLUE=$(tput setaf 4) #'\033[34m'
-GRAY=$(tput setaf 8) #'\033[90m'
-RESET=$(tput sgr0) #'\033[0m'
-
 
 AIRPORT_CMD="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"
 

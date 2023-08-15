@@ -8,6 +8,10 @@ Run following all-in-one
 - make zsh the default
 
 ```sh
+curl -sSL https://raw.githubusercontent.com/bubersson/init/master/init.sh | bash
+```
+
+```sh
 cd ~
 
 echo -e "Install pre-requisities: zsh and git"
@@ -24,12 +28,12 @@ touch .zshrc
 # read -p "Enter the name of this device: " 
 machine_name=box
 
-echo -e "\n### Install all aliases, bindings, etc. ###" >> .zshrc
+echo -e "\n### Init all aliases, bindings, etc. ###" >> .zshrc
 echo -e "# Available colors: https://i.imgur.com/okBgrw4.png" >> .zshrc
 echo -e "export MY_MACHINE_NAME=${machine_name}" >> .zshrc
 echo -e "export MY_PROMPT_CONTEXT_HOST=247" >> .zshrc
 echo -e "export MY_PROMPT_CONTEXT_BG=238" >> .zshrc
-echo -e "source ~/init/install.sh" >> .zshrc
+echo -e "source ~/init/init.sh" >> .zshrc
 
 cp -rf ~/init/dotfiles/.nanorc ~/.nanorc
 
