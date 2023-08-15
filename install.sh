@@ -1,3 +1,4 @@
+#!/bin/bash
 # Installation script for the bindings.
 
 # Set defaults
@@ -41,7 +42,7 @@ _zshrc() {
     
     my_machine_name=${my_machine_name:-box}
     if [ -f "${HOME_PATH}/.zshrc" ]; then
-        mv "${HOME_PATH}/.zshrc"{,.old}
+        mv "${HOME_PATH}"/.zshrc{,.old}
         echo -e "$INFO Backed up .zshrc as .zshrc.old"
     fi
     touch "${HOME_PATH}/.zshrc"
