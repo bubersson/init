@@ -73,7 +73,7 @@ _install() {
     # Check existing scripts
     if [ ! -z "$MY_MACHINE_NAME" ]; then
         echo -e "$CROSS Already installed. Redirecting from install.sh to init.sh."
-        echo -e "$INFO Please update .zshrc to source '~/init/init.sh'\n"
+        echo -e "$INFO Please run ${GRAY}~/init/install.sh zshrc ${RESET}to source '~/init/init.sh'\n"
         source ~/init/init.sh
         return
     fi
@@ -81,6 +81,7 @@ _install() {
     cd $HOME_PATH
 
     # Install dependencies
+    echo -e "${GREEN}Running install.sh${RESET}"
     echo -e "$INFO Starting install process"
     echo -e "$INFO Install pre-requisities: zsh and git"
     if [[ "$(uname)" == "Darwin" ]]; then
@@ -108,8 +109,8 @@ _install() {
 }
 
 case $1 in
-  --help|-h)  _help       ; return ;;
-  dotfiles)   _dotfiles   ; return ;;  
-  zshrc)      _zshrc      ; return ;;  
+  --help|-h)  _help       ; exit 0 ;;
+  dotfiles)   _dotfiles   ; exit 0 ;;  
+  zshrc)      _zshrc      ; exit 0 ;;  
   *)          _install    ; return ;;
 esac
