@@ -42,6 +42,7 @@ alias tree=gittree
 alias log=gitlog
 alias diffbranch="git diff --color master...`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`"
 alias mergebranch='git merge --squash'
+alias path='echo $PATH | tr -s ":" "\n"'
 
 function server() {
   if command -v python3 &> /dev/null; then

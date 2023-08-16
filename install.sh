@@ -15,36 +15,43 @@ CROSS="${RED}[✗]${RESET}"
 
 HOME_PATH=~
 INSTALL_PATH="${HOME_PATH}/init"
+INSTALL_REPO="https://github.com/bubersson/init.git"
 
 _help() {
     cat <<DOCUMENTATION
 ${GREEN}install.sh${RESET}
-Installation of all init bindings. 
+Installation of all init bindings.
 
 ${YELLOW}USAGE:${RESET}
     ./install.sh <SUBCOMMAND>
-    
+
 ${YELLOW}SUBCOMMANDS:${RESET}
-    ${GREEN}dotfiles  ${RESET}Links dotfiles from home folder to the clonned git folder. 
-    ${GREEN}zshrc     ${RESET}Creates *new* .zshrc file. 
+    ${GREEN}dotfiles  ${RESET}Links dotfiles from home folder to the clonned git folder.
+    ${GREEN}zshrc     ${RESET}Creates *new* .zshrc file.
+    ${GREEN}keyboard  ${RESET}Installs hop keyboard layout on Linux.
 
 DOCUMENTATION
 
 }
 
-_zshrc() {    
+_backup() {
+    if [ -f "${HOME_PATH}/$1" ]; then
+        mv "${HOME_PATH}/$1"{,.old}
+        echo -e "$INFO Backed up $1 as $1.old"
+    fi
+}
+
+_zshrc() {
     local my_machine_name
     if [ -n "$ZSH_VERSION" ]; then
         vared -p "Enter machine name [box]: " -c my_machine_name
     else
         read -p "Enter machine name [box]: " my_machine_name
     fi
-    
+
     my_machine_name=${my_machine_name:-box}
-    if [ -f "${HOME_PATH}/.zshrc" ]; then
-        mv "${HOME_PATH}"/.zshrc{,.old}
-        echo -e "$INFO Backed up .zshrc as .zshrc.old"
-    fi
+
+    _backup ".zshrc"
     touch "${HOME_PATH}/.zshrc"
     echo -e "\n### Init all aliases, bindings, etc. ###" >> "${HOME_PATH}/.zshrc"
     echo -e "# Available colors: https://i.imgur.com/okBgrw4.png" >> "${HOME_PATH}/.zshrc"
@@ -57,16 +64,51 @@ _zshrc() {
 
 
 _link_dotfile() {
-    if [ -f "${HOME_PATH}/$1" ]; then
-        mv "${HOME_PATH}/$1"{,.old}
-        echo -e "$INFO Backed up $1 as $1.old"
-    fi
+    _backup $1
     ln -s "${INSTALL_PATH}/dotfiles/$1" "${HOME_PATH}/$1"
     echo -e "$TICK $1 installed"
 }
 
 _dotfiles() {
     _link_dotfile ".nanorc"
+}
+
+_keyboard() {
+    # Notes:
+    # - the sed only applies the replacement on the first occurence
+    # - may need to restart the machine after doing this
+    # - the `XKBLAYOUT=hopkeyboard` seems to be the main thing that actually switches it
+    echo -e "$INFO Starting installation of hopkeyboard"
+    sudo cp ~/init/keyboard/xkb-custom-keyboard/hopkeyboard /usr/share/X11/xkb/symbols/hopkeyboard
+    echo -e "$TICK Keyboard layout copied under /usr/share/X11/xkb/symbols/hopkeyboard"
+
+    sudo sed -i.bak "0,/<variantList>/{s|<variantList>|\
+    <variantList>\n\
+            <variant>\n\
+                <configItem>\n\
+                    <name>hopkeyboard</name>\n\
+                    <description>English (US, Hop - Mac friendly touches)</description>\n\
+                </configItem>\n\
+            </variant>\n\
+    |}" /usr/share/X11/xkb/rules/evdev.xml
+    echo -e "$TICK Variant added to /usr/share/X11/xkb/rules/evdev.xml"
+
+    sudo bash -c 'cat > /etc/default/keyboard << ENDOFFILE
+XKBLAYOUT=hopkeyboard
+BACKSPACE=guess
+ENDOFFILE'
+    echo -e "$TICK Keyboard added to /etc/default/keyboard"
+
+    cat >> .profile << ENDOFFILE
+### Fix the repeated keys with hopkeyboard
+xset r on
+xset r 22
+seq 111 116 | xargs -n 1 xset r
+ENDOFFILE
+    echo -e "$TICK Updated .profile to fix key repeating issues"
+
+    echo -e "$INFO Please restart the computer now to see applied changes"
+    echo -e "$INFO You may need to select the Hop Keyboard from the language selection"
 }
 
 _install() {
@@ -91,7 +133,7 @@ _install() {
     fi
 
     # Clone repo
-    git clone https://github.com/bubersson/init.git $INSTALL_PATH
+    git clone $INSTALL_REPO $INSTALL_PATH
     echo -e "$TICK Repository clonned"
 
     echo -e "$INFO Change default shell to zsh, install .zshrc and other dotfiles"
@@ -99,7 +141,7 @@ _install() {
     echo -e "$TICK Shell changed to $(which zsh)"
 
     # Setup dotfiles
-    _zshrc 
+    _zshrc
     _dotfiles
 
     echo -e "$TICK All$GREEN DONE$RESET. Running zsh now...\n"
@@ -108,8 +150,9 @@ _install() {
 }
 
 case $1 in
-  --help|-h)  _help       ; return ;;
-  dotfiles)   _dotfiles   ; return ;;  
-  zshrc)      _zshrc      ; return ;;  
+  --help|-h)  _help       ; exit 0 ;;
+  dotfiles)   _dotfiles   ; exit 0 ;;
+  zshrc)      _zshrc      ; exit 0 ;;
+  keyboard)   _keyboard   ; exit 0 ;;
   *)          _install    ; return ;;
 esac
