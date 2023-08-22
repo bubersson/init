@@ -2,8 +2,7 @@
 #### My Aliases #####
 #####################
 
-RED=$(tput setaf 1) #'\033[31m'
-RESET=$(tput sgr0) #'\033[0m'
+source ~/init/scripts/defaults.sh
 
 # some more ls aliases
 alias ..="cd .."
@@ -42,6 +41,14 @@ alias tree=gittree
 alias log=gitlog
 alias diffbranch="git diff --color master...`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`"
 alias mergebranch='git merge --squash'
+
+# networking
+alias ports="netstat -tulnp | grep LISTEN"
+alias router="ip route"
+alias ip-private="hostname -I | awk {'print $1}'"
+alias ip-public="curl -4 ifconfig.co"
+
+# system
 alias path='echo $PATH | tr -s ":" "\n"'
 
 function server() {
@@ -71,11 +78,23 @@ if [[ "$(uname)" == "Darwin" ]]; then
     alias up='brew-refresh; brew update; brew upgrade'
 fi
 
+function _run_updates() {
+  if command -v apt &> /dev/null; then
+    echo -e "$INFO Running$WHITE sudo apt update ; sudo apt upgrade$RESET"
+    sudo apt update
+    sudo apt upgrade
+  fi
+  if command -v flatpak &> /dev/null; then
+    echo -e "$INFO Running$WHITE flatpak update$RESET"
+    flatpak update
+  fi
+}
+
 # Linux only.
 if [[ "$(uname)" == "Linux" ]]; then
     alias i='sudo apt'
     alias f='xdg-open'
-    alias up='sudo apt update; sudo apt upgrade'
+    alias up=_run_updates
 fi
 
 # If ccat exists, alias it to cat.

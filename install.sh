@@ -13,7 +13,7 @@ INFO="${BLUE}[i]${RESET}"
 TICK="${GREEN}[✓]${RESET}"
 CROSS="${RED}[✗]${RESET}"
 
-HOME_PATH=~
+HOME_PATH=$HOME
 INSTALL_PATH="${HOME_PATH}/init"
 INSTALL_REPO="https://github.com/bubersson/init.git"
 
@@ -29,6 +29,7 @@ ${YELLOW}SUBCOMMANDS:${RESET}
     ${GREEN}dotfiles  ${RESET}Links dotfiles from home folder to the clonned git folder.
     ${GREEN}zshrc     ${RESET}Creates *new* .zshrc file.
     ${GREEN}keyboard  ${RESET}Installs hop keyboard layout on Linux.
+    ${GREEN}mc        ${RESET}Installs custom mc config.
 
 DOCUMENTATION
 
@@ -71,6 +72,17 @@ _link_dotfile() {
 
 _dotfiles() {
     _link_dotfile ".nanorc"
+}
+
+_mc_config() {
+    # config
+    mkdir -p ~/.config/mc
+    cp ~/init/configs/mc.ini ~/.config/mc/ini
+    cp ~/init/configs/mc-filehighlight.ini ~/.config/mc/filehighlight.ini
+    # skin
+    mkdir -p ~/.local/share/mc/skins
+    cp ~/init/configs/mc-hop-skin.ini ~/.local/share/mc/skins/mc-hop-skin.ini
+    echo -e "$TICK Midnight Commander configured"
 }
 
 _keyboard() {
@@ -155,5 +167,6 @@ case $1 in
   dotfiles)   _dotfiles   ; exit 0 ;;
   zshrc)      _zshrc      ; exit 0 ;;
   keyboard)   _keyboard   ; exit 0 ;;  
+  mc)         _mc_config  ; exit 0 ;;  
   *)          _install    ; return ;;
 esac

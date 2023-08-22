@@ -8,8 +8,11 @@ function _keyboard() {
   setxkbmap -device $standard -layout "hopkeyboard"
 
   # Set layout for Logitech keyboard.
-  local logi=$(xinput --list --id-only 'keyboard:Logitech MX Keys')
-  setxkbmap -device $logi -layout "hopkeyboard+hopkeyboard(swap_lalt_lctl_lwin)"
+  xinput --list --id-only 'keyboard:Logitech MX Keys'
+  if [ $? -eq 0 ]; then  
+    local logi=$(xinput --list --id-only 'keyboard:Logitech MX Keys')
+    setxkbmap -device $logi -layout "hopkeyboard+hopkeyboard(swap_lalt_lctl_lwin)"
+  else
 
   # Fix the issue with key repeating
   # https://www.reddit.com/r/archlinux/comments/96rpvu/remapped_keys_via_xmodmap_and_xkb_not_repeating

@@ -7,6 +7,7 @@ BLUE=$(tput setaf 4) #'\033[34m'
 GRAY=$(tput setaf 8) #'\033[90m'
 RESET=$(tput sgr0) #'\033[0m'
 LIGHT_BLUE=$(tput setaf 14) #'\033[34m'
+WHITE=$(tput setaf 15)
 
 INFO="${BLUE}[i]${RESET}"
 TICK="${GREEN}[✓]${RESET}"
