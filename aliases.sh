@@ -10,6 +10,7 @@ alias ...="cd .. ; cd .."
 
 alias ls='ls --color=auto'
 alias ip='ip --color=auto'
+alias mc='mc --nosubshell' # for fast start on Mac
 
 # Linux only
 if [[ "$(uname)" == "Linux" ]]; then

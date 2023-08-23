@@ -79,6 +79,7 @@ _mc_config() {
     mkdir -p ~/.config/mc
     cp ~/init/configs/mc.ini ~/.config/mc/ini
     cp ~/init/configs/mc-filehighlight.ini ~/.config/mc/filehighlight.ini
+    cp ~/init/configs/mc.keymap ~/.config/mc/mc.keymap
     # skin
     mkdir -p ~/.local/share/mc/skins
     cp ~/init/configs/mc-hop-skin.ini ~/.local/share/mc/skins/mc-hop-skin.ini
