@@ -44,10 +44,18 @@ alias diffbranch="git diff --color master...`git branch 2> /dev/null | sed -e '/
 alias mergebranch='git merge --squash'
 
 # networking
-alias ports="netstat -tulnp | grep LISTEN"
-alias router="ip route"
-alias ip-private="hostname -I | awk {'print $1}'"
-alias ip-public="curl -4 ifconfig.co"
+if [[ "$(uname)" == "Darwin" ]]; then
+  alias ports="sudo lsof -PiTCP -sTCP:LISTEN"
+  alias router="netstat -rn |grep default"
+  alias ip-private="ipconfig getifaddr en0"
+  alias ip-public="curl -4 ifconfig.co"  
+fi
+if [[ "$(uname)" == "Linux" ]]; then
+  alias ports="netstat -tulnp | grep LISTEN"
+  alias router="ip route"
+  alias ip-private="hostname -I | awk {'print $1}'"
+  alias ip-public="curl -4 ifconfig.co"  
+fi
 
 # system
 alias path='echo $PATH | tr -s ":" "\n"'
