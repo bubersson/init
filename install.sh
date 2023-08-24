@@ -139,10 +139,10 @@ ENDOFFILE
 
 _apps() {
 	if [[ "$(uname)" == "Darwin" ]]; then
-        brew install mc micro
+        brew install mc micro htop curl
     fi
     if [[ "$(uname)" == "Linux" ]]; then
-        sudo apt install mc micro
+        sudo apt install mc micro htop curl
     fi
 }
 
@@ -189,6 +189,7 @@ case $1 in
   --help|-h)  _help          ; exit 0 ;;
   dotfiles)   _dotfiles      ; exit 0 ;;
   zshrc)      _zshrc         ; exit 0 ;;
+  apps)       _apps          ; exit 0 ;;  
   keyboard)   _keyboard      ; exit 0 ;;  
   mc)         _mc_config     ; exit 0 ;;  
   micro)      _micro_config  ; exit 0 ;;  
