@@ -1,0 +1,9 @@
+{
+    "colorscheme": "hop-dark",
+    "statusformatl": " 🔸 $(filename) $(modified)($(line),$(col)) $(status.paste)| ft:$(opt:filetype) | $(opt:fileformat) | $(opt:encoding)",
+    "statusformatr": "cmd:Ctrl+P quit:Ctrl-Q | tabs:$(opt:tabsize) ",
+    "infobar": false, 
+    "statusline": true,     
+    "scrollbar": true,
+    "divchars": "│─"
+}

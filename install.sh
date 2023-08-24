@@ -28,8 +28,10 @@ ${YELLOW}USAGE:${RESET}
 ${YELLOW}SUBCOMMANDS:${RESET}
     ${GREEN}dotfiles  ${RESET}Links dotfiles from home folder to the clonned git folder.
     ${GREEN}zshrc     ${RESET}Creates *new* .zshrc file.
+    ${GREEN}apps      ${RESET}Install common useful apps
     ${GREEN}keyboard  ${RESET}Installs hop keyboard layout on Linux.
-    ${GREEN}mc        ${RESET}Installs custom mc config.
+    ${GREEN}mc        ${RESET}Installs custom mc config and styles.
+    ${GREEN}micro     ${RESET}Installs custom micro config and styles.
 
 DOCUMENTATION
 
@@ -77,13 +79,24 @@ _dotfiles() {
 _mc_config() {
     # config
     mkdir -p ~/.config/mc
-    cp ~/init/configs/mc.ini ~/.config/mc/ini
-    cp ~/init/configs/mc-filehighlight.ini ~/.config/mc/filehighlight.ini
-    cp ~/init/configs/mc.keymap ~/.config/mc/mc.keymap
+    cp ~/init/configs/mc/mc.ini ~/.config/mc/mc.ini
+    cp ~/init/configs/mc/filehighlight.ini ~/.config/mc/filehighlight.ini
+    cp ~/init/configs/mc/mc.keymap ~/.config/mc/mc.keymap
     # skin
     mkdir -p ~/.local/share/mc/skins
-    cp ~/init/configs/mc-hop-skin.ini ~/.local/share/mc/skins/mc-hop-skin.ini
+    cp ~/init/configs/mc/hop-dark-skin.ini ~/.local/share/mc/skins/hop-dark-skin.ini
     echo -e "$TICK Midnight Commander configured"
+}
+
+_micro_config() {
+    # config
+    mkdir -p ~/.config/micro
+    cp ~/init/configs/micro/bindings.json ~/.config/micro/bindings.json
+    cp ~/init/configs/micro/settings.json ~/.config/micro/settings.json
+    # skin
+    mkdir -p ~/.config/micro/colorschemes
+    cp ~/init/configs/micro/colorschemes/hop-dark.micro ~/.config/micro/colorschemes/hop-dark.micro
+    echo -e "$TICK Micro editor configured"
 }
 
 _keyboard() {
@@ -122,6 +135,15 @@ ENDOFFILE
 
     echo -e "$INFO Please restart the computer now to see applied changes"
     echo -e "$INFO You may need to select the Hop Keyboard from the language selection"
+}
+
+_apps() {
+	if [[ "$(uname)" == "Darwin" ]]; then
+        brew install mc micro
+    fi
+    if [[ "$(uname)" == "Linux" ]]; then
+        sudo apt install mc micro
+    fi
 }
 
 _install() {
@@ -164,10 +186,11 @@ _install() {
 }
 
 case $1 in
-  --help|-h)  _help       ; exit 0 ;;
-  dotfiles)   _dotfiles   ; exit 0 ;;
-  zshrc)      _zshrc      ; exit 0 ;;
-  keyboard)   _keyboard   ; exit 0 ;;  
-  mc)         _mc_config  ; exit 0 ;;  
-  *)          _install    ; return ;;
+  --help|-h)  _help          ; exit 0 ;;
+  dotfiles)   _dotfiles      ; exit 0 ;;
+  zshrc)      _zshrc         ; exit 0 ;;
+  keyboard)   _keyboard      ; exit 0 ;;  
+  mc)         _mc_config     ; exit 0 ;;  
+  micro)      _micro_config  ; exit 0 ;;  
+  *)          _install       ; return ;;
 esac

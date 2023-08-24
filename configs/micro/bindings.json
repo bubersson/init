@@ -1,0 +1,8 @@
+{
+    "CtrlShiftUp":    "MoveLinesUp",
+    "CtrlShiftDown":  "MoveLinesDown",    
+    "Ctrl-d":  "DuplicateLine",
+    "Ctrl-p":  "CommandMode",
+    "Ctrl-g":  "FindNext",
+    "Ctrl-`":  "NextTab"
+}
