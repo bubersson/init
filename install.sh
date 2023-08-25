@@ -79,7 +79,7 @@ _dotfiles() {
 _mc_config() {
     # config
     mkdir -p ~/.config/mc
-    cp ~/init/configs/mc/mc.ini ~/.config/mc/mc.ini
+    cp ~/init/configs/mc/ini ~/.config/mc/ini
     cp ~/init/configs/mc/filehighlight.ini ~/.config/mc/filehighlight.ini
     cp ~/init/configs/mc/mc.keymap ~/.config/mc/mc.keymap
     # skin

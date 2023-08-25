@@ -1,8 +1,10 @@
 {
     "CtrlShiftUp":    "MoveLinesUp",
     "CtrlShiftDown":  "MoveLinesDown",    
-    "Ctrl-d":  "DuplicateLine",
+    "Ctrl-d":  "SpawnMultiCursor",
     "Ctrl-p":  "CommandMode",
-    "Ctrl-g":  "FindNext",
-    "Ctrl-`":  "NextTab"
+    "Ctrl-g":  "FindNext",    
+    "\u001bshiftctrld": "DuplicateLine",
+    "\u001bshiftctrls": "VSplit",
+    "\u001bctrltilde": "NextSplit,NextTab"
 }

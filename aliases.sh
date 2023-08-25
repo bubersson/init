@@ -110,3 +110,9 @@ fi
 if command -v ccat &> /dev/null; then
     alias cat='ccat --bg="dark" $*'
 fi
+
+# Configure editor. If micro is available, use micro. 
+if command -v micro &> /dev/null; then
+    export EDITOR=$(which micro)
+    alias nano=$(which micro)
+fi
