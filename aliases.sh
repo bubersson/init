@@ -115,4 +115,5 @@ fi
 if command -v micro &> /dev/null; then
     export EDITOR=$(which micro)
     alias nano=$(which micro)
+    alias e=$(which micro)
 fi

@@ -1,6 +1,8 @@
 {
-    "CtrlShiftUp":    "MoveLinesUp",
+    "CtrlShiftUp":    "MoveLinesUp",    
     "CtrlShiftDown":  "MoveLinesDown",    
+    "ShiftPageUp":    "MoveLinesUp",
+    "ShiftPageDown":    "MoveLinesDown",    
     "Ctrl-d":  "SpawnMultiCursor",
     "Ctrl-p":  "CommandMode",
     "Ctrl-g":  "FindNext",    

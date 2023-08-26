@@ -74,6 +74,7 @@ _link_dotfile() {
 
 _dotfiles() {
     _link_dotfile ".nanorc"
+    _kitty_config
 }
 
 _mc_config() {
@@ -97,6 +98,13 @@ _micro_config() {
     mkdir -p ~/.config/micro/colorschemes
     cp ~/init/configs/micro/colorschemes/hop-dark.micro ~/.config/micro/colorschemes/hop-dark.micro
     echo -e "$TICK Micro editor configured"
+}
+
+_kitty_config () {
+    #TODO
+    _backup ~/.config/kitty/kitty.conf
+    ln -s ~/init/configs/kitty/kitty.conf ~/.config/kitty/kitty.conf
+    echo -e "$TICK kitty installed"
 }
 
 _keyboard() {
