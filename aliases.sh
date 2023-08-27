@@ -10,6 +10,7 @@ alias ...="cd .. ; cd .."
 
 alias ls='ls --color=auto'
 alias ip='ip --color=auto'
+alias grep='grep --color=auto'
 alias mc='mc --nosubshell' # for fast start on Mac
 
 # Linux only
@@ -114,6 +115,5 @@ fi
 # Configure editor. If micro is available, use micro. 
 if command -v micro &> /dev/null; then
     export EDITOR=$(which micro)
-    alias nano=$(which micro)
-    alias e=$(which micro)
+    alias nano=$(which micro)    
 fi
