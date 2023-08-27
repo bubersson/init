@@ -72,3 +72,5 @@ setopt prompt_subst # enables substitution in prompt
 setopt interactive_comments   # allow copypasting scripts with "#" comments
 autoload -Uz vcs_info # from git command
 source ~/init/zsh-theme/hop-zsh-prompt.sh
+# Init plugin for shift-select
+source ~/init/zsh-plugins/zsh-shift-select/zsh-shift-select.plugin.zsh
