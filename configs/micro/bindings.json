@@ -1,11 +1,11 @@
 {
-    "CtrlShiftUp":    "MoveLinesUp",    
-    "CtrlShiftDown":  "MoveLinesDown",    
+    "CtrlShiftUp":    "MoveLinesUp",
+    "CtrlShiftDown":  "MoveLinesDown",
     "ShiftPageUp":    "MoveLinesUp",
-    "ShiftPageDown":    "MoveLinesDown",    
+    "ShiftPageDown":    "MoveLinesDown",
     "Ctrl-d":  "SpawnMultiCursor",
     "Ctrl-p":  "CommandMode",
-    "Ctrl-g":  "FindNext",    
+    "Ctrl-g":  "FindNext",
     "\u001bshiftctrld": "DuplicateLine",
     "\u001bshiftctrls": "VSplit",
     "\u001bctrltilde": "NextSplit,NextTab"

@@ -105,6 +105,7 @@ _kitty_config () {
     #TODO
     _backup ~/.config/kitty/kitty.conf
     ln -s ~/init/configs/kitty/kitty.conf ~/.config/kitty/kitty.conf
+    ln -s ~/init/configs/kitty/tab_bar.py ~/.config/kitty/tab_bar.py
     echo -e "$TICK kitty installed"
 }
 
