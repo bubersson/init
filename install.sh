@@ -7,6 +7,7 @@ GREEN=$(tput setaf 2) #'\033[32m'
 YELLOW=$(tput setaf 3) #'\033[33m'
 BLUE=$(tput setaf 4) #'\033[34m'
 GRAY=$(tput setaf 8) #'\033[90m'
+DGRAY=$(tput setaf 236)
 RESET=$(tput sgr0) #'\033[0m'
 WHITE=$(tput setaf 15)
 
@@ -70,16 +71,26 @@ _zshrc() {
 
 _link_dotfile() {
     _backup $2
-    ln -s "$1" "$2"
+    local error_message=$( ln -s "$1" "$2" 2>&1)
     local base_name=$(basename $2)
-    echo -e "$TICK   ${WHITE}${3:-$base_name}${RESET} linked"
+    local dir_name=$(dirname $2)
+    if [[ -z "${error_message// }" ]]; then
+        echo -e " ${DGRAY}├ ${GREEN}✓ ${GRAY}link ${dir_name}/${RESET}${base_name}"
+    else
+        echo -e " ${DGRAY}├ ${RED}✗ ${GRAY}link ${RESET}${base_name}: ${RED}${error_message}${RESET}"
+    fi
 }
 
 _copy_dotfile() {
     _backup $2
-    cp "$1" "$2"
+    local error_message=$( cp "$1" "$2" 2>&1)
     local base_name=$(basename $2)
-    echo -e "$TICK   ${WHITE}${3:-$base_name}${RESET} copied"
+    local dir_name=$(dirname $2)
+    if [[ -z "${error_message// }" ]]; then
+        echo -e " ${DGRAY}├ ${GREEN}✓ ${GRAY}copy ${dir_name}/${RESET}${base_name}"
+    else
+        echo -e " ${DGRAY}├ ${RED}✗ ${GRAY}copy ${RESET}${base_name}: ${RED}${error_message}${RESET}"
+    fi
 }
 
 _dotfiles() {
@@ -90,13 +101,13 @@ _dotfiles() {
 }
 
 _nano_config() {
-    echo -e "$INFO configuring nano"
+    echo -e " ${DGRAY}┌ ${GRAY} configuring nano"
     _link_dotfile "${INSTALL_PATH}/dotfiles/.nanorc" "${HOME_PATH}/.nanorc"
     echo -e "$TICK nano configured"
 }
 
 _mc_config() {
-    echo -e "$INFO configuring mc"
+    echo -e " ${DGRAY}┌ ${GRAY}configuring mc"
     # config
     mkdir -p ~/.config/mc
     _copy_dotfile "${INSTALL_PATH}/configs/mc/ini" "${HOME_PATH}/.config/mc/ini"
@@ -109,7 +120,7 @@ _mc_config() {
 }
 
 _micro_config() {
-    echo -e "$INFO configuring micro"
+    echo -e " ${DGRAY}┌ ${GRAY}configuring micro"
     # config
     mkdir -p ~/.config/micro
     _copy_dotfile "${INSTALL_PATH}/configs/micro/bindings.json" "${HOME_PATH}/.config/micro/bindings.json"
@@ -121,7 +132,7 @@ _micro_config() {
 }
 
 _kitty_config () {
-    echo -e "$INFO configuring kitty"
+    echo -e " ${DGRAY}┌ ${GRAY}configuring kitty"
     mkdir -p ~/.config/kitty
     _link_dotfile "${INSTALL_PATH}/configs/kitty/kitty.conf" "${HOME_PATH}/.config/kitty/kitty.conf"
     _link_dotfile "${INSTALL_PATH}/configs/kitty/tab_bar.py" "${HOME_PATH}/.config/kitty/tab_bar.py"
