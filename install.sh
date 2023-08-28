@@ -228,5 +228,6 @@ case $1 in
   keyboard)   _keyboard      ; exit 0 ;;
   mc)         _mc_config     ; exit 0 ;;
   micro)      _micro_config  ; exit 0 ;;
+  kitty)      _kitty_config  ; exit 0 ;;
   *)          _help          ; exit 0 ;;
 esac
