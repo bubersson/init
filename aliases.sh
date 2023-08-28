@@ -2,18 +2,26 @@
 #### My Aliases #####
 #####################
 
+# Standard one letter aliases
+# f - find file
+# e - editor
+# i - install / update software
+# l - list directory
+# o - open file in window manager
+# z - jump to folder (fuzzy)
+
 source ~/init/scripts/defaults.sh
 
-# some more ls aliases
+# colorize
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias ip='ip --color=auto'
+
+# handling files and folders
 alias ..="cd .."
 alias ...="cd .. ; cd .."
-
-alias ls='ls --color=auto'
-alias ip='ip --color=auto'
-alias grep='grep --color=auto'
 alias mc='mc --nosubshell' # for fast start on Mac
 
-# Linux only
 if [[ "$(uname)" == "Linux" ]]; then
   alias ll='ls -alhF --group-directories-first'
   alias la='ls -A --group-directories-first'
@@ -24,11 +32,18 @@ else
   alias l='ls -CF'
 fi
 
-# make dir and cd into it
-function mkd { mkdir -p ${1} ; cd ${1} }
+# Find file by prefix (ignore case). Usage: `fd myfile` or `fd myfile.txt ~`
+function f() { 
+  find ${2:-.} -iname "${1}*" 2>/dev/null 
+} 
+alias fd=f # backwards compatibility
+function mkd() { mkdir -p ${1} ; cd ${1} } # make dir and cd into it
+
+ # Install z
+. ~/init/scripts/z.sh
 
 # find process
-alias pg='ps -ef | grep '
+alias pg='ps -ef | grep ' 
 
 # git aliases
 alias cdb='git switch'
@@ -57,10 +72,6 @@ if [[ "$(uname)" == "Linux" ]]; then
   alias ip-private="hostname -I | awk {'print $1}'"
   alias ip-public="curl -4 ifconfig.co"  
 fi
-
-# system
-alias path='echo $PATH | tr -s ":" "\n"'
-
 function server() {
   if command -v python3 &> /dev/null; then
     python3 -m http.server ${1}
@@ -71,24 +82,38 @@ function server() {
   fi
 }
 
-function fd() {
-  # Find file by prefix, ignoring case. By default it searches under current directory.
-  # Usage: `fd myfile` or `fd myfile.txt ~`
-  find ${2:-.} -iname "${1}*" 2>/dev/null
-}
-
-# Install z
-. ~/init/scripts/z.sh
-
-# Mac OS X only.
-if [[ "$(uname)" == "Darwin" ]]; then
-    # Open current folder in finder (Mac OS X only)
-    alias i='brew'
-    alias f='open -a Finder'
-    alias up='brew-refresh; brew update; brew upgrade'
+# editor
+if command -v micro &> /dev/null; then
+  # If micro is available, use micro. 
+  export EDITOR=$(which micro)
+  alias e=$(which micro)    
+else
+  export EDITOR=$(which nano)
+  alias e=$(which nano)    
 fi
 
-function _run_updates() {
+# system
+alias path='echo $PATH | tr -s ":" "\n"'
+
+# Mac OS X only.
+function _run_updates_mac() {  
+  if command -v brew &> /dev/null; then
+    echo -e "$INFO Running$WHITE brew-refresh ; brew update ; brew upgrade$RESET"
+    brew-refresh 
+    brew update 
+    brew upgrade
+  else 
+    echo -e "$ERROR brew not found"
+  fi
+}
+if [[ "$(uname)" == "Darwin" ]]; then 
+  alias i='brew'
+  alias o='open -a Finder' # Open folder or file in the default application (e.g. Finder)
+  alias up=_run_updates_mac
+fi
+
+# Linux only.
+function _run_updates_linux() {
   if command -v apt &> /dev/null; then
     echo -e "$INFO Running$WHITE sudo apt update ; sudo apt upgrade$RESET"
     sudo apt update
@@ -97,23 +122,15 @@ function _run_updates() {
   if command -v flatpak &> /dev/null; then
     echo -e "$INFO Running$WHITE flatpak update$RESET"
     flatpak update
-  fi
+  fi  
 }
-
-# Linux only.
 if [[ "$(uname)" == "Linux" ]]; then
-    alias i='sudo apt'
-    alias f='xdg-open'
-    alias up=_run_updates
+  alias i='sudo apt'
+  alias o='xdg-open'
+  alias up=_run_updates_linux
 fi
 
 # If ccat exists, alias it to cat.
 if command -v ccat &> /dev/null; then
-    alias cat='ccat --bg="dark" $*'
-fi
-
-# Configure editor. If micro is available, use micro. 
-if command -v micro &> /dev/null; then
-    export EDITOR=$(which micro)
-    alias nano=$(which micro)    
+  alias cat='ccat --bg="dark" $*'
 fi

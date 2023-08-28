@@ -101,13 +101,13 @@ _dotfiles() {
 }
 
 _nano_config() {
-    echo -e " ${DGRAY}┌ ${GRAY} configuring nano"
+    echo -e "${GREEN}[ ]${RESET} configuring nano"
     _link_dotfile "${INSTALL_PATH}/dotfiles/.nanorc" "${HOME_PATH}/.nanorc"
     echo -e "$TICK nano configured"
 }
 
 _mc_config() {
-    echo -e " ${DGRAY}┌ ${GRAY}configuring mc"
+    echo -e "${GREEN}[ ]${RESET} configuring mc"
     # config
     mkdir -p ~/.config/mc
     _copy_dotfile "${INSTALL_PATH}/configs/mc/ini" "${HOME_PATH}/.config/mc/ini"
@@ -120,19 +120,19 @@ _mc_config() {
 }
 
 _micro_config() {
-    echo -e " ${DGRAY}┌ ${GRAY}configuring micro"
+    echo -e "${GREEN}[ ]${RESET} configuring micro"
     # config
     mkdir -p ~/.config/micro
-    _copy_dotfile "${INSTALL_PATH}/configs/micro/bindings.json" "${HOME_PATH}/.config/micro/bindings.json"
-    _copy_dotfile "${INSTALL_PATH}/configs/micro/settings.json" "${HOME_PATH}/.config/micro/settings.json"
+    _link_dotfile "${INSTALL_PATH}/configs/micro/bindings.json" "${HOME_PATH}/.config/micro/bindings.json"
+    _link_dotfile "${INSTALL_PATH}/configs/micro/settings.json" "${HOME_PATH}/.config/micro/settings.json"
     # skin
     mkdir -p ~/.config/micro/colorschemes
-    _copy_dotfile "${INSTALL_PATH}/configs/micro/colorschemes/hop-dark.micro" "${HOME_PATH}/.config/micro/colorschemes/hop-dark.micro"
+    _link_dotfile "${INSTALL_PATH}/configs/micro/colorschemes/hop-dark.micro" "${HOME_PATH}/.config/micro/colorschemes/hop-dark.micro"
     echo -e "$TICK Micro editor configured"
 }
 
 _kitty_config () {
-    echo -e " ${DGRAY}┌ ${GRAY}configuring kitty"
+    echo -e "${GREEN}[ ]${RESET} configuring kitty"
     mkdir -p ~/.config/kitty
     _link_dotfile "${INSTALL_PATH}/configs/kitty/kitty.conf" "${HOME_PATH}/.config/kitty/kitty.conf"
     _link_dotfile "${INSTALL_PATH}/configs/kitty/tab_bar.py" "${HOME_PATH}/.config/kitty/tab_bar.py"

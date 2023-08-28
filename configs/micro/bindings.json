@@ -1,12 +1,19 @@
 {
-    "CtrlShiftUp":    "MoveLinesUp",
-    "CtrlShiftDown":  "MoveLinesDown",
-    "ShiftPageUp":    "MoveLinesUp",
-    "ShiftPageDown":    "MoveLinesDown",
-    "Ctrl-d":  "SpawnMultiCursor",
-    "Ctrl-p":  "CommandMode",
-    "Ctrl-g":  "FindNext",
+    "\u001b[47;5u": "command:comment",
+    "\u001b[68;5u": "DuplicateLine",
+    "\u001b[83;5u": "VSplit",
+    "\u001b[96;5u": "NextSplit,NextTab",
+    "\u001bctrltilde": "NextSplit,NextTab",
     "\u001bshiftctrld": "DuplicateLine",
     "\u001bshiftctrls": "VSplit",
-    "\u001bctrltilde": "NextSplit,NextTab"
+    "\u003cEsc\u003e\u003cEsc\u003e": "Quit",
+    "Alt-/": "lua:comment.comment",
+    "Ctrl-d": "SpawnMultiCursor",
+    "Ctrl-g": "FindNext",
+    "Ctrl-p": "CommandMode",
+    "CtrlShiftDown": "MoveLinesDown",
+    "CtrlShiftUp": "MoveLinesUp",
+    "CtrlUnderscore": "lua:comment.comment",
+    "ShiftPageDown": "MoveLinesDown",
+    "ShiftPageUp": "MoveLinesUp"
 }
