@@ -8,6 +8,7 @@
 # i - install / update software
 # l - list directory
 # o - open file in window manager
+# s - ssh
 # z - jump to folder (fuzzy)
 
 source ~/init/scripts/defaults.sh
@@ -60,6 +61,7 @@ alias diffbranch="git diff --color master...`git branch 2> /dev/null | sed -e '/
 alias mergebranch='git merge --squash'
 
 # networking
+alias s='ssh'
 if [[ "$(uname)" == "Darwin" ]]; then
   alias ports="sudo lsof -PiTCP -sTCP:LISTEN"
   alias router="netstat -rn |grep default"

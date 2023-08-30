@@ -6,6 +6,7 @@
     "\u001bctrltilde": "NextSplit,NextTab",
     "\u001bshiftctrld": "DuplicateLine",
     "\u001bshiftctrls": "VSplit",
+    "\u001bcopy": "Copy",
     "\u003cEsc\u003e\u003cEsc\u003e": "Quit",
     "Alt-/": "lua:comment.comment",
     "Ctrl-d": "SpawnMultiCursor",

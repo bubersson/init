@@ -4,7 +4,6 @@
 autoload -U colors && colors	# Load colors
 
 # Enable ls colors
-alias ls='ls -G'
 export LSCOLORS="Gxfxcxdxbxegedabagacad" # Applies on MacOS(BSD) only.
 
 # Much better search in history with using just up/down arrow after the word
@@ -26,6 +25,31 @@ bindkey "^[[F" end-of-line
 
 # Make delete work to delete a char.
 bindkey "^[[3~" delete-char
+
+# Setup copypaste
+x-copy() {
+    zle copy-region-as-kill
+    # xclip -sel CLIPBOARD -in;
+    print -rn -- $CUTBUFFER | pbcopy    
+}
+zle -N x-copy
+
+x-cut() {
+    zle kill-region
+    print -rn -- $CUTBUFFER | pbcopy
+}
+zle -N x-cut
+
+x-paste() {    
+    # xclip -sel CLIPBOARD -out;
+    PASTE=$(pbpaste)
+    LBUFFER="$LBUFFER$PASTE"
+}
+zle -N x-paste
+
+bindkey "^[copy" x-copy # Has to be mapped from Ctrl+C in Terminal App
+bindkey "^X" x-cut
+bindkey "^V" x-paste
 
 # History file configuration
 [ -z "$HISTFILE" ] && HISTFILE="$HOME/.zsh_history"
