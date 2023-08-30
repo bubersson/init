@@ -28,22 +28,33 @@ bindkey "^[[3~" delete-char
 
 # Setup copypaste
 x-copy() {
-    zle copy-region-as-kill
-    # xclip -sel CLIPBOARD -in;
-    print -rn -- $CUTBUFFER | pbcopy    
+    zle copy-region-as-kill    
+    if command -v pbcopy &> /dev/null; then
+      print -rn -- $CUTBUFFER | pbcopy
+    else
+      print -rn -- $CUTBUFFER | xclip -sel CLIPBOARD -in
+    fi
 }
 zle -N x-copy
 
 x-cut() {
     zle kill-region
-    print -rn -- $CUTBUFFER | pbcopy
+    if command -v pbcopy &> /dev/null; then
+      print -rn -- $CUTBUFFER | pbcopy
+    else 
+      print -rn -- $CUTBUFFER | xclip -sel CLIPBOARD -in
+    fi
 }
 zle -N x-cut
 
 x-paste() {    
-    # xclip -sel CLIPBOARD -out;
-    PASTE=$(pbpaste)
-    LBUFFER="$LBUFFER$PASTE"
+    if command -v pbpaste &> /dev/null; then      
+      PASTE=$(pbpaste)
+      LBUFFER="$LBUFFER$PASTE"
+    else 
+      PASTE=$(xclip -sel CLIPBOARD -out)
+      LBUFFER="$LBUFFER$PASTE"
+    fi
 }
 zle -N x-paste
 
