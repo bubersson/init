@@ -2,7 +2,7 @@
     "\u001b[47;5u": "command:comment",
     "\u001b[68;5u": "DuplicateLine",
     "\u001b[83;5u": "VSplit",
-    "\u001b[96;5u": "NextSplit,NextTab",
+    "\u001b[96;5u": "NextSplit,NextTab",    
     "\u001bctrltilde": "NextSplit,NextTab",
     "\u001bshiftctrld": "DuplicateLine",
     "\u001bshiftctrls": "VSplit",
@@ -14,7 +14,8 @@
     "Ctrl-p": "CommandMode",
     "CtrlShiftDown": "MoveLinesDown",
     "CtrlShiftUp": "MoveLinesUp",
-    "CtrlUnderscore": "lua:comment.comment",
     "ShiftPageDown": "MoveLinesDown",
-    "ShiftPageUp": "MoveLinesUp"
+    "ShiftPageUp": "MoveLinesUp",
+    "CtrlShiftLeft":  "SelectToStartOfTextToggle",
+    "CtrlShiftRight": "SelectToEndOfLine"
 }
