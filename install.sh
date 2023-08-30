@@ -128,7 +128,7 @@ _micro_config() {
     # skin
     mkdir -p ~/.config/micro/colorschemes
     _copy_dotfile "${INSTALL_PATH}/configs/micro/colorschemes/hop-dark.micro" "${HOME_PATH}/.config/micro/colorschemes/hop-dark.micro"
-    echo -e "$TICK Micro editor configured"
+    echo -e "$TICK micro configured"
 }
 
 _kitty_config () {
@@ -172,6 +172,12 @@ xset r 22
 seq 111 116 | xargs -n 1 xset r
 ENDOFFILE
     echo -e "$TICK Updated .profile to fix key repeating issues"
+
+    # Need to run following scripts to force GNOME to use XKB (otherwise it uses its own thing)
+    echo -e "$INFO Checking current GNOME keyboard settings"
+    gsettings get org.gnome.desktop.input-sources sources
+    gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us+hopkeyboard'), ('xkb', 'us')]"
+    echo -e "$TICK Changed current GNOME keyboard settings to [('xkb', 'us+hopkeyboard'), ('xkb', 'us')]"
 
     echo -e "$INFO Please restart the computer now to see applied changes"
     echo -e "$INFO You may need to select the Hop Keyboard from the language selection"
