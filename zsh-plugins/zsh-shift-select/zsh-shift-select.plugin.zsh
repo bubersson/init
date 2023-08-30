@@ -73,11 +73,11 @@ function {
 		kri    '^[[1;2A'    x          up-line              # Shift + UpArrow
 		kind   '^[[1;2B'    x          down-line            # Shift + DownArrow
 		kHOM   '^[[1;2H'    x          beginning-of-line    # Shift + Home
-		x      '^[[1;6D'    x          beginning-of-line    # Shift + Ctrl + A
+		x      '^[[97;6u'   x          beginning-of-line    # Shift + Ctrl + A
 		kEND   '^[[1;2F'    x          end-of-line          # Shift + End
-		x      '^[[1;6C'    x          end-of-line          # Shift + Ctrl + E
-		x      '^[[1;6D'    '^[[1;4D'  backward-word        # Shift + Ctrl/Option + LeftArrow
-		x      '^[[101;6u'  '^[[1;4C'  forward-word         # Shift + Ctrl/Option + RightArrow
+		x      '^[[101;6u'  x          end-of-line          # Shift + Ctrl + E
+		x      '^[[1;6D'    '^[[1;4D'  beginning-of-line    # Shift + Ctrl/Option + LeftArrow
+		x      '^[[1;6C'    '^[[1;4C'  end-of-line          # Shift + Ctrl/Option + RightArrow
 		x      '^[[1;6H'    '^[[1;4H'  beginning-of-buffer  # Shift + Ctrl/Option + Home
 		x      '^[[1;6F'    '^[[1;4F'  end-of-buffer        # Shift + Ctrl/Option + End
 	); do
