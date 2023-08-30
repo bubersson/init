@@ -76,8 +76,8 @@ function {
 		x      '^[[97;6u'   x          beginning-of-line    # Shift + Ctrl + A
 		kEND   '^[[1;2F'    x          end-of-line          # Shift + End
 		x      '^[[101;6u'  x          end-of-line          # Shift + Ctrl + E
-		x      '^[[1;6D'    '^[[1;4D'  backward-word        # Shift + Ctrl/Option + LeftArrow
-		x      '^[[1;6C'    '^[[1;4C'  forward-word         # Shift + Ctrl/Option + RightArrow
+		x      '^[[1;6D'    '^[[1;4D'  beginning-of-line    # Shift + Ctrl/Option + LeftArrow
+		x      '^[[1;6C'    '^[[1;4C'  end-of-line          # Shift + Ctrl/Option + RightArrow
 		x      '^[[1;6H'    '^[[1;4H'  beginning-of-buffer  # Shift + Ctrl/Option + Home
 		x      '^[[1;6F'    '^[[1;4F'  end-of-buffer        # Shift + Ctrl/Option + End
 	); do

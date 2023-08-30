@@ -1,9 +1,8 @@
 {
     "colorscheme": "hop-dark",
-    "statusformatl": " 🔸 $(filename):$(line) $(modified) $(status.paste)| $(opt:filetype) | $(opt:fileformat) | $(opt:encoding) | $(status.size)",
-    "statusformatr": "cmd:Ctrl+P quit:Ctrl-Q | tabs:$(opt:tabsize) ",
-    "infobar": false, 
-    "statusline": true,     
+    "divchars": "│─",
+    "infobar": false,
     "scrollbar": true,
-    "divchars": "│─"
+    "statusformatl": " 🔸 $(filename):$(line) $(modified) $(status.paste)| $(opt:filetype) | $(opt:fileformat) | $(opt:encoding) | $(status.size)",
+    "statusformatr": "cmd:Ctrl+P quit:Ctrl-Q | tabs:$(opt:tabsize) "
 }
