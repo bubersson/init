@@ -127,13 +127,8 @@ _micro_config() {
     _link_dotfile "${INSTALL_PATH}/configs/micro/settings.json" "${HOME_PATH}/.config/micro/settings.json"
     # skin
     mkdir -p ~/.config/micro/colorschemes
-<<<<<<< HEAD
-    _copy_dotfile "${INSTALL_PATH}/configs/micro/colorschemes/hop-dark.micro" "${HOME_PATH}/.config/micro/colorschemes/hop-dark.micro"
-    echo -e "$TICK micro configured"
-=======
     _link_dotfile "${INSTALL_PATH}/configs/micro/colorschemes/hop-dark.micro" "${HOME_PATH}/.config/micro/colorschemes/hop-dark.micro"
-    echo -e "$TICK Micro editor configured"
->>>>>>> e29c106d1d505dad7d9d6d87fd4e3ec1a6f6eca8
+    echo -e "$TICK micro configured"
 }
 
 _kitty_config () {
