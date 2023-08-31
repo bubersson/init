@@ -34,9 +34,9 @@ else
 fi
 
 # Find file by prefix (ignore case). Usage: `fd myfile` or `fd myfile.txt ~`
-function f() { 
-  find ${2:-.} -iname "${1}*" 2>/dev/null 
-} 
+function f() {
+  find ${2:-.} -iname "${1}*" 2>/dev/null
+}
 alias fd=f # backwards compatibility
 function mkd() { mkdir -p ${1} ; cd ${1} } # make dir and cd into it
 
@@ -44,7 +44,7 @@ function mkd() { mkdir -p ${1} ; cd ${1} } # make dir and cd into it
 . ~/init/scripts/z.sh
 
 # find process
-alias pg='ps -ef | grep ' 
+alias pg='ps -ef | grep '
 
 # git aliases
 alias cdb='git switch'
@@ -61,18 +61,27 @@ alias diffbranch="git diff --color master...`git branch 2> /dev/null | sed -e '/
 alias mergebranch='git merge --squash'
 
 # networking
-alias s='ssh'
+function s() {
+  if [[ $# -eq 0 ]] ; then
+    echo -e "${YELLOW}AVAILABLE IDENTITIES:${RESET}"
+    sed -n 's/.*Host /    /p' ~/.ssh/config
+    echo -e ""
+    return
+  fi
+  ssh $@
+}
+
 if [[ "$(uname)" == "Darwin" ]]; then
   alias ports="sudo lsof -PiTCP -sTCP:LISTEN"
   alias router="netstat -rn |grep default"
   alias ip-private="ipconfig getifaddr en0"
-  alias ip-public="curl -4 ifconfig.co"  
+  alias ip-public="curl -4 ifconfig.co"
 fi
 if [[ "$(uname)" == "Linux" ]]; then
   alias ports="netstat -tulnp | grep LISTEN"
   alias router="ip route"
   alias ip-private="hostname -I | awk {'print $1}'"
-  alias ip-public="curl -4 ifconfig.co"  
+  alias ip-public="curl -4 ifconfig.co"
 fi
 function server() {
   if command -v python3 &> /dev/null; then
@@ -80,35 +89,35 @@ function server() {
   elif command -v python &> /dev/null; then
     python -m SimpleHTTPServer ${1}
   else
-    echo -e "${RED}ERROR:${RESET} python or python3 not found"
+    echo -e "${CROSS} ${RED}ERROR:${RESET} python or python3 not found"
   fi
 }
 
 # editor
 if command -v micro &> /dev/null; then
-  # If micro is available, use micro. 
+  # If micro is available, use micro.
   export EDITOR=$(which micro)
-  alias e=$(which micro)    
+  alias e=$(which micro)
 else
   export EDITOR=$(which nano)
-  alias e=$(which nano)    
+  alias e=$(which nano)
 fi
 
 # system
 alias path='echo $PATH | tr -s ":" "\n"'
 
 # Mac OS X only.
-function _run_updates_mac() {  
+function _run_updates_mac() {
   if command -v brew &> /dev/null; then
     echo -e "$INFO Running$WHITE brew-refresh ; brew update ; brew upgrade$RESET"
-    brew-refresh 
-    brew update 
+    brew-refresh
+    brew update
     brew upgrade
-  else 
-    echo -e "$ERROR brew not found"
+  else
+    echo -e "$CROSS brew not found"
   fi
 }
-if [[ "$(uname)" == "Darwin" ]]; then 
+if [[ "$(uname)" == "Darwin" ]]; then
   alias i='brew'
   alias o='open -a Finder' # Open folder or file in the default application (e.g. Finder)
   alias up=_run_updates_mac
@@ -124,7 +133,7 @@ function _run_updates_linux() {
   if command -v flatpak &> /dev/null; then
     echo -e "$INFO Running$WHITE flatpak update$RESET"
     flatpak update
-  fi  
+  fi
 }
 if [[ "$(uname)" == "Linux" ]]; then
   alias i='sudo apt'

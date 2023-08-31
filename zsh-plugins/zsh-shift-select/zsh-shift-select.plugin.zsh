@@ -78,6 +78,8 @@ function {
 		x      '^[[101;6u'  x          end-of-line          # Shift + Ctrl + E
 		x      '^[[1;6D'    '^[[1;4D'  beginning-of-line    # Shift + Ctrl/Option + LeftArrow
 		x      '^[[1;6C'    '^[[1;4C'  end-of-line          # Shift + Ctrl/Option + RightArrow
+		x      '^[[1;6D'    '^[[1;6D'  beginning-of-line    # Shift + Ctrl/Option + LeftArrow # I added this to handle cmd->ctrl
+		x      '^[[1;6C'    '^[[1;6C'  end-of-line          # Shift + Ctrl/Option + RightArrow # I aded this to handle cmd->ctrl
 		x      '^[[1;6H'    '^[[1;4H'  beginning-of-buffer  # Shift + Ctrl/Option + Home
 		x      '^[[1;6F'    '^[[1;4F'  end-of-buffer        # Shift + Ctrl/Option + End
 	); do

@@ -1,9 +1,10 @@
 #!/bin/bash
 # Mac OS
-
 # Refreshes brew access
+
+source ~/init/scripts/defaults.sh
 
 sudo chown -R $(whoami) /usr/local/bin /usr/local/etc /usr/local/sbin /usr/local/share /usr/local/share/doc
 chmod u+w /usr/local/bin /usr/local/etc /usr/local/sbin /usr/local/share /usr/local/share/doc
 
-echo -e "[\033[32mDONE\033[0m] Brew access refreshed"
+echo -e "$TICK Brew access refreshed"
