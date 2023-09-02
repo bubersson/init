@@ -29,7 +29,7 @@ ${YELLOW}USAGE:${RESET}
     ./install.sh <SUBCOMMAND>
 
 ${YELLOW}SUBCOMMANDS:${RESET}
-    ${GREEN}install   ${RESET}Runs the new installation from scratch (no checks for existing).
+    ${GREEN}install   ${RESET}Runs the new installation (no checks for existing).
     ${GREEN}up        ${RESET}Update the init bindings (pull from github).
     ${GREEN}dotfiles  ${RESET}Links dotfiles from home folder to the clonned git folder.
     ${GREEN}zshrc     ${RESET}Creates *new* .zshrc file.
