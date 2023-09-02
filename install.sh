@@ -9,7 +9,7 @@ BLUE=$(tput setaf 4) #'\033[34m'
 GRAY=$(tput setaf 8) #'\033[90m'
 DGRAY=$(tput setaf 236)
 RESET=$(tput sgr0) #'\033[0m'
-WHITE=$(tput setaf 15)
+WHITE=$(tput bold)$(tput setaf 15)
 
 INFO="${BLUE}[i]${RESET}"
 TICK="${GREEN}[✓]${RESET}"
@@ -21,7 +21,7 @@ INSTALL_REPO="https://github.com/bubersson/init.git"
 
 _help() {
     cat <<DOCUMENTATION
-${GREEN}install.sh${RESET}
+${GREEN}install.sh${RESET} (alias ${GREEN}dot${RESET})
 Installation of all init bindings.
 
 ${YELLOW}USAGE:${RESET}
@@ -165,7 +165,7 @@ BACKSPACE=guess
 ENDOFFILE'
     echo -e "$TICK Keyboard added to /etc/default/keyboard"
 
-    cat >> .profile << ENDOFFILE
+    cat >> ~/.profile << ENDOFFILE
 ### Fix the repeated keys with hopkeyboard
 xset r on
 xset r 22
@@ -193,14 +193,6 @@ _apps() {
 }
 
 _install() {
-    # Check existing scripts
-    if [ ! -z "$MY_MACHINE_NAME" ]; then
-        echo -e "$CROSS Already installed. Redirecting from install.sh to init.sh."
-        echo -e "$INFO Please run ${GRAY}~/init/install.sh zshrc ${RESET}to source '~/init/init.sh'\n"
-        source ~/init/init.sh
-        return
-    fi
-
     cd $HOME_PATH
 
     # Install dependencies
@@ -226,25 +218,40 @@ _install() {
     _zshrc
     _dotfiles
 
-    echo -e "$TICK All$GREEN DONE$RESET. Running zsh now...\n"
-
-    zsh
+    echo -e "$TICK All$GREEN DONE$RESET.\n"
+    echo -e "${YELLOW}NEXT STEPS:${RESET}"
+    echo -e "   run ${WHITE}zsh${RESET} now..."
+    echo -e "   run ${WHITE}dot apps${RESET} to install apps...\n"
 }
 
 # When executed without argument, run the actual install.
 if [[ $# -eq 0 ]] ; then
-    _install;
-    return
+    # Check existing scripts
+    if [ ! -z "$MY_MACHINE_NAME" ]; then
+        if [ -n "$ZSH_VERSION" ]; then
+            # We are already installed and sourced from old ~/.zshrc
+            echo -e "$CROSS Already installed. Redirecting from install.sh to init.sh."
+            echo -e "$INFO Please run ${GRAY}~/init/install.sh zshrc ${RESET}to source '~/init/init.sh'\n"
+            source ~/init/init.sh
+        else
+            # We are already installed and executed as a script or alias.
+            _help
+        fi
+    else
+        # We are not installed: either first time direct execution or via curl | bash.
+        _install
+    fi
+else
+    case $1 in
+    --help|-h)  _help          ; exit 0 ;;
+    install)    _install       ; exit 0 ;;
+    dotfiles)   _dotfiles      ; exit 0 ;;
+    zshrc)      _zshrc         ; exit 0 ;;
+    apps)       _apps          ; exit 0 ;;
+    keyboard)   _keyboard      ; exit 0 ;;
+    mc)         _mc_config     ; exit 0 ;;
+    micro)      _micro_config  ; exit 0 ;;
+    kitty)      _kitty_config  ; exit 0 ;;
+    *)          _help          ; exit 0 ;;
+    esac
 fi
-
-case $1 in
-  --help|-h)  _help          ; exit 0 ;;
-  dotfiles)   _dotfiles      ; exit 0 ;;
-  zshrc)      _zshrc         ; exit 0 ;;
-  apps)       _apps          ; exit 0 ;;
-  keyboard)   _keyboard      ; exit 0 ;;
-  mc)         _mc_config     ; exit 0 ;;
-  micro)      _micro_config  ; exit 0 ;;
-  kitty)      _kitty_config  ; exit 0 ;;
-  *)          _help          ; exit 0 ;;
-esac

@@ -5,7 +5,6 @@
 # Or create:
 #   ln -s /usr/local/go/bin/go /usr/local/bin/go
 
-
 # Set GOPATH (otherwise defaults to $HOME/go)
 # GOPATH is the work directory of your go project.
 export GOPATH=$HOME/go

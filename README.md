@@ -8,7 +8,8 @@ Run following all-in-one
 - make zsh the default
 
 ```sh
-curl -sSL https://raw.githubusercontent.com/bubersson/init/master/init.sh | bash
+sudo apt install curl
+curl -sSL https://raw.githubusercontent.com/bubersson/init/master/install.sh | bash
 ```
 
 ```sh

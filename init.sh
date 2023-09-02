@@ -7,7 +7,11 @@ echo -e "$INFO Running init/init.sh"
 source ~/init/paths.sh
 source ~/init/git-commands.sh
 
-[[ $0 == "bash" ]] && source ~/init/bash-setup.sh || source ~/init/zsh-setup.sh
+if [ -n "$ZSH_VERSION" ]; then
+    source ~/init/zsh-setup.sh
+else
+    source ~/init/bash-setup.sh
+fi
 
 source ~/init/aliases.sh
 

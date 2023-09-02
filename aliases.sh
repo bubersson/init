@@ -13,6 +13,9 @@
 
 source ~/init/scripts/defaults.sh
 
+# helper
+alias dot=~/init/install.sh
+
 # colorize
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
