@@ -1,6 +1,9 @@
 #!/bin/bash
 # Installation script for the bindings.
 
+# Exit immediately after error.
+set -e
+
 # Set defaults
 RED=$(tput setaf 1) #'\033[31m'
 GREEN=$(tput setaf 2) #'\033[32m'
@@ -29,12 +32,15 @@ ${YELLOW}USAGE:${RESET}
     ./install.sh <SUBCOMMAND>
 
 ${YELLOW}SUBCOMMANDS:${RESET}
+    ${GREEN}install   ${RESET}Runs the new installation from scratch (no checks for existing).
     ${GREEN}dotfiles  ${RESET}Links dotfiles from home folder to the clonned git folder.
     ${GREEN}zshrc     ${RESET}Creates *new* .zshrc file.
     ${GREEN}apps      ${RESET}Install common useful apps
     ${GREEN}keyboard  ${RESET}Installs hop keyboard layout on Linux.
     ${GREEN}mc        ${RESET}Installs custom mc config and styles.
     ${GREEN}micro     ${RESET}Installs custom micro config and styles.
+    ${GREEN}kitty     ${RESET}Installs kitty terminal config.
+    ${GREEN}git       ${RESET}Installs global git .gitconfig and .gitignore.
 
 DOCUMENTATION
 
@@ -98,6 +104,7 @@ _dotfiles() {
     _mc_config
     _micro_config
     _kitty_config
+    _git_config
 }
 
 _nano_config() {
@@ -137,6 +144,13 @@ _kitty_config () {
     _link_dotfile "${INSTALL_PATH}/configs/kitty/kitty.conf" "${HOME_PATH}/.config/kitty/kitty.conf"
     _link_dotfile "${INSTALL_PATH}/configs/kitty/tab_bar.py" "${HOME_PATH}/.config/kitty/tab_bar.py"
     echo -e "$TICK kitty configured"
+}
+
+_git_config() {
+    echo -e "${GREEN}[ ]${RESET} configuring git"
+    _copy_dotfile "${INSTALL_PATH}/dotfiles/.gitconfig" "${HOME_PATH}/.gitconfig"
+    _copy_dotfile "${INSTALL_PATH}/dotfiles/.gitignore" "${HOME_PATH}/.gitignore"
+    echo -e "$TICK git configured"
 }
 
 _keyboard() {
@@ -252,6 +266,7 @@ else
     mc)         _mc_config     ; exit 0 ;;
     micro)      _micro_config  ; exit 0 ;;
     kitty)      _kitty_config  ; exit 0 ;;
+    git)        _git_config    ; exit 0 ;;
     *)          _help          ; exit 0 ;;
     esac
 fi
