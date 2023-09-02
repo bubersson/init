@@ -1,9 +1,6 @@
 #!/bin/bash
 # Installation script for the bindings.
 
-# Exit immediately after error.
-set -e
-
 # Set defaults
 RED=$(tput setaf 1) #'\033[31m'
 GREEN=$(tput setaf 2) #'\033[32m'
@@ -33,6 +30,7 @@ ${YELLOW}USAGE:${RESET}
 
 ${YELLOW}SUBCOMMANDS:${RESET}
     ${GREEN}install   ${RESET}Runs the new installation from scratch (no checks for existing).
+    ${GREEN}up        ${RESET}Update the init bindings (pull from github).
     ${GREEN}dotfiles  ${RESET}Links dotfiles from home folder to the clonned git folder.
     ${GREEN}zshrc     ${RESET}Creates *new* .zshrc file.
     ${GREEN}apps      ${RESET}Install common useful apps
@@ -238,6 +236,14 @@ _install() {
     echo -e "   run ${WHITE}dot apps${RESET} to install apps...\n"
 }
 
+_up() {
+    echo -e "$INFO Updating the init installation"
+    pushd ~/init > /dev/null
+    git pull
+    popd > /dev/null
+    zsh
+}
+
 # When executed without argument, run the actual install.
 if [[ $# -eq 0 ]] ; then
     # Check existing scripts
@@ -259,6 +265,7 @@ else
     case $1 in
     --help|-h)  _help          ; exit 0 ;;
     install)    _install       ; exit 0 ;;
+    up)         _up            ; exit 0 ;;
     dotfiles)   _dotfiles      ; exit 0 ;;
     zshrc)      _zshrc         ; exit 0 ;;
     apps)       _apps          ; exit 0 ;;
