@@ -1,4 +1,9 @@
 # This is Git's per-user configuration file.
+[core]
+	excludesfile = ~/.gitignore
+	pager = less -iXFR
+[color]
+	ui = always
 [user]
     # Instead of defining user globally here, define the user per repository
     # (i.e. in the folder where you have checked out the code)
@@ -7,6 +12,11 @@
 [alias]
 	co = checkout
 	cm = commit -am
+	p = push
+	up = pull
+	s = status -s
     tree = "!f(){ git log --branches --remotes --tags --graph --oneline --decorate --max-count=${1:-'25'}; }; f"    
-[core]
-	excludesfile = ~/.gitignore
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	allowedSignersFile = ~/.ssh/allowed_signers
