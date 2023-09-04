@@ -5,8 +5,8 @@
 [color]
 	ui = always
 [user]
-    # Instead of defining user globally here, define the user per repository
-    # (i.e. in the folder where you have checked out the code)
+	# Instead of defining user globally here, define the user per repository
+	# (i.e. in the folder where you have checked out the code)
 	name = example
 	email = example@example.com
 [alias]
