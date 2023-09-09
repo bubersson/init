@@ -36,11 +36,11 @@ else
   alias l='ls -CF'
 fi
 
-# Find file by prefix (ignore case). Usage: `fd myfile` or `fd myfile.txt ~`
+# Find file by prefix (ignore case). Usage: `f` or `f myfile` or `f myfile.txt \etc` or `f '*css'`
 function f() {
-  find ${2:-.} -iname "${1}*" 2>/dev/null
+  find ${2:-.} -iname "${1}*" 2>/dev/null | GREP_COLORS="sl=0;38;5;242:ms=0;38;49" grep --color=always '^\|[^/]*$'
 }
-alias fd=f # backwards compatibility
+
 function mkd() { mkdir -p ${1} ; cd ${1} } # make dir and cd into it
 
  # Install z
