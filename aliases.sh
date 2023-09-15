@@ -135,7 +135,7 @@ function _run_updates_linux() {
   fi
   if command -v flatpak &> /dev/null; then
     echo -e "$INFO Running$WHITE flatpak update$RESET"
-    flatpak update
+    flatpak update -y
   fi
 }
 if [[ "$(uname)" == "Linux" ]]; then
