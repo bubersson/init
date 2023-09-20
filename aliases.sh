@@ -96,6 +96,20 @@ function server() {
   fi
 }
 
+export MANPAGER='less -s -M +Gg'
+function man() {
+    env \
+    LESS_TERMCAP_mb="$(printf "\e[1;31m")" \
+    LESS_TERMCAP_md="$(printf "\e[1;33m")" \
+    LESS_TERMCAP_so="$(printf "\e[01;44;37m")" \
+    LESS_TERMCAP_us="$(printf "\e[1;37m")" \
+    LESS_TERMCAP_me="$(printf "\e[0m")" \
+    LESS_TERMCAP_se="$(printf "\e[0m")" \
+    LESS_TERMCAP_ue="$(printf "\e[0m")" \
+    GROFF_NO_SGR=1 \
+    man "${@}"
+}
+
 # editor
 if command -v micro &> /dev/null; then
   # If micro is available, use micro.
@@ -134,7 +148,7 @@ function _run_updates_linux() {
     sudo apt upgrade
   fi
   if command -v flatpak &> /dev/null; then
-    echo -e "$INFO Running$WHITE flatpak update$RESET"
+    echo -e "$INFO Running$WHITE flatpak update -y$RESET"
     flatpak update -y
   fi
 }
