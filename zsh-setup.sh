@@ -22,6 +22,8 @@ fi
 # https://coderwall.com/p/a8uxma/zsh-iterm2-osx-shortcuts
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
+bindkey "^[[1;5D" beginning-of-line # CSI u
+bindkey "^[[1;5C" end-of-line # CSI u
 
 # Make delete work to delete a char.
 bindkey "^[[3~" delete-char
