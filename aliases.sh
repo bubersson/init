@@ -143,9 +143,9 @@ fi
 # Linux only.
 function _run_updates_linux() {
   if command -v apt &> /dev/null; then
-    echo -e "$INFO Running$WHITE sudo apt update ; sudo apt upgrade$RESET"
+    echo -e "$INFO Running$WHITE sudo apt update ; sudo apt upgrade -y$RESET"
     sudo apt update
-    sudo apt upgrade
+    sudo apt upgrade -y
   fi
   if command -v flatpak &> /dev/null; then
     echo -e "$INFO Running$WHITE flatpak update -y$RESET"
