@@ -8,12 +8,13 @@ YELLOW=$(tput setaf 3) #'\033[33m'
 BLUE=$(tput setaf 4) #'\033[34m'
 GRAY=$(tput setaf 8) #'\033[90m'
 DGRAY=$(tput setaf 236)
-RESET=$(tput sgr0) #'\033[0m'
 WHITE=$(tput bold)$(tput setaf 15)
+RESET=$(tput sgr0) #'\033[0m'
 
 INFO="${BLUE}[i]${RESET}"
 TICK="${GREEN}[✓]${RESET}"
 CROSS="${RED}[✗]${RESET}"
+EMPTY="${DGRAY}[ ]${RESET}"
 
 HOME_PATH=$HOME
 INSTALL_PATH="${HOME_PATH}/init"
@@ -80,8 +81,10 @@ _link_dotfile() {
     local dir_name=$(dirname $2)
     if [[ -z "${error_message// }" ]]; then
         echo -e " ${DGRAY}├ ${GREEN}✓ ${GRAY}link ${dir_name}/${RESET}${base_name}"
+        return 0
     else
         echo -e " ${DGRAY}├ ${RED}✗ ${GRAY}link ${RESET}${base_name}: ${RED}${error_message}${RESET}"
+        return 1
     fi
 }
 
@@ -92,63 +95,94 @@ _copy_dotfile() {
     local dir_name=$(dirname $2)
     if [[ -z "${error_message// }" ]]; then
         echo -e " ${DGRAY}├ ${GREEN}✓ ${GRAY}copy ${dir_name}/${RESET}${base_name}"
+        return 0
     else
         echo -e " ${DGRAY}├ ${RED}✗ ${GRAY}copy ${RESET}${base_name}: ${RED}${error_message}${RESET}"
+        return 1
     fi
 }
 
 _dotfiles() {
     _nano_config
+    echo ""
     _mc_config
+    echo ""
     _micro_config
+    echo ""
     _kitty_config
+    echo ""
     _git_config
 }
 
 _nano_config() {
-    echo -e "${GREEN}[ ]${RESET} configuring nano"
-    _link_dotfile "${INSTALL_PATH}/dotfiles/.nanorc" "${HOME_PATH}/.nanorc"
-    echo -e "$TICK nano configured"
+    local has_error=false
+    echo -e "${EMPTY} configuring nano"
+    _link_dotfile "${INSTALL_PATH}/dotfiles/.nanorc" "${HOME_PATH}/.nanorc" || has_error=true
+    if $has_error ; then
+        echo -e "$CROSS nano config returned error"
+    else
+        echo -e "$TICK nano configured"
+    fi
 }
 
 _mc_config() {
-    echo -e "${GREEN}[ ]${RESET} configuring mc"
+    local has_error=false
+    echo -e "${EMPTY} configuring mc"
     # config
     mkdir -p ~/.config/mc
-    _copy_dotfile "${INSTALL_PATH}/configs/mc/ini" "${HOME_PATH}/.config/mc/ini"
-    _copy_dotfile "${INSTALL_PATH}/configs/mc/filehighlight.ini" "${HOME_PATH}/.config/mc/filehighlight.ini"
-    _copy_dotfile "${INSTALL_PATH}/configs/mc/mc.keymap" "${HOME_PATH}/.config/mc/mc.keymap"
+    _copy_dotfile "${INSTALL_PATH}/configs/mc/ini" "${HOME_PATH}/.config/mc/ini" || has_error=true
+    _copy_dotfile "${INSTALL_PATH}/configs/mc/filehighlight.ini" "${HOME_PATH}/.config/mc/filehighlight.ini" || has_error=true
+    _copy_dotfile "${INSTALL_PATH}/configs/mc/mc.keymap" "${HOME_PATH}/.config/mc/mc.keymap" || has_error=true
     # skin
     mkdir -p ~/.local/share/mc/skins
     _copy_dotfile "${INSTALL_PATH}/configs/mc/hop-dark-skin.ini" "${HOME_PATH}/.local/share/mc/skins/hop-dark-skin.ini"
-    echo -e "$TICK mc configured"
+    if $has_error ; then
+        echo -e "$CROSS mc config returned error"
+    else
+        echo -e "$TICK mc configured"
+    fi
 }
 
 _micro_config() {
-    echo -e "${GREEN}[ ]${RESET} configuring micro"
+    local has_error=false
+    echo -e "${EMPTY} configuring micro"
     # config
     mkdir -p ~/.config/micro
-    _link_dotfile "${INSTALL_PATH}/configs/micro/bindings.json" "${HOME_PATH}/.config/micro/bindings.json"
-    _link_dotfile "${INSTALL_PATH}/configs/micro/settings.json" "${HOME_PATH}/.config/micro/settings.json"
+    _link_dotfile "${INSTALL_PATH}/configs/micro/bindings.json" "${HOME_PATH}/.config/micro/bindings.json" || has_error=true
+    _link_dotfile "${INSTALL_PATH}/configs/micro/settings.json" "${HOME_PATH}/.config/micro/settings.json" || has_error=true
     # skin
     mkdir -p ~/.config/micro/colorschemes
-    _link_dotfile "${INSTALL_PATH}/configs/micro/colorschemes/hop-dark.micro" "${HOME_PATH}/.config/micro/colorschemes/hop-dark.micro"
-    echo -e "$TICK micro configured"
+    _link_dotfile "${INSTALL_PATH}/configs/micro/colorschemes/hop-dark.micro" "${HOME_PATH}/.config/micro/colorschemes/hop-dark.micro" || has_error=true
+    if $has_error ; then
+        echo -e "$CROSS micro config returned error"
+    else
+        echo -e "$TICK micro configured"
+    fi
 }
 
 _kitty_config () {
-    echo -e "${GREEN}[ ]${RESET} configuring kitty"
+    local has_error=false
+    echo -e "${EMPTY} configuring kitty"
     mkdir -p ~/.config/kitty
-    _link_dotfile "${INSTALL_PATH}/configs/kitty/kitty.conf" "${HOME_PATH}/.config/kitty/kitty.conf"
-    _link_dotfile "${INSTALL_PATH}/configs/kitty/tab_bar.py" "${HOME_PATH}/.config/kitty/tab_bar.py"
-    echo -e "$TICK kitty configured"
+    _link_dotfile "${INSTALL_PATH}/configs/kitty/kitty.conf" "${HOME_PATH}/.config/kitty/kitty.conf" || has_error=true
+    _link_dotfile "${INSTALL_PATH}/configs/kitty/tab_bar.py" "${HOME_PATH}/.config/kitty/tab_bar.py" || has_error=true
+    if $has_error ; then
+        echo -e "$CROSS kitty config returned error"
+    else
+        echo -e "$TICK kitty configured"
+    fi
 }
 
 _git_config() {
-    echo -e "${GREEN}[ ]${RESET} configuring git"
-    _copy_dotfile "${INSTALL_PATH}/dotfiles/.gitconfig" "${HOME_PATH}/.gitconfig"
-    _copy_dotfile "${INSTALL_PATH}/dotfiles/.gitignore" "${HOME_PATH}/.gitignore"
-    echo -e "$TICK git configured"
+    local has_error=false
+    echo -e "${EMPTY} configuring git"
+    _copy_dotfile "${INSTALL_PATH}/dotfiles/.gitconfig" "${HOME_PATH}/.gitconfig" || has_error=true
+    _copy_dotfile "${INSTALL_PATH}/dotfiles/.gitignore" "${HOME_PATH}/.gitignore" || has_error=true
+    if $has_error ; then
+        echo -e "$CROSS git config returned error"
+    else
+        echo -e "$TICK git configured"
+    fi
 }
 
 _keyboard() {
