@@ -249,7 +249,7 @@ _install() {
         brew install git zsh
     fi
     if [[ "$(uname)" == "Linux" ]]; then
-        sudo apt install git zsh
+        sudo apt install -y git zsh
     fi
 
     # Clone repo

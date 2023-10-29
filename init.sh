@@ -1,4 +1,9 @@
-# Initializes shell bindings on shell startup. 
+# Initializes shell bindings on shell startup.
+
+if [[ "$TERM" == "xterm-kitty" ]]; then
+    # a hack for kitty, because native functions (like tput) don't recognize kitty
+    TERM="xterm-256color"
+fi
 
 source ~/init/scripts/defaults.sh
 
