@@ -13,7 +13,7 @@ if [[ "$(uname)" == "Darwin" ]]; then #Mac
     bindkey "^[[B" history-beginning-search-forward
     # opt out of brew analytics on Mac
     export HOMEBREW_NO_ANALYTICS=1
-elif [[ ! -z "${key// }" ]] # Linux
+elif [[ ! -z "${key// }" ]]; then # Linux
     bindkey "$key[Up]" history-beginning-search-backward
     bindkey "$key[Down]" history-beginning-search-forward
 else # Different Linux
