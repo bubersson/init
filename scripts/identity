@@ -29,8 +29,10 @@ function _list() {
 
 function _ssh() {
 	# TODO: This is not yet finished.
+	# s add homebox user@192.168.0.1
 
-	# Generates ssh key, copies it to target machine and logs in wiht the key.
+	# Generates ssh key, copies it to target machine and logs in with the key.
+	# So next time you just use `ssh name`
 	# Single name for
 	#  - machine
 	#  - key file
