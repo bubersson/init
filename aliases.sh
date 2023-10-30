@@ -64,15 +64,7 @@ alias diffbranch="git diff --color master...`git branch 2> /dev/null | sed -e '/
 alias mergebranch='git merge --squash'
 
 # networking
-function s() {
-  if [[ $# -eq 0 ]] ; then
-    echo -e "${YELLOW}AVAILABLE IDENTITIES:${RESET}"
-    sed -n 's/.*Host /    /p' ~/.ssh/config
-    echo -e ""
-    return
-  fi
-  ssh $@
-}
+alias s=identity-tool
 
 if [[ "$(uname)" == "Darwin" ]]; then
   alias ports="sudo lsof -PiTCP -sTCP:LISTEN"

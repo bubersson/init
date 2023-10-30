@@ -1,0 +1,85 @@
+#!/bin/bash
+
+source ~/init/scripts/defaults.sh
+
+ME=$(basename "${0}")
+VERSION="v0.01"
+
+function _default() {
+	if [[ $# -eq 0 ]] ; then
+		_help
+		_list
+		return
+	fi
+	ssh $@
+}
+
+_help() {
+    cat <<DOCUMENTATION
+${GREEN}identity-tool${RESET} (alias ${GREEN}s${RESET})
+SSH Identity Utility ${VERSION}
+
+${YELLOW}USAGE:${RESET}
+    identity-tool <SUBCOMMAND> <PARAMS>
+    ${GRAY}identity-tool${RESET}
+    ${GRAY}identity-tool add machine_name user 192.168.0.1${RESET}
+
+${YELLOW}SUBCOMMANDS:${RESET}
+    ${GREEN}add   ${RESET}Create new identity.
+    ${GREEN}list  ${RESET}List existing identities.
+
+DOCUMENTATION
+
+}
+
+function _list() {
+	echo -e "${YELLOW}AVAILABLE IDENTITIES:${RESET}"
+	sed -n 's/.*Host /    /p' ~/.ssh/config
+	echo -e ""
+}
+
+function _add() {
+	if [[ $# -ne 4 ]] ; then
+		echo -e "${CROSS} ${RED}ERROR: Wrong number of params to 'add'${RESET}"
+		echo -e "Expected format: ${WHITE}identity-tool add machine_name user 192.168.0.1${RESET}"
+		return
+	fi
+    local has_error=false
+
+	local SSH_CONNECTION_NAME=$2
+	local SSH_LOGIN_USER=$3
+	local SSH_LOGIN_HOST=$4
+	local SSH_LOGIN_EMAIL="my@email.com"
+
+	# Generate SSH key
+	echo -e "$INFO Generating ssh key"
+	mkdir -p ~/.ssh
+	ssh-keygen -t ed25519 -C $SSH_LOGIN_EMAIL -N "" -f "$HOME/.ssh/$SSH_CONNECTION_NAME" || has_error=true
+
+	# Add new connection to ~/.ssh/config
+	echo -e "$INFO Adding new connection to ~/.ssh/config"
+	touch ~/.ssh/config
+	chmod 600 ~/.ssh/config
+	echo -e "\nHost "$SSH_CONNECTION_NAME >> ~/.ssh/config
+	echo -e "	HostName "$SSH_LOGIN_HOST >> ~/.ssh/config
+	echo -e "	User "$SSH_LOGIN_USER >> ~/.ssh/config
+	echo -e "	AddKeysToAgent yes" >> ~/.ssh/config
+	echo -e "	IdentityFile ~/.ssh/"$SSH_CONNECTION_NAME >> ~/.ssh/config
+	echo -e " " >> ~/.ssh/config
+
+	echo -e "$INFO Copying public key to the target machine"
+	ssh-copy-id -i "$HOME/.ssh/$SSH_CONNECTION_NAME" "${SSH_LOGIN_USER}@${SSH_LOGIN_HOST}" || has_error=true
+
+	if $has_error ; then
+        echo -e "$CROSS Function returned errors"
+    else
+    	echo -e "$TICK DONE. To log in use: ${WHITE}identity-tool ${SSH_CONNECTION_NAME}${RESET}"
+    fi
+}
+
+case $1 in
+	--help|-h)  _help          ; exit 0 ;;
+	list)    	_list     	   ; exit 0 ;;
+	add)        _add $@        ; exit 0 ;;
+	*)          _default $@    ; exit 0 ;;
+esac
