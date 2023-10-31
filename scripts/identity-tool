@@ -14,7 +14,7 @@ function _default() {
 	ssh $@
 }
 
-_help() {
+function _help() {
     cat <<DOCUMENTATION
 ${GREEN}identity-tool${RESET} (alias ${GREEN}s${RESET})
 SSH Identity Utility ${VERSION}
