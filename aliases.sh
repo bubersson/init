@@ -71,12 +71,14 @@ if [[ "$(uname)" == "Darwin" ]]; then
   alias router="netstat -rn |grep default"
   alias ip-private="ipconfig getifaddr en0"
   alias ip-public="curl -4 ifconfig.co"
+  alias battery="system_profiler SPPowerDataType"
 fi
 if [[ "$(uname)" == "Linux" ]]; then
   alias ports="netstat -tulnp | grep LISTEN"
   alias router="ip route"
   alias ip-private="hostname -I | awk {'print $1}'"
   alias ip-public="curl -4 ifconfig.co"
+  alias battery="upower -i /org/freedesktop/UPower/devices/battery_BAT0"
 fi
 function server() {
   if command -v python3 &> /dev/null; then
