@@ -7,8 +7,7 @@ VERSION="v0.01"
 
 AIRPORT_CMD="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"
 
-function _default() {
-  cat <<HEREDOC
+MANUAL() { <<DOCUMENTATION
 ${GREEN}change-mac${RESET}
 Change MAC Address (${VERSION}). Use -h or --help param for help.
 ${GRAY}WARNING: DO NOT USE THIS PROGRAM! DO NOT RUN IT!${RESET}
@@ -24,7 +23,11 @@ ${YELLOW}SUBCOMMANDS:${RESET}
     ${GREEN}print     ${RESET}Prints out current & original MAC address for each interface.
     ${GREEN}reset     ${RESET}Resets the MAC address to original value.
 
-HEREDOC
+DOCUMENTATION
+}
+
+function _default() {
+  MANUAL
   _listInterfaces
   if [[ "$(uname)" == "Linux" ]]; then
     _validate

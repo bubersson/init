@@ -3,19 +3,9 @@
 source ~/init/scripts/defaults.sh
 
 ME=$(basename "${0}")
-VERSION="v0.01"
+VERSION="v0.02"
 
-function _default() {
-	if [[ $# -eq 0 ]] ; then
-		_help
-		_list
-		return
-	fi
-	ssh $@
-}
-
-function _help() {
-    cat <<DOCUMENTATION
+MANUAL() { cat <<DOCUMENTATION
 ${GREEN}identity-tool${RESET} (alias ${GREEN}s${RESET})
 SSH Identity Utility ${VERSION}
 
@@ -29,7 +19,15 @@ ${YELLOW}SUBCOMMANDS:${RESET}
     ${GREEN}list  ${RESET}List existing identities.
 
 DOCUMENTATION
+}
 
+function _default() {
+	if [[ $# -eq 0 ]] ; then
+		MANUAL
+		_list
+		return
+	fi
+	ssh $@
 }
 
 function _list() {
@@ -78,7 +76,7 @@ function _add() {
 }
 
 case $1 in
-	--help|-h)  _help          ; exit 0 ;;
+	--help|-h)  MANUAL          ; exit 0 ;;
 	list)    	_list     	   ; exit 0 ;;
 	add)        _add $@        ; exit 0 ;;
 	*)          _default $@    ; exit 0 ;;

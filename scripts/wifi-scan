@@ -16,8 +16,7 @@ ROCKYOU_URL="https://github.com/zacheller/rockyou/blob/master/rockyou.txt.tar.gz
 
 AIRPORT_CMD="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"
 
-function _default() {
-  cat <<DOCUMENTATION
+MANUAL() { cat <<DOCUMENTATION
 ${GREEN}wifi-scan${RESET}
 WiFi Scanner (${VERSION}). Use -h or --help param for help.
 ${GRAY}WARNING: DO NOT USE THIS PROGRAM! DO NOT RUN IT!${RESET}
@@ -38,7 +37,10 @@ ${YELLOW}SUBCOMMANDS:${RESET}
     ${GREEN}crack     ${RESET}Crack passphrase after scan. Required param BSSID (e.g. "00:00:11:22:33:44")
 
 DOCUMENTATION
+}
 
+function _default() {
+  MANUAL
   if [[ "$(uname)" == "Linux" ]]; then
     _validate "airmon-ng besside-ng"
   fi
