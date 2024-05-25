@@ -11,6 +11,7 @@ SSH Identity Utility ${VERSION}
 
 ${YELLOW}USAGE:${RESET}
     identity-tool <SUBCOMMAND> <PARAMS>
+    identity-tool <IDENTITY>
     ${GRAY}identity-tool${RESET}
     ${GRAY}identity-tool add machine_name user 192.168.0.1${RESET}
 
