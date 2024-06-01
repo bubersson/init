@@ -137,9 +137,9 @@ fi
 # Linux only.
 function _run_updates_linux() {
   if command -v nala &> /dev/null; then
-    echo -e "$INFO Running$WHITE sudo apt update ; sudo apt upgrade -y$RESET"
+    echo -e "$INFO Running$WHITE sudo nala update ; sudo nala upgrade -y$RESET"
     sudo nala update
-    sudo nala upgrade
+    sudo nala upgrade -y
   elif command -v apt &> /dev/null; then
     echo -e "$INFO Running$WHITE sudo apt update ; sudo apt upgrade -y$RESET"
     sudo apt update
