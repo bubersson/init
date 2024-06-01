@@ -136,7 +136,11 @@ fi
 
 # Linux only.
 function _run_updates_linux() {
-  if command -v apt &> /dev/null; then
+  if command -v nala &> /dev/null; then
+    echo -e "$INFO Running$WHITE sudo apt update ; sudo apt upgrade -y$RESET"
+    sudo nala update
+    sudo nala upgrade
+  elif command -v apt &> /dev/null; then
     echo -e "$INFO Running$WHITE sudo apt update ; sudo apt upgrade -y$RESET"
     sudo apt update
     sudo apt upgrade -y
@@ -147,7 +151,11 @@ function _run_updates_linux() {
   fi
 }
 if [[ "$(uname)" == "Linux" ]]; then
-  alias i='sudo apt'
+  if command -v nala &> /dev/null; then
+    alias i='sudo nala'
+  else
+    alias i='sudo apt'
+  fi
   alias o='xdg-open'
   alias up=_run_updates_linux
 fi
