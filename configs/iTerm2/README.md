@@ -16,8 +16,3 @@ It also includes couple made up escapechars that the app in the terminal needs t
     "\u001bshiftctrls": "VSplit",
     "\u001bctrltilde": "NextSplit,NextTab"
 ```
-
-
-
-
-

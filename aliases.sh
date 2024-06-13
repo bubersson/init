@@ -40,6 +40,8 @@ fi
 function f() {
   find ${2:-.} -iname "${1}*" 2>/dev/null | GREP_COLORS="sl=0;38;5;242:ms=0;38;49" grep --color=always '^\|[^/]*$'
 }
+# We use noglob, so zsh doesn't expand characters like "*" and so we can do e.g. `f *css`
+alias f='noglob f'
 
 function mkd() { mkdir -p ${1} ; cd ${1} } # make dir and cd into it
 

@@ -139,6 +139,18 @@ torben_fj_mode=false
 quick_search_mode=0
 select_flags=6
 
+[terminal:xterm-256color]
+f1=\\e[49\;5u
+f2=\\e[50\;5u
+f3=\\e[51\;5u
+f4=\\e[52\;5u
+f5=\\e[53\;5u
+f6=\\e[54\;5u
+f7=\\e[55\;5u
+f8=\\e[56\;5u
+f9=\\e[57\;5u
+f10=\\e[48\;5u
+
 [Panelize]
 Find *.orig after patching=find . -name \\*.orig -print
 Find SUID and SGID programs=find . \\( \\( -perm -04000 -a -perm /011 \\) -o \\( -perm -02000 -a -perm /01 \\) \\) -print
