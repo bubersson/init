@@ -20,8 +20,7 @@ HOME_PATH=$HOME
 INSTALL_PATH="${HOME_PATH}/init"
 INSTALL_REPO="https://github.com/bubersson/init.git"
 
-_help() {
-    cat <<DOCUMENTATION
+_help() { cat <<xoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxo
 ${GREEN}install.sh${RESET} (alias ${GREEN}dot${RESET})
 Installation of all init bindings.
 
@@ -41,8 +40,7 @@ ${YELLOW}SUBCOMMANDS:${RESET}
     ${GREEN}kitty     ${RESET}Installs kitty terminal config.
     ${GREEN}git       ${RESET}Installs global git .gitconfig and .gitignore.
 
-DOCUMENTATION
-
+xoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxo
 }
 
 _backup() {
@@ -103,14 +101,10 @@ _copy_dotfile() {
 }
 
 _dotfiles() {
-    _nano_config
-    echo ""
-    _mc_config
-    echo ""
-    _micro_config
-    echo ""
-    _kitty_config
-    echo ""
+    _nano_config  ; echo ""
+    _mc_config    ; echo ""
+    _micro_config ; echo ""
+    _kitty_config ; echo ""
     _git_config
 }
 
