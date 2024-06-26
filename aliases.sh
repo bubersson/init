@@ -36,12 +36,21 @@ else
   alias l='ls -CF'
 fi
 
+export GREP_COLOR="0;0;33" # Old, but works on MacOS default grep.
+export GREP_COLORS="sl=0;38;5;242:ms=0;38;49"
+
 # Find file by prefix (ignore case). Usage: `f` or `f myfile` or `f myfile.txt \etc` or `f '*css'`
 function f() {
-  find ${2:-.} -iname "${1}*" 2>/dev/null | GREP_COLORS="sl=0;38;5;242:ms=0;38;49" grep --color=always '^\|[^/]*$'
+  find ${2:-.} -iname "${1}*" 2>/dev/null | grep --color=always '^\|[^/]*$'
 }
 # We use noglob, so zsh doesn't expand characters like "*" and so we can do e.g. `f *css`
 alias f='noglob f'
+
+# Find files that contain the given string (case insensitive), print file, line and preview.
+function ff() {
+  grep -Rnwis ${2:-.} -e "${1}"
+}
+
 
 function mkd() { mkdir -p ${1} ; cd ${1} } # make dir and cd into it
 
