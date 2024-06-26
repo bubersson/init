@@ -36,8 +36,10 @@ else
   alias l='ls -CF'
 fi
 
-export GREP_COLOR="0;0;33" # Old, but works on MacOS default grep.
 export GREP_COLORS="sl=0;38;5;242:ms=0;38;49"
+if [[ "$(uname)" == "Darwin" ]]; then
+	export GREP_COLOR="0;0;33" # Old, but works on MacOS default grep.
+fi
 
 # Find file by prefix (ignore case). Usage: `f` or `f myfile` or `f myfile.txt \etc` or `f '*css'`
 function f() {
@@ -48,7 +50,7 @@ alias f='noglob f'
 
 # Find files that contain the given string (case insensitive), print file, line and preview.
 function ff() {
-  grep -Rnwis ${2:-.} -e "${1}"
+  grep -RInwis ${2:-.} -e "${1}"
 }
 
 
