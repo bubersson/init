@@ -43,7 +43,7 @@ fi
 
 # Find file by prefix (ignore case). Usage: `f` or `f myfile` or `f myfile.txt \etc` or `f '*css'`
 function f() {
-  find ${2:-.} -iname "${1}*" 2>/dev/null | grep --color=always '^\|[^/]*$'
+  find ${2:-.} -iname "${1}*" 2>/dev/null | grep '^\|[^/]*$'
 }
 # We use noglob, so zsh doesn't expand characters like "*" and so we can do e.g. `f *css`
 alias f='noglob f'
