@@ -177,3 +177,9 @@ fi
 if command -v ccat &> /dev/null; then
   alias cat='ccat --bg="dark" $*'
 fi
+
+if [[ "$(uname)" == "Linux" ]]; then
+  if command -v spd-say &> /dev/null; then
+    alias say='spd-say'
+  fi
+fi
