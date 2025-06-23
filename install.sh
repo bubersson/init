@@ -207,14 +207,9 @@ _keyboard() {
     mkdir -p ~/.config/keyd 
     echo -e "$TICK Created ~/.config/keyd"
 
-    local has_error=false
-    _copy_dotfile "${INSTALL_PATH}/keyboard/xkb-custom-keyboard/keyd.default.conf" "/etc/keyd/default.conf" || has_error=true    
-    if $has_error ; then
-        echo -e "$CROSS copying keyboard files to ~/config/keyd returned error"
-    else
-        echo -e "$TICK keyboard copy done"
-    fi
-
+    echo -e "$INFO Enabling keyd service"
+    sudo cp "${INSTALL_PATH}/keyboard/xkb-custom-keyboard/keyd.default.conf" "/etc/keyd/default.conf" 
+    
     sudo systemctl restart keyd
 
     exit 0
