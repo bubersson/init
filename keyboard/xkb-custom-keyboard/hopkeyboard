@@ -21,10 +21,18 @@ xkb_symbols "hop_keyboard_symbols" {
     include "ctrl(swap_lalt_lctl)"
     // Swap right alt and right ctrl (my edit).
     include "hopkeyboard(swap_ralt_rctl)"
+    // Modify the Ctrl+XX behaviors to match Mac.
+    // include "hopkeyboard(set_mac_ctrl)"
 
     // Repeating is broken. This exact issue
     // https://www.reddit.com/r/archlinux/comments/96rpvu/remapped_keys_via_xmodmap_and_xkb_not_repeating
+};
 
+// Modify the Ctrl+XX behaviors to match Mac.
+// This doesn't work correctly on Wayland, because Wayland doesn't support RedirectKey, 
+// so when pressed the keys will do nothing. 
+partial modifier_keys
+xkb_symbols "set_mac_ctrl" {
     // Make (new) alt+backspace behave like Delete.
     override key <BKSP> {
         type = "PC_ALT_LEVEL2",
