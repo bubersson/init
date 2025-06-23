@@ -185,8 +185,42 @@ _keyboard() {
     # - may need to restart the machine after doing this
     # - the `XKBLAYOUT=hopkeyboard` seems to be the main thing that actually switches it
 
-    echo -e "$INFO Starting installation of hopkeyboard"
-    
+    echo -e "$INFO Starting installation of hopkeyboard using keyd"
+
+    if ! command -v keyd &> /dev/null; then
+        echo -e "$CROSS keyd is not available. Attempting to install from apt."
+        sudo apt install keyd
+        if ! command -v keyd &> /dev/null; then
+            echo -e "$CROSS keyd is not available in. Attempting to install from source."
+            echo -e "$INFO Downloading build pre-requisities"
+            sudo apt install build-essential autoconf automake
+            mkdir -p ~/apps ; cd ~/apps
+            echo -e "$INFO Clonning keyd from git"
+            git clone https://github.com/rvaiya/keyd
+            echo -e "$INFO Installing keyd"
+            make && sudo make install
+            echo -e "$INFO Enabling keyd service"
+            sudo systemctl enable --now keyd
+        fi
+    fi
+
+    mkdir -p ~/.config/keyd 
+    echo -e "$TICK Created ~/.config/keyd"
+
+    local has_error=false
+    _copy_dotfile "${INSTALL_PATH}/keyboard/xkb-custom-keyboard/keyd.default.conf" "/etc/keyd/default.conf" || has_error=true    
+    if $has_error ; then
+        echo -e "$CROSS copying keyboard files to ~/config/keyd returned error"
+    else
+        echo -e "$TICK keyboard copy done"
+    fi
+
+    sudo systemctl restart keyd
+
+    exit 0
+
+    # ------------------ OLD INSTALLATION USING XKB .config --
+
     mkdir -p ~/.config/xkb/{symbols,rules,compat,keycodes,types}
     echo -e "$TICK Created folders ~/.config/xkb/{symbols,rules,compat,keycodes,types}"
 
@@ -194,6 +228,7 @@ _keyboard() {
     _copy_dotfile "${INSTALL_PATH}/keyboard/xkb-custom-keyboard/hopkeyboard" "${HOME_PATH}/.config/xkb/symbols/hopkeyboard" || has_error=true
     _copy_dotfile "${INSTALL_PATH}/keyboard/xkb-custom-keyboard/evdev.xml" "${HOME_PATH}/.config/xkb/rules/evdev.xml" || has_error=true
     _copy_dotfile "${INSTALL_PATH}/keyboard/xkb-custom-keyboard/evdev" "${HOME_PATH}/.config/xkb/rules/evdev" || has_error=true
+    _copy_dotfile "${INSTALL_PATH}/keyboard/xkb-custom-keyboard/keyd.default.conf" "/etc/keyd/default.conf" || has_error=true
 
     if $has_error ; then
         echo -e "$CROSS copying keyboard files to ~/config/xkb returned error"
@@ -207,10 +242,8 @@ _keyboard() {
     gsettings set org.gnome.desktop.input-sources xkb-options "['hopkeyboard:hop_keyboard_symbols']"
 
     echo -e "$INFO Please restart the computer now to see applied changes"
-    
-    exit 0
 
-    # ------------------ OLD BELOW ----------
+    # ------------------ OLD INSTALLATION USING XKB ----------
     echo -e "$INFO Starting installation of hopkeyboard"
 
     sudo cp ~/init/keyboard/xkb-custom-keyboard/hopkeyboard /usr/share/X11/xkb/symbols/hopkeyboard
