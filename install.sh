@@ -184,7 +184,35 @@ _keyboard() {
     # - the sed only applies the replacement on the first occurence
     # - may need to restart the machine after doing this
     # - the `XKBLAYOUT=hopkeyboard` seems to be the main thing that actually switches it
+
     echo -e "$INFO Starting installation of hopkeyboard"
+    
+    mkdir -p ~/.config/xkb/{symbols,rules,compat,keycodes,types}
+    echo -e "$TICK Created folders ~/.config/xkb/{symbols,rules,compat,keycodes,types}"
+
+    local has_error=false
+    _copy_dotfile "${INSTALL_PATH}/keyboard/xkb-custom-keyboard/hopkeyboard" "${HOME_PATH}/.config/xkb/symbols/hopkeyboard" || has_error=true
+    _copy_dotfile "${INSTALL_PATH}/keyboard/xkb-custom-keyboard/evdev.xml" "${HOME_PATH}/.config/xkb/rules/evdev.xml" || has_error=true
+    _copy_dotfile "${INSTALL_PATH}/keyboard/xkb-custom-keyboard/evdev" "${HOME_PATH}/.config/xkb/rules/evdev" || has_error=true
+
+    if $has_error ; then
+        echo -e "$CROSS copying keyboard files to ~/config/xkb returned error"
+    else
+        echo -e "$TICK keyboard copy done"
+    fi
+
+    echo -e "$INFO Checking GNOME keyboard settings"
+    gsettings get org.gnome.desktop.input-sources xkb-options
+    echo -e "$TICK Changed GNOME keyboard settings"
+    gsettings set org.gnome.desktop.input-sources xkb-options "['hopkeyboard:hop_keyboard_symbols']"
+
+    echo -e "$INFO Please restart the computer now to see applied changes"
+    
+    exit 0
+
+    # ------------------ OLD BELOW ----------
+    echo -e "$INFO Starting installation of hopkeyboard"
+
     sudo cp ~/init/keyboard/xkb-custom-keyboard/hopkeyboard /usr/share/X11/xkb/symbols/hopkeyboard
     echo -e "$TICK Keyboard layout copied under /usr/share/X11/xkb/symbols/hopkeyboard"
 

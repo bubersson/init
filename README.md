@@ -196,13 +196,21 @@ dconf write /org/gnome/mutter/keybindings/toggle-tiled-right "['<Primary><Super>
 ```
 
 #### VSCode Key Bindings
-When installed through flatpak, it lives in `~/.var/app/com.visualstudio.code/config/Code/User/keybindings.json`
+##### Linux (Flatpak)
+Flatpak Path: `~/.var/app/com.visualstudio.code/config/Code/User/keybindings.json`
 
 Installation: Copy from init into the right spot. 
 `cp ~/init/configs/vscode/keybindings.json ~/.var/app/com.visualstudio.code/config/Code/User/keybindings.json`
 
 Updating init: Copy current keybindings into init. 
 `cp ~/.var/app/com.visualstudio.code/config/Code/User/keybindings.json ~/init/configs/vscode/keybindings.json`
+
+##### MacOS
+Mac Path: `"~/Library/Application Support/Code/User"`
+Install:
+`cp ~/init/configs/vscode/keybindings-mac.json ~/Library/Application\ Support/Code/User/keybindings.json`
+Move current keybindings into init folder.
+`cp ~/Library/Application\ Support/Code/User/keybindings.json ~/init/configs/vscode/keybindings-mac.json`
 
 #### Elementary OS
 

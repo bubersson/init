@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xkbConfigRegistry SYSTEM "xkb.dtd">
+<xkbConfigRegistry version="1.1">  
+  <optionList>
+    <group allowMultipleSelection="true">
+      <configItem>
+        <name>hopkeyboard</name>
+        <description>Hop Keyboard Options</description>
+      </configItem>
+      <option>
+        <configItem>
+          <name>hopkeyboard:hop_keyboard_symbols</name>
+          <description>Change default behavior and mapping of Home and more.</description>
+        </configItem>
+        <configItem>
+          <name>hopkeyboard:swap_ralt_rctl</name>
+          <description>Swap ralt and rctl</description>
+        </configItem>
+        <configItem>
+          <name>hopkeyboard:swap_lalt_lctl_lwin</name>
+          <description>Map Alt to Super(win), Map Win to Control, Map Ctrl to Alt</description>
+        </configItem>
+      </option>
+    </group>
+  </optionList>
+</xkbConfigRegistry>

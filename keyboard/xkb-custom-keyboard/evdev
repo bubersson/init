@@ -1,0 +1,4 @@
+! option = symbols
+  hopkeyboard:hop_keyboard_symbols = +hopkeyboard(hop_keyboard_symbols)
+
+! include %S/evdev
