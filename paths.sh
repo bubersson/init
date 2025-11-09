@@ -15,3 +15,8 @@ export PATH=$PATH:$GOPATH/bin
 
 # Allow my scripts to be executed globally
 export PATH=$PATH:~/init/scripts/
+
+# Add Homebrew default path on MacOS
+if [[ "$(uname)" == "Darwin" ]]; then
+    export PATH=$PATH:/opt/homebrew/bin
+fi
