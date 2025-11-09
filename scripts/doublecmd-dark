@@ -1,0 +1,3 @@
+# doublecmd dark (for KDE)
+
+qt5ctQT_QPA_PLATFORMTHEME=qt5ct;doublecmd
