@@ -39,6 +39,7 @@ ${YELLOW}SUBCOMMANDS:${RESET}
     ${GREEN}micro     ${RESET}Installs custom micro config and styles.
     ${GREEN}kitty     ${RESET}Installs kitty terminal config.
     ${GREEN}git       ${RESET}Installs global git .gitconfig and .gitignore.
+    ${GREEN}ghostty   ${RESET}Installs ghostty terminal config.
 
 xoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxo
 }
@@ -164,6 +165,18 @@ _kitty_config () {
         echo -e "$CROSS kitty config returned error"
     else
         echo -e "$TICK kitty configured"
+    fi
+}
+
+_ghostty_config () {
+    local has_error=false
+    echo -e "${EMPTY} configuring ghostty"
+    mkdir -p ~/.config/ghostty
+    _link_dotfile "${INSTALL_PATH}/configs/ghostty/config" "${HOME_PATH}/.config/ghostty/config" || has_error=true
+    if $has_error ; then
+        echo -e "$CROSS ghostty config returned error"
+    else
+        echo -e "$TICK ghostty configured"
     fi
 }
 
@@ -347,17 +360,18 @@ if [[ $# -eq 0 ]] ; then
     fi
 else
     case $1 in
-    --help|-h)  _help          ; exit 0 ;;
-    install)    _install       ; exit 0 ;;
-    up)         _up            ; exit 0 ;;
-    dotfiles)   _dotfiles      ; exit 0 ;;
-    zshrc)      _zshrc         ; exit 0 ;;
-    apps)       _apps          ; exit 0 ;;
-    keyboard)   _keyboard      ; exit 0 ;;
-    mc)         _mc_config     ; exit 0 ;;
-    micro)      _micro_config  ; exit 0 ;;
-    kitty)      _kitty_config  ; exit 0 ;;
-    git)        _git_config    ; exit 0 ;;
-    *)          _help          ; exit 0 ;;
+    --help|-h)  _help           ; exit 0 ;;
+    install)    _install        ; exit 0 ;;
+    up)         _up             ; exit 0 ;;
+    dotfiles)   _dotfiles       ; exit 0 ;;
+    zshrc)      _zshrc          ; exit 0 ;;
+    apps)       _apps           ; exit 0 ;;
+    keyboard)   _keyboard       ; exit 0 ;;
+    mc)         _mc_config      ; exit 0 ;;
+    micro)      _micro_config   ; exit 0 ;;
+    kitty)      _kitty_config   ; exit 0 ;;
+    ghostty)    _ghostty_config ; exit 0 ;;
+    git)        _git_config     ; exit 0 ;;
+    *)          _help           ; exit 0 ;;
     esac
 fi

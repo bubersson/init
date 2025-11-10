@@ -33,11 +33,15 @@ bindkey "^[[3~" delete-char
 
 # Setup copypaste
 x-copy() {
-    zle copy-region-as-kill    
-    if command -v pbcopy &> /dev/null; then
-      print -rn -- $CUTBUFFER | pbcopy
+    if (( REGION_ACTIVE )); then # only when active selection do copy
+      zle copy-region-as-kill
+      if command -v pbcopy &> /dev/null; then
+        print -rn -- $CUTBUFFER | pbcopy
+      else
+        print -rn -- $CUTBUFFER | xclip -sel CLIPBOARD -in
+      fi
     else
-      print -rn -- $CUTBUFFER | xclip -sel CLIPBOARD -in
+      zle send-break
     fi
 }
 zle -N x-copy
@@ -65,7 +69,7 @@ zle -N x-paste
 
 # Copy to be mapped from Ctrl+C in Terminal App
 # e.g. in kitty.conf: map ctrl+c send_text all \x1bcopy
-bindkey "^[copy" x-copy 
+bindkey "^C" x-copy # copies only when selected
 bindkey "^X" x-cut
 bindkey "^V" x-paste
 

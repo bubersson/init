@@ -1,0 +1,21 @@
+# Ghostty Config
+
+background = 0e0e0e
+font-size = 10
+
+# keybind = ctrl+p=toggle_command_palette # not used
+keybind = ctrl+t=new_tab
+
+# ctrl+right_arrow is "End" from keyd
+keybind = shift+end=unbind
+keybind = shift+home=unbind
+keybind = shift+page_up=unbind
+keybind = shift+page_down=unbind
+
+# Not working currently
+# keybind = performable:ctrl+c=unbind
+
+keybind = performable:ctrl+c=copy_to_clipboard
+keybind = performable:ctrl+shift+c=copy_to_clipboard
+keybind = ctrl+v=paste_from_clipboard
+keybind = ctrl+alt+up=new_split:up
