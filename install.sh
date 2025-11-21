@@ -173,6 +173,7 @@ _ghostty_config () {
     echo -e "${EMPTY} configuring ghostty"
     mkdir -p ~/.config/ghostty
     _link_dotfile "${INSTALL_PATH}/configs/ghostty/config" "${HOME_PATH}/.config/ghostty/config" || has_error=true
+    _copy_dotfile "${INSTALL_PATH}/configs/ghostty/config-linux" "${HOME_PATH}/.config/ghostty/config-linux" || has_error=true
     if $has_error ; then
         echo -e "$CROSS ghostty config returned error"
     else

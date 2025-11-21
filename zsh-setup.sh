@@ -69,7 +69,7 @@ zle -N x-paste
 
 # Copy to be mapped from Ctrl+C in Terminal App
 # e.g. in kitty.conf: map ctrl+c send_text all \x1bcopy
-bindkey "^C" x-copy # copies only when selected
+bindkey "^[copy" x-copy # copies only when selected
 bindkey "^X" x-cut
 bindkey "^V" x-paste
 

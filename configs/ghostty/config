@@ -1,21 +1,120 @@
 # Ghostty Config
 
-background = 0e0e0e
-font-size = 10
+theme = "iTerm2 Tango Dark"
+background = 111111
+# background-blur-radius = 20
+# background-opacity = 0.7
 
-# keybind = ctrl+p=toggle_command_palette # not used
+# font-size = 10
+
 keybind = ctrl+t=new_tab
+keybind = cmd+backquote=next_tab
+keybind = ctrl+backquote=next_tab
+keybind = cmd+shift+backquote=previous_tab
+keybind = ctrl+shift+backquote=previous_tab
 
-# ctrl+right_arrow is "End" from keyd
+#### Linux
+
+# ctrl+right_arrow is "End" from keyd (on Linux)
 keybind = shift+end=unbind
 keybind = shift+home=unbind
 keybind = shift+page_up=unbind
 keybind = shift+page_down=unbind
+# TODO: ADD KEYBIND FOR CTRL+W
+# keybind = ctrl+w
 
-# Not working currently
-# keybind = performable:ctrl+c=unbind
+#### MacOS 
 
+macos-titlebar-style = tabs
+
+# cmd+q on MacOS not closing window
+# Micro doesn't support Command key, so we need to remap all these to Ctrl
+# Another option is to wait for ghostty to enable remapping of ctrl & command: 
+# https://github.com/ghostty-org/ghostty/issues/5160
+keybind = cmd+c=esc:copy
+keybind = cmd+d=text:\x04
+keybind = cmd+f=text:\x06
+keybind = cmd+g=text:\x07
+keybind = cmd+p=text:\x10
+keybind = cmd+q=text:\x11
+keybind = cmd+s=text:\x13
+keybind = cmd+v=text:\x16
+keybind = cmd+x=text:\x18
+keybind = cmd+z=text:\x1A
+
+# Fix copy and pasting (currently copy doesn't work)
 keybind = performable:ctrl+c=copy_to_clipboard
-keybind = performable:ctrl+shift+c=copy_to_clipboard
-keybind = ctrl+v=paste_from_clipboard
-keybind = ctrl+alt+up=new_split:up
+# keybind = performable:ctrl+shift+c=copy_to_clipboard
+# keybind = performable:cmd+c=copy_to_clipboard
+# keybind = performable:cmd+shift+c=copy_to_clipboard
+keybind = performable:ctrl+v=paste_from_clipboard
+# keybind = ctrl+alt+up=new_split:up
+
+# Make sure it navigates to the end of line
+keybind = cmd+left=csi:H
+keybind = cmd+right=csi:F
+keybind = cmd+up=csi:5~
+keybind = cmd+down=csi:6~
+
+keybind = cmd+shift+up=csi:1;6A
+keybind = cmd+shift+down=csi:1;6B
+keybind = cmd+shift+right=csi:1;6C
+keybind = cmd+shift+left=csi:1;6D
+keybind = cmd+shift+d=esc:shiftctrld
+
+# TODO: Pick a better shortcut for the topdown terminal
+keybind = global:cmd+shift+t=toggle_quick_terminal
+
+# 
+# keybind = cmd+a=text:\x01
+# keybind = cmd+b=text:\x02
+# keybind = cmd+c=text:\x03
+# keybind = cmd+d=text:\x04
+# keybind = cmd+e=text:\x05
+# keybind = cmd+f=text:\x06
+# keybind = cmd+g=text:\x07
+# keybind = cmd+h=text:\x08
+# keybind = cmd+i=text:\x09
+# keybind = cmd+j=text:\x0A
+# keybind = cmd+k=text:\x0B
+# keybind = cmd+l=text:\x0C
+# keybind = cmd+m=text:\x0D
+# keybind = cmd+n=text:\x0E
+# keybind = cmd+o=text:\x0F
+# keybind = cmd+p=text:\x10
+# keybind = cmd+q=text:\x11
+# keybind = cmd+r=text:\x12
+# keybind = cmd+s=text:\x13
+# keybind = cmd+t=text:\x14
+# keybind = cmd+u=text:\x15
+# keybind = cmd+v=text:\x16
+# keybind = cmd+w=text:\x17
+# keybind = cmd+x=text:\x18
+# keybind = cmd+y=text:\x19
+# keybind = cmd+z=text:\x1A
+# 
+# keybind = cmd+up=text:\x1B[A
+# keybind = cmd+down=text:\x1B[B
+# keybind = cmd+right=text:\x1B[C
+# keybind = cmd+left=text:\x1B[D
+# keybind = cmd+home=text:\x1B[H
+# keybind = cmd+end=text:\x1B[F
+# keybind = cmd+page_up=text:\x1B[5~
+# keybind = cmd+page_down=text:\x1B[6~
+# keybind = cmd+escape=text:\x1B
+# keybind = cmd+enter=text:\x0D
+# keybind = cmd+tab=text:\x09
+# keybind = cmd+backspace=text:\x08
+# 
+# keybind = cmd+f1=text:\x1B[11~
+# keybind = cmd+f2=text:\x1B[12~
+# keybind = cmd+f3=text:\x1B[13~
+# keybind = cmd+f4=text:\x1B[14~
+# keybind = cmd+f5=text:\x1B[15~
+# keybind = cmd+f6=text:\x1B[17~
+# keybind = cmd+f7=text:\x1B[18~
+# keybind = cmd+f8=text:\x1B[19~
+# keybind = cmd+f9=text:\x1B[20~
+# keybind = cmd+f10=text:\x1B[21~
+# keybind = cmd+f11=text:\x1B[23~
+# [<64;52;24M]

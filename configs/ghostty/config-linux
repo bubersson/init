@@ -1,0 +1,4 @@
+# Linux specific config. This file is loaded by the main config. 
+# This file is a local custom copy on the machine (i.e. it's not linked)
+
+# font-size = 10
