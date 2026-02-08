@@ -14,11 +14,11 @@ function gitfff() {
 
 function gitcme() {
     git add .
-    git commit -a -m ${1:-'[autoupdate]'}
+    git commit -a -s -m ${1:-'[autoupdate]'}
     git push
 }
 
 function gitcm() {
     git add .
-    git commit -a -m ${1:-'[autoupdate]'} 
+    git commit -a -s -m ${1:-'[autoupdate]'} 
 }
