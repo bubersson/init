@@ -204,6 +204,8 @@ _keyboard() {
     if ! command -v keyd &> /dev/null; then
         echo -e "$CROSS keyd is not available. Attempting to install from apt."
         sudo apt install keyd
+        echo -e "$INFO Creating a link ln -s /usr/bin/keyd.rvaiya /usr/bin/keyd"
+        sudo ln -s /usr/bin/keyd.rvaiya /usr/bin/keyd
         if ! command -v keyd &> /dev/null; then
             echo -e "$CROSS keyd is not available in. Attempting to install from source."
             echo -e "$INFO Downloading build pre-requisities"
