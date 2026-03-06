@@ -38,7 +38,7 @@ macos-titlebar-style = tabs
 # Another option is to wait for ghostty to enable remapping of ctrl & command: 
 # https://github.com/ghostty-org/ghostty/issues/5160
 keybind = cmd+c=esc:copy
-keybind = cmd+d=text:\x04
+# keybind = cmd+d=text:\x04
 keybind = cmd+f=text:\x06
 keybind = cmd+g=text:\x07
 keybind = cmd+p=text:\x10
