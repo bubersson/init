@@ -159,8 +159,8 @@ function _run_updates_linux() {
     sudo apt upgrade -y
   fi
   if command -v flatpak &> /dev/null; then
-    echo -e "$INFO Running$WHITE flatpak update -y$RESET"
-    flatpak update -y
+    echo -e "$INFO Running$WHITE sudo flatpak update -y$RESET"
+    sudo flatpak update -y
   fi
 }
 if [[ "$(uname)" == "Linux" ]]; then

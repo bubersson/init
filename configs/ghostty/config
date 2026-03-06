@@ -1,5 +1,9 @@
 # Ghostty Config
 
+# shell-integration-features = ssh-terminfo to copy the terminfo entry the first time you log into a new server over SSH.
+# shell-integration-features = ssh-env to configure SSH to fall back to xterm-256color.
+shell-integration-features = ssh-terminfo,ssh-env
+
 # Optionally load linux config if present (relative path to the current config)
 config-file = ?config-linux
 # font-size = 10
