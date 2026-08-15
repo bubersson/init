@@ -16,6 +16,12 @@ export PATH=$PATH:$GOPATH/bin
 # Allow my scripts to be executed globally
 export PATH=$PATH:~/init/scripts/
 
+# Add executable path for AppImages
+export PATH=$PATH:~/Applications/
+
+# Add .local/bin
+export PATH=$PATH:~/.local/bin
+
 # Add Homebrew default path on MacOS
 if [[ "$(uname)" == "Darwin" ]]; then
     export PATH=$PATH:/opt/homebrew/bin
