@@ -26,7 +26,7 @@ alias ..="cd .."
 alias ...="cd .. ; cd .."
 alias mc='mc --nosubshell' # for fast start on Mac
 
-if [[ "$(uname)" == "Linux" ]]; then
+if [[ "$OSTYPE" == linux* ]]; then
   alias ll='ls -alhF --group-directories-first'
   alias la='ls -A --group-directories-first'
   alias l='ls -CF --group-directories-first'
@@ -37,7 +37,7 @@ else
 fi
 
 export GREP_COLORS="sl=0;38;5;242:ms=0;38;49"
-if [[ "$(uname)" == "Darwin" ]]; then
+if [[ "$OSTYPE" == darwin* ]]; then
 	export GREP_COLOR="0;0;33" # Old, but works on MacOS default grep.
 fi
 
@@ -73,20 +73,23 @@ alias status="git status -sb"
 alias fff=gitfff # fff stands for diFFFiles
 alias tree=gittree
 alias log=gitlog
-alias diffbranch="git diff --color master...`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`"
+function diffbranch() {
+  local curr=$(git branch --show-current 2>/dev/null)
+  [ -n "$curr" ] && git diff --color "master...$curr"
+}
 alias mergebranch='git merge --squash'
 
 # networking
 alias s=identity-tool
 
-if [[ "$(uname)" == "Darwin" ]]; then
+if [[ "$OSTYPE" == darwin* ]]; then
   alias ports="sudo lsof -PiTCP -sTCP:LISTEN"
   alias router="netstat -rn |grep default"
   alias ip-private="ipconfig getifaddr en0"
   alias ip-public="curl -4 ifconfig.co"
   alias battery="system_profiler SPPowerDataType"
 fi
-if [[ "$(uname)" == "Linux" ]]; then
+if [[ "$OSTYPE" == linux* ]]; then
   alias ports="netstat -tulnp | grep LISTEN"
   alias router="ip route"
   alias ip-private="hostname -I | awk {'print $1}'"
@@ -120,11 +123,11 @@ function man() {
 # editor
 if command -v micro &> /dev/null; then
   # If micro is available, use micro.
-  export EDITOR=$(which micro)
-  alias e=$(which micro)
+  export EDITOR=micro
+  alias e=micro
 else
-  export EDITOR=$(which nano)
-  alias e=$(which nano)
+  export EDITOR=nano
+  alias e=nano
 fi
 
 # system
@@ -141,7 +144,7 @@ function _run_updates_mac() {
     echo -e "$CROSS brew not found"
   fi
 }
-if [[ "$(uname)" == "Darwin" ]]; then
+if [[ "$OSTYPE" == darwin* ]]; then
   alias i='brew'
   alias o='open -a Finder' # Open folder or file in the default application (e.g. Finder)
   alias up=_run_updates_mac
@@ -163,7 +166,7 @@ function _run_updates_linux() {
     sudo flatpak update -y
   fi
 }
-if [[ "$(uname)" == "Linux" ]]; then
+if [[ "$OSTYPE" == linux* ]]; then
   if command -v nala &> /dev/null; then
     alias i='sudo nala'
   else
@@ -178,7 +181,7 @@ if command -v ccat &> /dev/null; then
   alias cat='ccat --bg="dark" $*'
 fi
 
-if [[ "$(uname)" == "Linux" ]]; then
+if [[ "$OSTYPE" == linux* ]]; then
   if command -v spd-say &> /dev/null; then
     alias say='spd-say'
   fi

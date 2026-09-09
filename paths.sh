@@ -17,6 +17,6 @@ export PATH=$PATH:$GOPATH/bin
 export PATH=$PATH:~/init/scripts/
 
 # Add Homebrew default path on MacOS
-if [[ "$(uname)" == "Darwin" ]]; then
-    export PATH=$PATH:/opt/homebrew/bin
+if [[ "$OSTYPE" == darwin* ]]; then
+    export PATH=/opt/homebrew/bin:$PATH
 fi

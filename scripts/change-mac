@@ -7,7 +7,7 @@ VERSION="v0.01"
 
 AIRPORT_CMD="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"
 
-MANUAL() { <<DOCUMENTATION
+MANUAL() { cat <<DOCUMENTATION
 ${GREEN}change-mac${RESET}
 Change MAC Address (${VERSION}). Use -h or --help param for help.
 ${GRAY}WARNING: DO NOT USE THIS PROGRAM! DO NOT RUN IT!${RESET}
@@ -74,7 +74,7 @@ function _install() {
     # Mac OS X only.
     if [[ "$(uname)" == "Darwin" ]]; then
       _validate brew
-      sudo brew install openssl
+      brew install openssl
       if [ $? -eq 0 ]; then
         echo -e "[${GREEN}DONE${RESET}] Installation successful"
         exit 0

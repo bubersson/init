@@ -8,7 +8,7 @@ export LSCOLORS="Gxfxcxdxbxegedabagacad" # Applies on MacOS(BSD) only.
 
 # Much better search in history with using just up/down arrow after the word
 # prefix. E.g. write "cop", press up arrow and see "copy a.txt b.txt".
-if [[ "$(uname)" == "Darwin" ]]; then #Mac
+if [[ "$OSTYPE" == darwin* ]]; then #Mac
     bindkey "^[[A" history-beginning-search-backward
     bindkey "^[[B" history-beginning-search-forward
     # opt out of brew analytics on Mac

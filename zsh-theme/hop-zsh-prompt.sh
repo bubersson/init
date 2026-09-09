@@ -103,7 +103,7 @@ prompt_context() {
   if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
     context_bg=${MY_PROMPT_CONTEXT_BG:-$PROMPT_CONTEXT_BG}
     host_fg=${MY_PROMPT_CONTEXT_HOST:-$PROMPT_CONTEXT_HOST}
-    prompt_segment $context_bg PROMPT_CONTEXT_USERNAME "%n%{%F{$host_fg}%}@$MY_MACHINE_NAME"
+    prompt_segment $context_bg $PROMPT_CONTEXT_USERNAME "%n%{%F{$host_fg}%}@$MY_MACHINE_NAME"
   fi
 }
 
@@ -111,85 +111,80 @@ prompt_context() {
 prompt_git() {
   (( $+commands[git] )) || return
 
-  local PL_BRANCH_CHAR
-  () {
-    local LC_ALL="" LC_CTYPE="en_US.UTF-8"
-    PL_BRANCH_CHAR="⑂" # $'\ue0a0' # 
-  }
-  local branch state remote dirty
+  local PL_BRANCH_CHAR="⑂"
+  local -a lines
+  lines=("${(@f)$(git status --porcelain -b 2>/dev/null)}") || return
+  [[ -z "$lines[1]" ]] && return
 
-  repo_path=$(git rev-parse --git-dir 2>&1)
-  if [ $? -eq 0 ]; then
-      git_status="$(git status 2> /dev/null)"
-      branch_pattern="^[# ]*On branch ([[:print:]]*)" # For ZSH added "\$" instead of "$". ([^${IFS}]*)
-      detached_branch_pattern="# Not currently on any branch"
-      remote_pattern="[# ]*Your branch is (.*) of"
-      diverge_pattern="[# ]*Your branch and (.*) have diverged"
-      untracked_pattern="[# ]*Untracked files:"
-      new_pattern="new file:"
-      not_staged_pattern="[# ]*Changes not staged for commit"
-      to_be_commited="[# ]*Changes to be committed:"
+  local header="$lines[1]"
+  local b_part="${header#\#\# }"
+  local branch state remote dirty mode
 
-      # changes to be commited (no files to be added)
-      if [[ ${git_status} =~ ${to_be_commited} ]]; then
-          state=" •"
-          dirty=1
-      fi
-
-      #files not staged for commit
-      if [[ ${git_status} =~ ${not_staged_pattern} ]]; then
-          state=" ⭑"
-          dirty=1
-      fi
-
-      # add an else if or two here if you want to get more specific
-      # show if we're ahead or behind HEAD
-      if [[ ${git_status} =~ ${remote_pattern} ]]; then
-          dirty=1
-          if [[ $match[1] == "ahead" ]]; then
-              remote=" ↑"
-          else
-              remote=" ↓"
-          fi
-      fi
-      #new files
-      if [[ ${git_status} =~ ${new_pattern} ]]; then
-          dirty=1
-          remote=" +"
-      fi
-      #untracked files
-      if [[ ${git_status} =~ ${untracked_pattern} ]]; then
-          dirty=1
-          remote=" ?"
-      fi
-      #diverged branch
-      if [[ ${git_status} =~ ${diverge_pattern} ]]; then
-          dirty=1
-          remote=" ↕"
-      fi
-      #branch name
-      if [[ ${git_status} =~ ${branch_pattern} ]]; then
-          branch=$match[1] # ${BASH_REMATCH[1]} for bash
-      #detached branch
-      elif [[ ${git_status} =~ ${detached_branch_pattern} ]]; then
-          branch="NO BRANCH"
-      fi
-      #merge mode
-      if [[ -e "${repo_path}/BISECT_LOG" ]]; then
-        mode=" <B>"
-      elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
-        mode=" >M<"
-      elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
-        mode=" >R>"
-      fi
-      #segment color
-      if [[ -n $dirty ]]; then
-        prompt_segment yellow black
-      else
-        prompt_segment green $CURRENT_FG
-      fi
-      echo -n "${PL_BRANCH_CHAR} ${branch}${state}${remote}${mode}"
+  # Branch name extraction:
+  if [[ "$b_part" == "HEAD (no branch)"* ]]; then
+    branch="NO BRANCH"
+  elif [[ "$b_part" == "Initial commit on "* ]]; then
+    branch="${b_part#Initial commit on }"
+  elif [[ "$b_part" == "No commits yet on "* ]]; then
+    branch="${b_part#No commits yet on }"
+  else
+    branch="${b_part%%(\.\.\.| )*}"
   fi
+
+  # Remote status from header:
+  if [[ "$header" == *"ahead"* && "$header" == *"behind"* ]]; then
+    dirty=1
+    remote=" ↕"
+  elif [[ "$header" == *"ahead"* ]]; then
+    dirty=1
+    remote=" ↑"
+  elif [[ "$header" == *"behind"* ]]; then
+    dirty=1
+    remote=" ↓"
+  fi
+
+  local line
+  for line in "${lines[@]:1}"; do
+    [[ -z "$line" ]] && continue
+    dirty=1
+    local c1="${line[1]}"
+    local c2="${line[2]}"
+    if [[ "$c1" == "?" ]]; then
+      remote=" ?"
+    elif [[ "$c1" == "A" ]]; then
+      remote=" +"
+    elif [[ "$c1" != " " ]]; then
+      state=" •"
+    fi
+    if [[ "$c2" != " " && "$c2" != "" ]]; then
+      state=" ⭑"
+    fi
+  done
+
+  # Rebase / merge / bisect mode check
+  local git_dir
+  if [[ -d .git ]]; then
+    git_dir=".git"
+  else
+    git_dir="$(git rev-parse --git-dir 2>/dev/null)"
+  fi
+  if [[ -n "$git_dir" ]]; then
+    if [[ -e "${git_dir}/BISECT_LOG" ]]; then
+      mode=" <B>"
+    elif [[ -e "${git_dir}/MERGE_HEAD" ]]; then
+      mode=" >M<"
+    elif [[ -e "${git_dir}/rebase" || -e "${git_dir}/rebase-apply" || -e "${git_dir}/rebase-merge" ]]; then
+      mode=" >R>"
+    fi
+  fi
+
+  # segment color
+  if [[ -n $dirty ]]; then
+    prompt_segment yellow black
+  else
+    prompt_segment green $CURRENT_FG
+  fi
+  echo -n "${PL_BRANCH_CHAR} ${branch}${state}${remote}${mode}"
 }
 
 prompt_bzr() {
@@ -302,7 +297,7 @@ prompt_aws() {
 
 ## Main prompt
 build_prompt() {
-  RETVAL=$?
+  local RETVAL=$?
   prompt_status
 #   prompt_virtualenv
 #   prompt_aws

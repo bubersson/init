@@ -57,7 +57,7 @@ function _install() {
     _validate brew
     mkdir -p /usr/local/bin
     sudo ln -s "${AIRPORT_CMD}" /usr/local/bin/airport
-    sudo brew install aircrack-ng curl
+    brew install aircrack-ng curl
     if [ $? -eq 0 ]; then
       echo -e "[${GREEN}DONE${RESET}] Installation successful"
       exit 0
@@ -137,7 +137,7 @@ function _download() {
 
   mkdir -p $WORDLIST_FOLDER
   local result=0
-  if command -v curl >/dev/null ]; then
+  if command -v curl >/dev/null; then
     curl $ROCKYOU_URL -L -o $WORDLIST_FOLDER/rockyou.txt.tar.gz
     result=$?
   else
