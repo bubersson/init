@@ -31,7 +31,7 @@ keybind = ctrl+w=close_window
 
 #### MacOS 
 
-#macos-titlebar-style = tabs
+macos-titlebar-style = tabs
 
 # cmd+q on MacOS not closing window
 # Micro doesn't support Command key, so we need to remap all these to Ctrl
