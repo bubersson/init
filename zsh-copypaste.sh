@@ -144,15 +144,11 @@ x-osc52-cut() {
 }
 zle -N x-osc52-cut
 
-# Bind Cmd+C (Ghostty CSI u ^[[99;9u), Ctrl+C, and legacy sequences
+# Bind Cmd+C (Ghostty CSI u ^[[99;9u) and Ctrl+C
 bindkey "^C" x-osc52-copy
 bindkey -M shift-select "^C" x-osc52-copy
 bindkey "^[[99;9u" x-osc52-copy
 bindkey -M shift-select "^[[99;9u" x-osc52-copy
-bindkey "^[[99;3u" x-osc52-copy
-bindkey -M shift-select "^[[99;3u" x-osc52-copy
-bindkey "^[copy" x-osc52-copy
-bindkey -M shift-select "^[copy" x-osc52-copy
 
 # Bind Cmd+X (Ghostty CSI u ^[[120;9u), Ctrl+X
 bindkey "^X" x-osc52-cut
