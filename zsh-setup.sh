@@ -2,6 +2,7 @@
 # For zsh specific setups
 
 autoload -U colors && colors	# Load colors
+stty -ixon 2>/dev/null		# Disable flow control so Cmd+S/Ctrl+S never freezes terminal
 
 # Enable ls colors
 export LSCOLORS="Gxfxcxdxbxegedabagacad" # Applies on MacOS(BSD) only.
@@ -30,48 +31,6 @@ bindkey "^[[1;5C" end-of-line # CSI u
 
 # Make delete work to delete a char.
 bindkey "^[[3~" delete-char
-
-# Setup copypaste
-x-copy() {
-    if (( REGION_ACTIVE )); then # only when active selection do copy
-      zle copy-region-as-kill
-      if command -v pbcopy &> /dev/null; then
-        print -rn -- $CUTBUFFER | pbcopy
-      else
-        print -rn -- $CUTBUFFER | xclip -sel CLIPBOARD -in
-      fi
-    else
-      zle send-break
-    fi
-}
-zle -N x-copy
-
-x-cut() {
-    zle kill-region
-    if command -v pbcopy &> /dev/null; then
-      print -rn -- $CUTBUFFER | pbcopy
-    else 
-      print -rn -- $CUTBUFFER | xclip -sel CLIPBOARD -in
-    fi
-}
-zle -N x-cut
-
-x-paste() {    
-    if command -v pbpaste &> /dev/null; then      
-      PASTE=$(pbpaste)
-      LBUFFER="$LBUFFER$PASTE"
-    else 
-      PASTE=$(xclip -sel CLIPBOARD -out)
-      LBUFFER="$LBUFFER$PASTE"
-    fi
-}
-zle -N x-paste
-
-# Copy to be mapped from Ctrl+C in Terminal App
-# e.g. in kitty.conf: map ctrl+c send_text all \x1bcopy
-bindkey "^[copy" x-copy # copies only when selected
-bindkey "^X" x-cut
-bindkey "^V" x-paste
 
 # History file configuration
 [ -z "$HISTFILE" ] && HISTFILE="$HOME/.zsh_history"
@@ -118,5 +77,5 @@ setopt prompt_subst # enables substitution in prompt
 setopt interactive_comments   # allow copypasting scripts with "#" comments
 autoload -Uz vcs_info # from git command
 source ~/init/zsh-theme/hop-zsh-prompt.sh
-# Init plugin for shift-select
-source ~/init/zsh-plugins/zsh-shift-select/zsh-shift-select.plugin.zsh
+# Copypaste, selection, and clipboard integration
+source ~/init/zsh-copypaste.sh
