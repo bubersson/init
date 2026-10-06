@@ -107,15 +107,15 @@ x-osc52-copy() {
     local text="${BUFFER[start+1,end]}"
     CUTBUFFER="$text"
     if command -v pbcopy &> /dev/null; then
-      print -rn -- "$text" | pbcopy
-    elif command -v wl-copy &> /dev/null; then
-      print -rn -- "$text" | wl-copy
-    elif command -v xclip &> /dev/null; then
-      print -rn -- "$text" | xclip -sel CLIPBOARD -in
+      print -rn -- "$text" | pbcopy 2>/dev/null
+    elif [[ -n "$WAYLAND_DISPLAY" ]] && command -v wl-copy &> /dev/null; then
+      print -rn -- "$text" | wl-copy 2>/dev/null
+    elif [[ -n "$DISPLAY" ]] && command -v xclip &> /dev/null; then
+      print -rn -- "$text" | xclip -sel CLIPBOARD -in 2>/dev/null
     fi
     if command -v base64 &> /dev/null; then
-      local b64=$(print -rn -- "$text" | base64 | tr -d '\r\n')
-      printf '\e]52;c;%s\a' "$b64" > /dev/tty 2>/dev/null || printf '\e]52;c;%s\a' "$b64"
+      local b64=$(print -rn -- "$text" | base64 2>/dev/null | tr -d '\r\n')
+      printf '\e]52;c;%s\a' "$b64" > /dev/tty 2>/dev/null || printf '\e]52;c;%s\a' "$b64" 2>/dev/null
     fi
     REGION_ACTIVE=1
   else
@@ -128,15 +128,15 @@ x-osc52-cut() {
   if (( REGION_ACTIVE )); then
     zle kill-region
     if command -v pbcopy &> /dev/null; then
-      print -rn -- "$CUTBUFFER" | pbcopy
-    elif command -v wl-copy &> /dev/null; then
-      print -rn -- "$CUTBUFFER" | wl-copy
-    elif command -v xclip &> /dev/null; then
-      print -rn -- "$CUTBUFFER" | xclip -sel CLIPBOARD -in
+      print -rn -- "$CUTBUFFER" | pbcopy 2>/dev/null
+    elif [[ -n "$WAYLAND_DISPLAY" ]] && command -v wl-copy &> /dev/null; then
+      print -rn -- "$CUTBUFFER" | wl-copy 2>/dev/null
+    elif [[ -n "$DISPLAY" ]] && command -v xclip &> /dev/null; then
+      print -rn -- "$CUTBUFFER" | xclip -sel CLIPBOARD -in 2>/dev/null
     fi
     if command -v base64 &> /dev/null; then
-      local b64=$(print -rn -- "$CUTBUFFER" | base64 | tr -d '\r\n')
-      printf '\e]52;c;%s\a' "$b64" > /dev/tty 2>/dev/null || printf '\e]52;c;%s\a' "$b64"
+      local b64=$(print -rn -- "$CUTBUFFER" | base64 2>/dev/null | tr -d '\r\n')
+      printf '\e]52;c;%s\a' "$b64" > /dev/tty 2>/dev/null || printf '\e]52;c;%s\a' "$b64" 2>/dev/null
     fi
     zle -K main 2>/dev/null || true
     zle -R 2>/dev/null || true
