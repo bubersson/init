@@ -4,11 +4,6 @@
 # Disable flow control so Cmd+S/Ctrl+S never freezes terminal
 stty -ixon 2>/dev/null
 
-# Load shift-select plugin if available
-if [[ -f ~/init/zsh-plugins/zsh-shift-select/zsh-shift-select.plugin.zsh ]]; then
-  source ~/init/zsh-plugins/zsh-shift-select/zsh-shift-select.plugin.zsh
-fi
-
 # ------------------------------------------------------------------------------
 # 1. Selection Collapse (GUI Text Editor Style)
 # ------------------------------------------------------------------------------
