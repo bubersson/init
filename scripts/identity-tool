@@ -3,7 +3,7 @@
 source ~/init/scripts/defaults.sh
 
 ME=$(basename "${0}")
-VERSION="v0.02"
+VERSION="v0.03"
 
 MANUAL() { cat <<DOCUMENTATION
 ${GREEN}identity-tool${RESET} (alias ${GREEN}s${RESET})
@@ -14,9 +14,11 @@ ${YELLOW}USAGE:${RESET}
     identity-tool <IDENTITY>
     ${GRAY}identity-tool${RESET}
     ${GRAY}identity-tool add machine_name user 192.168.0.1${RESET}
+    ${GRAY}identity-tool git identity_name${RESET}
 
 ${YELLOW}SUBCOMMANDS:${RESET}
     ${GREEN}add   ${RESET}Create new identity.
+    ${GREEN}git   ${RESET}Configure git identity for current repository.
     ${GREEN}list  ${RESET}List existing identities.
 
 DOCUMENTATION
@@ -76,9 +78,60 @@ function _add() {
     fi
 }
 
+function _git() {
+	if [[ $# -ne 2 ]] ; then
+		echo -e "${CROSS} ${RED}ERROR: Wrong number of params to 'git'${RESET}"
+		echo -e "Expected format: ${WHITE}identity-tool git identity_name${RESET}"
+		return
+	fi
+	local has_error=false
+
+	local SOME_NAME=$2
+
+	if [[ ! "$SOME_NAME" =~ ^[a-zA-Z0-9][a-zA-Z0-9._-]*$ ]]; then
+		echo -e "${CROSS} ${RED}ERROR: Invalid identity name: ${WHITE}${SOME_NAME}${RESET}"
+		echo -e "Identity name must start with an alphanumeric character and contain only letters, numbers, dots, dashes, or underscores."
+		return
+	fi
+
+	local PUB_KEY_FILE="$HOME/.ssh/$SOME_NAME.pub"
+
+	if [ ! -d .git ]; then
+		echo -e "$INFO Initializing git repository"
+		git init || has_error=true
+	fi
+
+	if [ ! -f "$PUB_KEY_FILE" ]; then
+		echo -e "${CROSS} ${RED}ERROR: Public key file not found: ${WHITE}${PUB_KEY_FILE}${RESET}"
+		return
+	fi
+
+	local SOME_EMAIL=$(awk '{print $3}' "$PUB_KEY_FILE" | head -n 1)
+	if [ -z "$SOME_EMAIL" ]; then
+		echo -e "${CROSS} ${RED}ERROR: Could not extract email from ${WHITE}${PUB_KEY_FILE}${RESET}"
+		return
+	fi
+
+	git config user.name "$SOME_NAME" || has_error=true
+	git config user.email "$SOME_EMAIL" || has_error=true
+	git config user.signingkey "$HOME/.ssh/$SOME_NAME.pub" || has_error=true
+	git config commit.gpgsign true || has_error=true
+	git config tag.gpgsign true || has_error=true
+	git config gpg.format ssh || has_error=true
+	git config gpg.ssh.allowedSignersFile "$HOME/.ssh/allowed_signers" || has_error=true
+
+	if $has_error ; then
+		echo -e "$CROSS Function returned errors"
+	else
+		echo -e "$TICK DONE. Git identity set to ${WHITE}${SOME_NAME}${RESET} <${SOME_EMAIL}>"
+	fi
+}
+
 case $1 in
 	--help|-h)  MANUAL          ; exit 0 ;;
 	list)    	_list     	   ; exit 0 ;;
 	add)        _add $@        ; exit 0 ;;
+	git)        _git $@        ; exit 0 ;;
 	*)          _default $@    ; exit 0 ;;
 esac
+

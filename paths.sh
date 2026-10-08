@@ -22,7 +22,7 @@ export PATH=$PATH:~/Applications/
 # Add .local/bin
 export PATH=$PATH:~/.local/bin
 
-# Add Homebrew default path on MacOS
+# Add Homebrew default path on MacOS (happens automatically, or at least it should)
 if [[ "$OSTYPE" == darwin* ]]; then
-    export PATH=/opt/homebrew/bin:$PATH
+    export PATH=$PATH:/opt/homebrew/bin
 fi
