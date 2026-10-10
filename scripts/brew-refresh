@@ -4,7 +4,25 @@
 
 source ~/init/scripts/defaults.sh
 
-sudo chown -R $(whoami) /usr/local/bin /usr/local/etc /usr/local/sbin /usr/local/share /usr/local/share/doc
-chmod u+w /usr/local/bin /usr/local/etc /usr/local/sbin /usr/local/share /usr/local/share/doc
+dirs=(
+	/usr/local/bin
+	/usr/local/etc
+	/usr/local/sbin
+	/usr/local/share
+	/usr/local/share/doc
+)
+
+existing_dirs=()
+for dir in "${dirs[@]}"; do
+	if [ -d "$dir" ]; then
+		existing_dirs+=("$dir")
+	fi
+done
+
+if [ ${#existing_dirs[@]} -gt 0 ]; then
+	sudo chown -R $(whoami) "${existing_dirs[@]}"
+	chmod u+w "${existing_dirs[@]}"
+fi
 
 echo -e "$TICK Brew access refreshed"
+
