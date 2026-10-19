@@ -121,8 +121,10 @@ function man() {
 }
 
 # editor
-if command -v micro &> /dev/null; then
-  # If micro is available, use micro.
+if command -v fresh &> /dev/null; then
+  export EDITOR=fresh
+  alias e=fresh
+elif command -v micro &> /dev/null; then
   export EDITOR=micro
   alias e=micro
 else

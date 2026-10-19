@@ -33,6 +33,9 @@ keybind = ctrl+w=close_window
 
 macos-titlebar-style = tabs
 
+# Pass Cmd+Q through to the active terminal application instead of quitting Ghostty
+keybind = super+q=unbind
+
 # Native clipboard
 keybind = performable:super+c=copy_to_clipboard
 keybind = super+v=paste_from_clipboard
