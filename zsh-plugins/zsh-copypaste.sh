@@ -61,15 +61,15 @@ bindkey -M shift-select "^[[200~" bracketed-paste
 # ------------------------------------------------------------------------------
 # Enable Kitty keyboard protocol flag 1 only while at the interactive prompt (precmd),
 # and restore standard legacy keyboard mode before running external commands (preexec).
-# This prevents pagers (like `less` in `git diff`), editors, and CLI tools from
-# having their arrow keys or key repeat swallowed.
+# Using \e[=1u / \e[=0u sets flags in-place without growing the stack on empty prompts,
+# and \e[<99u drains any stacked modes so processes like `ping` receive raw \x03 (SIGINT).
 if [[ -t 1 ]] && [[ -n "$TERM" ]] && [[ "$TERM" != "dumb" ]]; then
   autoload -Uz add-zsh-hook 2>/dev/null
   _enable_kitty_keyboard() {
-    [[ -t 1 ]] && printf '\e[>1u'
+    [[ -t 1 ]] && printf '\e[<99u\e[=1u' > /dev/tty 2>/dev/null
   }
   _disable_kitty_keyboard() {
-    [[ -t 1 ]] && printf '\e[<u'
+    [[ -t 1 ]] && printf '\e[<99u\e[=0u' > /dev/tty 2>/dev/null
   }
   add-zsh-hook precmd _enable_kitty_keyboard 2>/dev/null
   add-zsh-hook preexec _disable_kitty_keyboard 2>/dev/null
@@ -89,6 +89,8 @@ select-all() {
 zle -N select-all
 bindkey "^A" select-all
 bindkey -M shift-select "^A" select-all
+bindkey "^[[97;5u" select-all
+bindkey -M shift-select "^[[97;5u" select-all
 bindkey "^[[97;9u" select-all
 bindkey -M shift-select "^[[97;9u" select-all
 
@@ -114,7 +116,7 @@ x-osc52-copy() {
     fi
     REGION_ACTIVE=1
   else
-    [[ "$KEYS" == $'\x03' ]] && zle send-break
+    [[ "$KEYS" == $'\x03' || "$KEYS" == $'\e[99;5u' ]] && zle send-break
   fi
 }
 zle -N x-osc52-copy
@@ -139,14 +141,18 @@ x-osc52-cut() {
 }
 zle -N x-osc52-cut
 
-# Bind Cmd+C (Ghostty CSI u ^[[99;9u) and Ctrl+C
+# Bind Cmd+C (Ghostty CSI u ^[[99;9u) and Ctrl+C (^C / CSI u ^[[99;5u)
 bindkey "^C" x-osc52-copy
 bindkey -M shift-select "^C" x-osc52-copy
+bindkey "^[[99;5u" x-osc52-copy
+bindkey -M shift-select "^[[99;5u" x-osc52-copy
 bindkey "^[[99;9u" x-osc52-copy
 bindkey -M shift-select "^[[99;9u" x-osc52-copy
 
-# Bind Cmd+X (Ghostty CSI u ^[[120;9u), Ctrl+X
+# Bind Cmd+X (Ghostty CSI u ^[[120;9u) and Ctrl+X (^X / CSI u ^[[120;5u)
 bindkey "^X" x-osc52-cut
 bindkey -M shift-select "^X" x-osc52-cut
+bindkey "^[[120;5u" x-osc52-cut
+bindkey -M shift-select "^[[120;5u" x-osc52-cut
 bindkey "^[[120;9u" x-osc52-cut
 bindkey -M shift-select "^[[120;9u" x-osc52-cut

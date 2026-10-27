@@ -29,19 +29,18 @@ keybind = shift+page_down=unbind
 # TODO: ADD KEYBIND FOR CTRL+W on Linux: Test THIS!
 keybind = ctrl+w=close_window
 
-#### MacOS 
+#### MacOS
 
 macos-titlebar-style = tabs
 
 # Pass Cmd+Q through to the active terminal application instead of quitting Ghostty
 keybind = super+q=unbind
 
-# Native clipboard
+# Native clipboard (macOS: super+c/v, Linux with keyd: ctrl+c/v)
 keybind = performable:super+c=copy_to_clipboard
 keybind = super+v=paste_from_clipboard
-# Previous ctrl+c/ctrl+v fallback (kept for reference):
-# keybind = performable:ctrl+c=copy_to_clipboard
-# keybind = performable:ctrl+v=paste_from_clipboard
+keybind = performable:ctrl+c=copy_to_clipboard
+keybind = performable:ctrl+v=paste_from_clipboard
 
 # Native editor shortcuts (Save, Cut, Undo, Redo)
 keybind = super+s=text:\x13
