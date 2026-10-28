@@ -82,7 +82,7 @@ function _git() {
 	if [[ $# -ne 2 ]] ; then
 		echo -e "${CROSS} ${RED}ERROR: Wrong number of params to 'git'${RESET}"
 		echo -e "Expected format: ${WHITE}identity-tool git identity_name${RESET}"
-		return
+		return 1
 	fi
 	local has_error=false
 
@@ -91,25 +91,25 @@ function _git() {
 	if [[ ! "$SOME_NAME" =~ ^[a-zA-Z0-9][a-zA-Z0-9._-]*$ ]]; then
 		echo -e "${CROSS} ${RED}ERROR: Invalid identity name: ${WHITE}${SOME_NAME}${RESET}"
 		echo -e "Identity name must start with an alphanumeric character and contain only letters, numbers, dots, dashes, or underscores."
-		return
+		return 1
 	fi
 
 	local PUB_KEY_FILE="$HOME/.ssh/$SOME_NAME.pub"
 
-	if [ ! -d .git ]; then
-		echo -e "$INFO Initializing git repository"
-		git init || has_error=true
-	fi
-
 	if [ ! -f "$PUB_KEY_FILE" ]; then
 		echo -e "${CROSS} ${RED}ERROR: Public key file not found: ${WHITE}${PUB_KEY_FILE}${RESET}"
-		return
+		return 1
 	fi
 
 	local SOME_EMAIL=$(awk '{print $3}' "$PUB_KEY_FILE" | head -n 1)
 	if [ -z "$SOME_EMAIL" ]; then
 		echo -e "${CROSS} ${RED}ERROR: Could not extract email from ${WHITE}${PUB_KEY_FILE}${RESET}"
-		return
+		return 1
+	fi
+
+	if [ ! -d .git ]; then
+		echo -e "$INFO Initializing git repository"
+		git init || has_error=true
 	fi
 
 	git config user.name "$SOME_NAME" || has_error=true
@@ -122,6 +122,7 @@ function _git() {
 
 	if $has_error ; then
 		echo -e "$CROSS Function returned errors"
+		return 1
 	else
 		echo -e "$TICK DONE. Git identity set to ${WHITE}${SOME_NAME}${RESET} <${SOME_EMAIL}>"
 	fi
@@ -130,8 +131,8 @@ function _git() {
 case $1 in
 	--help|-h)  MANUAL          ; exit 0 ;;
 	list)    	_list     	   ; exit 0 ;;
-	add)        _add $@        ; exit 0 ;;
-	git)        _git $@        ; exit 0 ;;
-	*)          _default $@    ; exit 0 ;;
+	add)        _add $@        ; exit $? ;;
+	git)        _git $@        ; exit $? ;;
+	*)          _default $@    ; exit $? ;;
 esac
 
