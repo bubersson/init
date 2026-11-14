@@ -79,16 +79,18 @@ function _install() {
       ethtool shtool rfkill zlib1g-dev libpcap-dev libsqlite3-dev \
       libpcre2-dev libhwloc-dev libcmocka-dev hostapd wpasupplicant \
       tcpdump screen iw usbutils expect
-  mkdir -p $INSTALL_FOLDER
-  cd $INSTALL_FOLDER
-  git clone http://github.com/aircrack-ng/aircrack-ng
-  cd aircrack-ng
-  autoreconf -i
-  ./configure
-  make
-  make install
-  if [ $? -eq 0 ]; then
+  if mkdir -p "$INSTALL_FOLDER" &&
+     cd "$INSTALL_FOLDER" &&
+     git clone https://github.com/aircrack-ng/aircrack-ng.git &&
+     cd aircrack-ng &&
+     autoreconf -i &&
+     ./configure &&
+     make &&
+     sudo make install; then
     echo -e "[${GREEN}DONE${RESET}] Installation successful"
+  else
+    echo -e "[${RED}ERROR${RESET}] Installation failed"
+    exit 1
   fi
 }
 

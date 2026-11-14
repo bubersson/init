@@ -2,12 +2,46 @@
 # Create dir for AppImages
 mkdir -p ~/Applications
 
-# Download
-wget -q --show-progress -O ~/Applications/double_commander.AppImage https://download.opensuse.org/repositories/home:/Alexx2000:/doublecmd-beta/AppImage/doublecmd-qt-latest-x86_64.AppImage
-wget -q --show-progress -O ~/Applications/doublecmd.svg https://raw.githubusercontent.com/doublecmd/doublecmd/refs/heads/master/pixmaps/mainicon/dc_128.svg
+APPIMAGE_URL="https://download.opensuse.org/repositories/home:/Alexx2000:/doublecmd-beta/AppImage/doublecmd-qt-latest-x86_64.AppImage"
+APPIMAGE_SHA256_URL="${APPIMAGE_URL}.sha256"
+ICON_URL="https://raw.githubusercontent.com/doublecmd/doublecmd/refs/heads/master/pixmaps/mainicon/dc_128.svg"
 
-# Make executable
-chmod +x ~/Applications/double_commander.AppImage
+tmp_dir=$(mktemp -d) || exit 1
+trap 'rm -rf "$tmp_dir"' EXIT
+
+# Download AppImage and its SHA256 checksum
+wget -q --show-progress -O "$tmp_dir/double_commander.AppImage" "$APPIMAGE_URL" || {
+  echo "ERROR: Failed to download Double Commander AppImage" >&2
+  exit 1
+}
+wget --https-only -q -O "$tmp_dir/double_commander.AppImage.sha256" "$APPIMAGE_SHA256_URL" || {
+  echo "ERROR: Failed to download SHA256 checksum" >&2
+  exit 1
+}
+
+# Verify SHA256 checksum before marking executable or installing into ~/Applications
+expected_sha256=$(awk 'NR==1 {print $1}' "$tmp_dir/double_commander.AppImage.sha256" | tr '[:upper:]' '[:lower:]')
+if [[ ! "$expected_sha256" =~ ^[0-9a-f]{64}$ ]]; then
+  echo "ERROR: Invalid SHA256 checksum format from $APPIMAGE_SHA256_URL" >&2
+  exit 1
+fi
+
+actual_sha256=$(sha256sum "$tmp_dir/double_commander.AppImage" | awk '{print $1}' | tr '[:upper:]' '[:lower:]')
+if [[ "$actual_sha256" != "$expected_sha256" ]]; then
+  echo "ERROR: SHA256 checksum mismatch for Double Commander AppImage!" >&2
+  echo "  Expected: $expected_sha256" >&2
+  echo "  Actual:   $actual_sha256" >&2
+  exit 1
+fi
+
+wget --https-only -q --show-progress -O ~/Applications/doublecmd.svg "$ICON_URL" || {
+  echo "ERROR: Failed to download Double Commander icon" >&2
+  exit 1
+}
+
+# Make executable and move into place only after verification succeeds
+chmod +x "$tmp_dir/double_commander.AppImage"
+mv "$tmp_dir/double_commander.AppImage" ~/Applications/double_commander.AppImage
 
 echo "Double Commander downloaded into ~/Applications/double_commander.AppImage"
 

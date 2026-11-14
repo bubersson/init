@@ -30,7 +30,7 @@ function _default() {
 		_list
 		return
 	fi
-	ssh $@
+	ssh "$@"
 }
 
 function _list() {
@@ -43,7 +43,7 @@ function _add() {
 	if [[ $# -ne 4 ]] ; then
 		echo -e "${CROSS} ${RED}ERROR: Wrong number of params to 'add'${RESET}"
 		echo -e "Expected format: ${WHITE}identity-tool add machine_name user 192.168.0.1${RESET}"
-		return
+		return 1
 	fi
     local has_error=false
 
@@ -52,27 +52,41 @@ function _add() {
 	local SSH_LOGIN_HOST=$4
 	local SSH_LOGIN_EMAIL="my@email.com"
 
+	if [[ ! "$SSH_CONNECTION_NAME" =~ ^[a-zA-Z0-9][a-zA-Z0-9._-]*$ ]]; then
+		echo -e "${CROSS} ${RED}ERROR: Invalid connection name: ${WHITE}${SSH_CONNECTION_NAME}${RESET}"
+		echo -e "Connection name must start with an alphanumeric character and contain only letters, numbers, dots, dashes, or underscores."
+		return 1
+	fi
+
+	if [[ ! "$SSH_LOGIN_USER" =~ ^[a-zA-Z0-9_][a-zA-Z0-9._-]*$ ]]; then
+		echo -e "${CROSS} ${RED}ERROR: Invalid SSH user: ${WHITE}${SSH_LOGIN_USER}${RESET}"
+		return 1
+	fi
+
+	if [[ ! "$SSH_LOGIN_HOST" =~ ^[a-zA-Z0-9:][a-zA-Z0-9._:-]*$ ]]; then
+		echo -e "${CROSS} ${RED}ERROR: Invalid SSH host: ${WHITE}${SSH_LOGIN_HOST}${RESET}"
+		return 1
+	fi
+
 	# Generate SSH key
 	echo -e "$INFO Generating ssh key"
-	mkdir -p ~/.ssh
-	ssh-keygen -t ed25519 -C $SSH_LOGIN_EMAIL -N "" -f "$HOME/.ssh/$SSH_CONNECTION_NAME" || has_error=true
+	mkdir -p -m 700 ~/.ssh
+	chmod 700 ~/.ssh
+	ssh-keygen -t ed25519 -C "$SSH_LOGIN_EMAIL" -N "" -f "$HOME/.ssh/$SSH_CONNECTION_NAME" || has_error=true
 
 	# Add new connection to ~/.ssh/config
 	echo -e "$INFO Adding new connection to ~/.ssh/config"
 	touch ~/.ssh/config
 	chmod 600 ~/.ssh/config
-	echo -e "\nHost "$SSH_CONNECTION_NAME >> ~/.ssh/config
-	echo -e "	HostName "$SSH_LOGIN_HOST >> ~/.ssh/config
-	echo -e "	User "$SSH_LOGIN_USER >> ~/.ssh/config
-	echo -e "	AddKeysToAgent yes" >> ~/.ssh/config
-	echo -e "	IdentityFile ~/.ssh/"$SSH_CONNECTION_NAME >> ~/.ssh/config
-	echo -e " " >> ~/.ssh/config
+	printf '\nHost %s\n\tHostName %s\n\tUser %s\n\tAddKeysToAgent yes\n\tIdentityFile ~/.ssh/%s\n\n' \
+		"$SSH_CONNECTION_NAME" "$SSH_LOGIN_HOST" "$SSH_LOGIN_USER" "$SSH_CONNECTION_NAME" >> ~/.ssh/config
 
 	echo -e "$INFO Copying public key to the target machine"
 	ssh-copy-id -i "$HOME/.ssh/$SSH_CONNECTION_NAME" "${SSH_LOGIN_USER}@${SSH_LOGIN_HOST}" || has_error=true
 
 	if $has_error ; then
         echo -e "$CROSS Function returned errors"
+        return 1
     else
     	echo -e "$TICK DONE. To log in use: ${WHITE}identity-tool ${SSH_CONNECTION_NAME}${RESET}"
     fi
@@ -128,11 +142,11 @@ function _git() {
 	fi
 }
 
-case $1 in
-	--help|-h)  MANUAL          ; exit 0 ;;
-	list)    	_list     	   ; exit 0 ;;
-	add)        _add $@        ; exit $? ;;
-	git)        _git $@        ; exit $? ;;
-	*)          _default $@    ; exit $? ;;
+case "$1" in
+	--help|-h)  MANUAL            ; exit 0 ;;
+	list)       _list             ; exit 0 ;;
+	add)        _add "$@"         ; exit $? ;;
+	git)        _git "$@"         ; exit $? ;;
+	*)          _default "$@"     ; exit $? ;;
 esac
 

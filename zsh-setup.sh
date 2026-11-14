@@ -73,7 +73,6 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 # Install ZSH Prompt
 setopt auto_cd
 setopt multios
-setopt prompt_subst # enables substitution in prompt
 setopt interactive_comments   # allow copypasting scripts with "#" comments
 autoload -Uz vcs_info # from git command
 source ~/init/zsh-theme/hop-zsh-prompt.sh

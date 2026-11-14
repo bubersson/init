@@ -35,6 +35,15 @@
 # A few utility functions to make it easy and re-usable to draw segmented prompts
 
 CURRENT_BG='NONE'
+typeset -ga psvar
+_HOP_PROMPT_BUF=''
+
+# Store dynamic/untrusted text in psvar and return its %Nv prompt escape in REPLY.
+# Zsh expands %Nv literally after prompt_subst, preventing command/variable/% injection.
+_prompt_psvar() {
+  psvar+=("$1")
+  REPLY="%${#psvar}v"
+}
 
 case ${SOLARIZED_THEME:-dark} in
     light) CURRENT_FG='white';;
@@ -74,23 +83,23 @@ prompt_segment() {
   [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
   [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
   if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
-    echo -n " %{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%} "
+    _HOP_PROMPT_BUF+=" %{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%} "
   else
-    echo -n "%{$bg%}%{$fg%} "
+    _HOP_PROMPT_BUF+="%{$bg%}%{$fg%} "
   fi
   CURRENT_BG=$1
-  [[ -n $3 ]] && echo -n $3
+  [[ -n $3 ]] && _HOP_PROMPT_BUF+="$3"
 }
 
 # End the prompt, closing any open segments
 prompt_end() {
   if [[ -n $CURRENT_BG ]]; then
-    echo -n " %{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR\n"
+    _HOP_PROMPT_BUF+=" %{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR"$'\n'
   else
-    echo -n "%{%k%}$SEGMENT_SEPARATOR\n"
+    _HOP_PROMPT_BUF+="%{%k%}$SEGMENT_SEPARATOR"$'\n'
   fi
-  echo -n "%{%f%}λ"
-  CURRENT_BG=''
+  _HOP_PROMPT_BUF+="%{%f%}λ"
+  CURRENT_BG='NONE'
 }
 
 ### Prompt components
@@ -103,7 +112,8 @@ prompt_context() {
   if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
     context_bg=${MY_PROMPT_CONTEXT_BG:-$PROMPT_CONTEXT_BG}
     host_fg=${MY_PROMPT_CONTEXT_HOST:-$PROMPT_CONTEXT_HOST}
-    prompt_segment $context_bg $PROMPT_CONTEXT_USERNAME "%n%{%F{$host_fg}%}@$MY_MACHINE_NAME"
+    _prompt_psvar "$MY_MACHINE_NAME"
+    prompt_segment $context_bg $PROMPT_CONTEXT_USERNAME "%n%{%F{$host_fg}%}@$REPLY"
   fi
 }
 
@@ -184,7 +194,8 @@ prompt_git() {
   else
     prompt_segment green $CURRENT_FG
   fi
-  echo -n "${PL_BRANCH_CHAR} ${branch}${state}${remote}${mode}"
+  _prompt_psvar "${branch}"
+  _HOP_PROMPT_BUF+="${PL_BRANCH_CHAR} ${REPLY}${state}${remote}${mode}"
 }
 
 prompt_bzr() {
@@ -202,13 +213,14 @@ prompt_bzr() {
     status_mod=$(echo -n "$bzr_status" | head -n1 | grep "modified" | wc -m)
     status_all=$(echo -n "$bzr_status" | head -n1 | wc -m)
     revision=$(bzr log -r-1 --log-format line | cut -d: -f1)
+    _prompt_psvar "$revision"
     if [[ $status_mod -gt 0 ]] ; then
-      prompt_segment yellow black "bzr@$revision ✚"
+      prompt_segment yellow black "bzr@$REPLY ✚"
     else
       if [[ $status_all -gt 0 ]] ; then
-        prompt_segment yellow black "bzr@$revision"
+        prompt_segment yellow black "bzr@$REPLY"
       else
-        prompt_segment green black "bzr@$revision"
+        prompt_segment green black "bzr@$REPLY"
       fi
     fi
   fi
@@ -231,7 +243,8 @@ prompt_hg() {
         # if working copy is clean
         prompt_segment green $CURRENT_FG
       fi
-      echo -n $(hg prompt "☿ {rev}@{branch}") $st
+      _prompt_psvar "$(hg prompt "☿ {rev}@{branch}")"
+      _HOP_PROMPT_BUF+="$REPLY${st:+ $st}"
     else
       st=""
       rev=$(hg id -n 2>/dev/null | sed 's/[^-0-9]//g')
@@ -245,7 +258,8 @@ prompt_hg() {
       else
         prompt_segment green $CURRENT_FG
       fi
-      echo -n "☿ $rev@$branch" $st
+      _prompt_psvar "☿ $rev@$branch"
+      _HOP_PROMPT_BUF+="$REPLY${st:+ $st}"
     fi
   fi
 }
@@ -259,7 +273,8 @@ prompt_dir() {
 prompt_virtualenv() {
   local virtualenv_path="$VIRTUAL_ENV"
   if [[ -n $virtualenv_path && -n $VIRTUAL_ENV_DISABLE_PROMPT ]]; then
-    prompt_segment blue black "(`basename $virtualenv_path`)"
+    _prompt_psvar "${virtualenv_path:t}"
+    prompt_segment blue black "($REPLY)"
   fi
 }
 
@@ -289,15 +304,19 @@ prompt_status() {
 # - displays black on green otherwise
 prompt_aws() {
   [[ -z "$AWS_PROFILE" ]] && return
+  _prompt_psvar "$AWS_PROFILE"
   case "$AWS_PROFILE" in
-    *-prod|*production*) prompt_segment red yellow  "AWS: $AWS_PROFILE" ;;
-    *) prompt_segment green black "AWS: $AWS_PROFILE" ;;
+    *-prod|*production*) prompt_segment red yellow  "AWS: $REPLY" ;;
+    *) prompt_segment green black "AWS: $REPLY" ;;
   esac
 }
 
 ## Main prompt
 build_prompt() {
   local RETVAL=$?
+  CURRENT_BG='NONE'
+  _HOP_PROMPT_BUF=''
+  psvar=()
   prompt_status
 #   prompt_virtualenv
 #   prompt_aws
@@ -307,6 +326,8 @@ build_prompt() {
 #   prompt_hg
   prompt_dir
   prompt_end
+  PROMPT="%{%f%b%k%}${_HOP_PROMPT_BUF} "
 }
 
-PROMPT='%{%f%b%k%}$(build_prompt) '
+precmd_functions=(build_prompt ${precmd_functions:#build_prompt})
+build_prompt

@@ -17,28 +17,31 @@ function _default() {
   echo -e "${YELLOW}SUBCOMMANDS:${RESET}"
   echo -e "    ${GREEN}video   ${RESET}Grab a video from a Youtube link."
   echo -e "    ${GREEN}audio   ${RESET}Grab audio only from a Youtube link."
-  echo -e "    ${GREEN}install ${RESET}Pull and install youtube-dl."
+  echo -e "    ${GREEN}install ${RESET}Install yt-dlp."
   echo -e ""
   _validate
 }
 
 function _install() {
     if [[ "$(uname)" == "Darwin" ]]; then #Mac
-        sudo brew install youtube-dl
-        if [ $? -eq 0 ]; then
+        if brew install yt-dlp; then
             echo -e "[${GREEN}DONE${RESET}] Installation successful"
+        else
+            echo -e "[${RED}ERROR${RESET}] Installation failed"
+            exit 1
         fi
     else # Linux
-        sudo wget https://yt-dl.org/downloads/latest/youtube-dl -O /usr/local/bin/youtube-dl
-        if [ $? -eq 0 ]; then
+        if sudo apt-get update && sudo apt-get install -y yt-dlp; then
             echo -e "[${GREEN}DONE${RESET}] Installation successful"
+        else
+            echo -e "[${RED}ERROR${RESET}] Installation failed"
+            exit 1
         fi
-        sudo chmod a+rx /usr/local/bin/youtube-dl
     fi
 }
 
 function _validate() {
-  REQUIRED=${@:-"youtube-dl"}
+  REQUIRED=${@:-"yt-dlp"}
   MISSING=""
   for i in $REQUIRED ; do
     command -v $i >/dev/null && continue || { MISSING="$MISSING $i"; }
@@ -57,18 +60,18 @@ function _validate() {
 
 function _video() {
     _validate
-    youtube-dl $2
+    yt-dlp -- "$2"
 }
 
 function _audio() {
     _validate
-    youtube-dl -f bestaudio --extract-audio --audio-format best --add-metadata $2
+    yt-dlp -f bestaudio --extract-audio --audio-format best --add-metadata -- "$2"
 }
 
 case $1 in
-  --help|-h)  _default    ; exit 0 ;;
-  video)      _video $@   ; exit 0 ;;
-  audio)      _audio $@   ; exit 0 ;;
-  install)    _install    ; exit 0 ;;
-  *)          _default    ; exit 0 ;;
+  --help|-h)  _default       ; exit 0 ;;
+  video)      _video "$@"    ; exit 0 ;;
+  audio)      _audio "$@"    ; exit 0 ;;
+  install)    _install       ; exit 0 ;;
+  *)          _default       ; exit 0 ;;
 esac

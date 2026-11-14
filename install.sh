@@ -2,14 +2,16 @@
 # Installation script for the bindings.
 
 # Set defaults
-RED=$(tput setaf 1) #'\033[31m'
-GREEN=$(tput setaf 2) #'\033[32m'
-YELLOW=$(tput setaf 3) #'\033[33m'
-BLUE=$(tput setaf 4) #'\033[34m'
-GRAY=$(tput setaf 8) #'\033[90m'
-DGRAY=$(tput setaf 236)
-WHITE=$(tput bold)$(tput setaf 15)
-RESET=$(tput sgr0) #'\033[0m'
+if [ -t 1 ] && [ -n "$TERM" ] && [ "$TERM" != "dumb" ]; then
+    RED=$(tput setaf 1) #'\033[31m'
+    GREEN=$(tput setaf 2) #'\033[32m'
+    YELLOW=$(tput setaf 3) #'\033[33m'
+    BLUE=$(tput setaf 4) #'\033[34m'
+    GRAY=$(tput setaf 8) #'\033[90m'
+    DGRAY=$(tput setaf 236)
+    WHITE=$(tput bold)$(tput setaf 15)
+    RESET=$(tput sgr0) #'\033[0m'
+fi
 
 INFO="${BLUE}[i]${RESET}"
 TICK="${GREEN}[✓]${RESET}"
@@ -45,9 +47,11 @@ xoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxoxo
 }
 
 _backup() {
-    if [ -f "${HOME_PATH}/$1" ]; then
-        mv "${HOME_PATH}/$1"{,.old}
-        echo -e "$INFO Backed up $1 as $1.old"
+    local target="$1"
+    [[ "$target" != /* ]] && target="${HOME_PATH}/$target"
+    if [ -e "$target" ] || [ -L "$target" ]; then
+        mv "$target" "${target}.old"
+        echo -e "$INFO Backed up $target as ${target}.old"
     fi
 }
 
@@ -56,29 +60,36 @@ _zshrc() {
     if [ -n "$ZSH_VERSION" ]; then
         vared -p "Enter machine name [box]: " -c my_machine_name
     else
-        read -p "Enter machine name [box]: " my_machine_name
+        read -r -p "Enter machine name [box]: " my_machine_name
     fi
 
+    my_machine_name=${my_machine_name//$'\r'/}
+    my_machine_name=${my_machine_name//$'\n'/}
     my_machine_name=${my_machine_name:-box}
+    local escaped_machine_name
+    local escaped_install_path
+    escaped_machine_name=$(printf '%s' "$my_machine_name" | sed "s/'/'\\\\''/g")
+    escaped_install_path=$(printf '%s' "$INSTALL_PATH" | sed "s/'/'\\\\''/g")
 
-    _backup ".zshrc"
-    touch "${HOME_PATH}/.zshrc"
-    echo -e "\n### Init all aliases, bindings, etc. ###" >> "${HOME_PATH}/.zshrc"
-    echo -e "# Available colors: https://i.imgur.com/okBgrw4.png" >> "${HOME_PATH}/.zshrc"
-    echo -e "export MY_MACHINE_NAME=${my_machine_name}" >> "${HOME_PATH}/.zshrc"
-    echo -e "export MY_PROMPT_CONTEXT_HOST=247" >> "${HOME_PATH}/.zshrc"
-    echo -e "export MY_PROMPT_CONTEXT_BG=238" >> "${HOME_PATH}/.zshrc"
-    echo -e "source ${INSTALL_PATH}/init.sh" >> "${HOME_PATH}/.zshrc"
+    _backup "${HOME_PATH}/.zshrc"
+    {
+        printf '\n### Init all aliases, bindings, etc. ###\n'
+        printf '# Available colors: https://i.imgur.com/okBgrw4.png\n'
+        printf "export MY_MACHINE_NAME='%s'\n" "$escaped_machine_name"
+        printf 'export MY_PROMPT_CONTEXT_HOST=247\n'
+        printf 'export MY_PROMPT_CONTEXT_BG=238\n'
+        printf "source '%s/init.sh'\n" "$escaped_install_path"
+    } >> "${HOME_PATH}/.zshrc"
     echo -e "$TICK .zshrc installed"
 }
 
 
 _link_dotfile() {
-    _backup $2
-    local error_message=$( ln -s "$1" "$2" 2>&1)
-    local base_name=$(basename $2)
-    local dir_name=$(dirname $2)
-    if [[ -z "${error_message// }" ]]; then
+    _backup "$2"
+    local error_message
+    local base_name=$(basename "$2")
+    local dir_name=$(dirname "$2")
+    if error_message=$(ln -s "$1" "$2" 2>&1); then
         echo -e " ${DGRAY}├ ${GREEN}✓ ${GRAY}link ${dir_name}/${RESET}${base_name}"
         return 0
     else
@@ -88,11 +99,11 @@ _link_dotfile() {
 }
 
 _copy_dotfile() {
-    _backup $2
-    local error_message=$( cp "$1" "$2" 2>&1)
-    local base_name=$(basename $2)
-    local dir_name=$(dirname $2)
-    if [[ -z "${error_message// }" ]]; then
+    _backup "$2"
+    local error_message
+    local base_name=$(basename "$2")
+    local dir_name=$(dirname "$2")
+    if error_message=$(cp "$1" "$2" 2>&1); then
         echo -e " ${DGRAY}├ ${GREEN}✓ ${GRAY}copy ${dir_name}/${RESET}${base_name}"
         return 0
     else
@@ -102,10 +113,11 @@ _copy_dotfile() {
 }
 
 _dotfiles() {
-    _nano_config  ; echo ""
-    _mc_config    ; echo ""
-    _micro_config ; echo ""
-    _kitty_config ; echo ""
+    _nano_config    ; echo ""
+    _mc_config      ; echo ""
+    _micro_config   ; echo ""
+    _kitty_config   ; echo ""
+    _ghostty_config ; echo ""
     _git_config
 }
 
@@ -130,7 +142,7 @@ _mc_config() {
     _copy_dotfile "${INSTALL_PATH}/configs/mc/mc.keymap" "${HOME_PATH}/.config/mc/mc.keymap" || has_error=true
     # skin
     mkdir -p ~/.local/share/mc/skins
-    _copy_dotfile "${INSTALL_PATH}/configs/mc/hop-dark-skin.ini" "${HOME_PATH}/.local/share/mc/skins/hop-dark-skin.ini"
+    _copy_dotfile "${INSTALL_PATH}/configs/mc/hop-dark-skin.ini" "${HOME_PATH}/.local/share/mc/skins/hop-dark-skin.ini" || has_error=true
     if $has_error ; then
         echo -e "$CROSS mc config returned error"
     else
@@ -194,105 +206,35 @@ _git_config() {
 }
 
 _keyboard() {
-    # Notes:
-    # - the sed only applies the replacement on the first occurence
-    # - may need to restart the machine after doing this
-    # - the `XKBLAYOUT=hopkeyboard` seems to be the main thing that actually switches it
-
     echo -e "$INFO Starting installation of hopkeyboard using keyd"
 
     if ! command -v keyd &> /dev/null; then
         echo -e "$CROSS keyd is not available. Attempting to install from apt."
         sudo apt install keyd
-        echo -e "$INFO Creating a link ln -s /usr/bin/keyd.rvaiya /usr/bin/keyd"
-        sudo ln -s /usr/bin/keyd.rvaiya /usr/bin/keyd
+        if [ -x /usr/bin/keyd.rvaiya ] && [ ! -e /usr/bin/keyd ]; then
+            echo -e "$INFO Creating a link ln -s /usr/bin/keyd.rvaiya /usr/bin/keyd"
+            sudo ln -s /usr/bin/keyd.rvaiya /usr/bin/keyd
+        fi
         if ! command -v keyd &> /dev/null; then
-            echo -e "$CROSS keyd is not available in. Attempting to install from source."
+            echo -e "$CROSS keyd is not available. Attempting to install from source."
             echo -e "$INFO Downloading build pre-requisities"
             sudo apt install build-essential autoconf automake
-            mkdir -p ~/apps ; cd ~/apps
-            echo -e "$INFO Clonning keyd from git"
-            git clone https://github.com/rvaiya/keyd
+            mkdir -p ~/apps && cd ~/apps || return 1
+            if [ ! -d ~/apps/keyd ]; then
+                echo -e "$INFO Clonning keyd from git"
+                git clone https://github.com/rvaiya/keyd || return 1
+            fi
+            cd ~/apps/keyd || return 1
             echo -e "$INFO Installing keyd"
-            make && sudo make install
-            echo -e "$INFO Enabling keyd service"
-            sudo systemctl enable --now keyd
+            make && sudo make install || return 1
         fi
     fi
 
-    mkdir -p ~/.config/keyd 
-    echo -e "$TICK Created ~/.config/keyd"
-
     echo -e "$INFO Enabling keyd service"
-    sudo cp "${INSTALL_PATH}/keyboard/xkb-custom-keyboard/keyd.default.conf" "/etc/keyd/default.conf" 
-    
+    sudo mkdir -p /etc/keyd
+    sudo cp "${INSTALL_PATH}/keyboard/xkb-custom-keyboard/keyd.default.conf" "/etc/keyd/default.conf" || return 1
+    sudo systemctl enable --now keyd
     sudo systemctl restart keyd
-
-    exit 0
-
-    # ------------------ OLD INSTALLATION USING XKB .config --
-
-    mkdir -p ~/.config/xkb/{symbols,rules,compat,keycodes,types}
-    echo -e "$TICK Created folders ~/.config/xkb/{symbols,rules,compat,keycodes,types}"
-
-    local has_error=false
-    _copy_dotfile "${INSTALL_PATH}/keyboard/xkb-custom-keyboard/hopkeyboard" "${HOME_PATH}/.config/xkb/symbols/hopkeyboard" || has_error=true
-    _copy_dotfile "${INSTALL_PATH}/keyboard/xkb-custom-keyboard/evdev.xml" "${HOME_PATH}/.config/xkb/rules/evdev.xml" || has_error=true
-    _copy_dotfile "${INSTALL_PATH}/keyboard/xkb-custom-keyboard/evdev" "${HOME_PATH}/.config/xkb/rules/evdev" || has_error=true
-    _copy_dotfile "${INSTALL_PATH}/keyboard/xkb-custom-keyboard/keyd.default.conf" "/etc/keyd/default.conf" || has_error=true
-
-    if $has_error ; then
-        echo -e "$CROSS copying keyboard files to ~/config/xkb returned error"
-    else
-        echo -e "$TICK keyboard copy done"
-    fi
-
-    echo -e "$INFO Checking GNOME keyboard settings"
-    gsettings get org.gnome.desktop.input-sources xkb-options
-    echo -e "$TICK Changed GNOME keyboard settings"
-    gsettings set org.gnome.desktop.input-sources xkb-options "['hopkeyboard:hop_keyboard_symbols']"
-
-    echo -e "$INFO Please restart the computer now to see applied changes"
-
-    # ------------------ OLD INSTALLATION USING XKB ----------
-    echo -e "$INFO Starting installation of hopkeyboard"
-
-    sudo cp ~/init/keyboard/xkb-custom-keyboard/hopkeyboard /usr/share/X11/xkb/symbols/hopkeyboard
-    echo -e "$TICK Keyboard layout copied under /usr/share/X11/xkb/symbols/hopkeyboard"
-
-    sudo sed -i.bak "0,/<variantList>/{s|<variantList>|\
-    <variantList>\n\
-            <variant>\n\
-                <configItem>\n\
-                    <name>hopkeyboard</name>\n\
-                    <description>English (US, Hop - Mac friendly touches)</description>\n\
-                </configItem>\n\
-            </variant>\n\
-    |}" /usr/share/X11/xkb/rules/evdev.xml
-    echo -e "$TICK Variant added to /usr/share/X11/xkb/rules/evdev.xml"
-
-    sudo bash -c 'cat > /etc/default/keyboard << ENDOFFILE
-XKBLAYOUT=hopkeyboard
-BACKSPACE=guess
-ENDOFFILE'
-    echo -e "$TICK Keyboard added to /etc/default/keyboard"
-
-    cat >> ~/.profile << ENDOFFILE
-### Fix the repeated keys with hopkeyboard
-xset r on
-xset r 22
-seq 111 116 | xargs -n 1 xset r
-ENDOFFILE
-    echo -e "$TICK Updated .profile to fix key repeating issues"
-
-    # Need to run following scripts to force GNOME to use XKB (otherwise it uses its own thing)
-    echo -e "$INFO Checking current GNOME keyboard settings"
-    gsettings get org.gnome.desktop.input-sources sources
-    gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us+hopkeyboard'), ('xkb', 'us')]"
-    echo -e "$TICK Changed current GNOME keyboard settings to [('xkb', 'us+hopkeyboard'), ('xkb', 'us')]"
-
-    echo -e "$INFO Please restart the computer now to see applied changes"
-    echo -e "$INFO You may need to select the Hop Keyboard from the language selection"
 }
 
 _apps() {
@@ -319,12 +261,14 @@ _install() {
     fi
 
     # Clone repo
-    git clone $INSTALL_REPO $INSTALL_PATH
+    git clone "$INSTALL_REPO" "$INSTALL_PATH"
     echo -e "$TICK Repository clonned"
 
     echo -e "$INFO Change default shell to zsh, install .zshrc and other dotfiles"
-    sudo chsh -s $(which zsh)
-    echo -e "$TICK Shell changed to $(which zsh)"
+    local zsh_path
+    zsh_path=$(command -v zsh)
+    sudo chsh -s "$zsh_path" "${USER:-$(id -un)}"
+    echo -e "$TICK Shell changed to $zsh_path"
 
     # Setup dotfiles
     _zshrc

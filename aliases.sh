@@ -43,18 +43,18 @@ fi
 
 # Find file by prefix (ignore case). Usage: `f` or `f myfile` or `f myfile.txt \etc` or `f '*css'`
 function f() {
-  find ${2:-.} -iname "${1}*" 2>/dev/null | grep '^\|[^/]*$'
+  find "${2:-.}" -iname "${1}*" 2>/dev/null | grep --color=auto '[^/]*$'
 }
 # We use noglob, so zsh doesn't expand characters like "*" and so we can do e.g. `f *css`
 alias f='noglob f'
 
 # Find files that contain the given string (case insensitive), print file, line and preview.
 function ff() {
-  grep -RInwis ${2:-.} -e "${1}"
+  grep -RInwis "${2:-.}" -e "${1}"
 }
 
 
-function mkd() { mkdir -p ${1} ; cd ${1} } # make dir and cd into it
+function mkd() { [ -n "$1" ] && mkdir -p -- "$1" && cd -- "$1"; } # make dir and cd into it
 
  # Install z
 . ~/init/scripts/z.sh
@@ -75,7 +75,8 @@ alias tree=gittree
 alias log=gitlog
 function diffbranch() {
   local curr=$(git branch --show-current 2>/dev/null)
-  [ -n "$curr" ] && git diff --color "master...$curr"
+  local base="${1:-$(_git_default_branch)}"
+  [ -n "$curr" ] && git diff --color "${base}...${curr}"
 }
 alias mergebranch='git merge --squash'
 
@@ -86,14 +87,14 @@ if [[ "$OSTYPE" == darwin* ]]; then
   alias ports="sudo lsof -PiTCP -sTCP:LISTEN"
   alias router="netstat -rn |grep default"
   alias ip-private="ipconfig getifaddr en0"
-  alias ip-public="curl -4 ifconfig.co"
+  alias ip-public="curl -4 -fsSL --max-time 5 https://ifconfig.co"
   alias battery="system_profiler SPPowerDataType"
 fi
 if [[ "$OSTYPE" == linux* ]]; then
   alias ports="netstat -tulnp | grep LISTEN"
   alias router="ip route"
   alias ip-private="hostname -I | awk {'print $1}'"
-  alias ip-public="curl -4 ifconfig.co"
+  alias ip-public="curl -4 -fsSL --max-time 5 https://ifconfig.co"
   alias battery="upower -i /org/freedesktop/UPower/devices/battery_BAT0"
 fi
 function server() {
@@ -180,7 +181,7 @@ fi
 
 # If ccat exists, alias it to cat.
 if command -v ccat &> /dev/null; then
-  alias cat='ccat --bg="dark" $*'
+  alias cat='ccat --bg="dark"'
 fi
 
 if [[ "$OSTYPE" == linux* ]]; then
