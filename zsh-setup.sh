@@ -9,17 +9,13 @@ export LSCOLORS="Gxfxcxdxbxegedabagacad" # Applies on MacOS(BSD) only.
 
 # Much better search in history with using just up/down arrow after the word
 # prefix. E.g. write "cop", press up arrow and see "copy a.txt b.txt".
-if [[ "$OSTYPE" == darwin* ]]; then #Mac
-    bindkey "^[[A" history-beginning-search-backward
-    bindkey "^[[B" history-beginning-search-forward
+bindkey "^[[A" history-beginning-search-backward
+bindkey "^[[B" history-beginning-search-forward
+[[ -n "${terminfo[kcuu1]}" ]] && bindkey "${terminfo[kcuu1]}" history-beginning-search-backward
+[[ -n "${terminfo[kcud1]}" ]] && bindkey "${terminfo[kcud1]}" history-beginning-search-forward
+if [[ "$OSTYPE" == darwin* ]]; then
     # opt out of brew analytics on Mac
     export HOMEBREW_NO_ANALYTICS=1
-elif [[ ! -z "${key// }" ]]; then # Linux
-    bindkey "$key[Up]" history-beginning-search-backward
-    bindkey "$key[Down]" history-beginning-search-forward
-else # Different Linux
-    bindkey "^[[A" history-beginning-search-backward
-    bindkey "^[[B" history-beginning-search-forward
 fi
 
 # Make the command left and right work with iTerm2
@@ -34,8 +30,8 @@ bindkey "^[[3~" delete-char
 
 # History file configuration
 [ -z "$HISTFILE" ] && HISTFILE="$HOME/.zsh_history"
-[ "$HISTSIZE" -lt 50000 ] && HISTSIZE=50000
-[ "$SAVEHIST" -lt 10000 ] && SAVEHIST=10000
+[ "${HISTSIZE:-0}" -lt 50000 ] && HISTSIZE=50000
+[ "${SAVEHIST:-0}" -lt 10000 ] && SAVEHIST=10000
 
 # History command configuration
 # http://zsh.sourceforge.net/Doc/Release/Options.html#Options
@@ -53,7 +49,8 @@ setopt share_history          # share command history data
 autoload -Uz compinit
 compinit -C
 zstyle ':completion:*' menu select
-zstyle ':completion:*' list-colors ''
+# Case-insensitive completion first, then word-separator partial match, then substring match
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
 if whence dircolors >/dev/null; then # On Linux
   eval "$(dircolors -b)"
@@ -74,7 +71,6 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 setopt auto_cd
 setopt multios
 setopt interactive_comments   # allow copypasting scripts with "#" comments
-autoload -Uz vcs_info # from git command
 source ~/init/zsh-theme/hop-zsh-prompt.sh
 
 # Load plugins
